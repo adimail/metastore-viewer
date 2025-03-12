@@ -1,49 +1,81 @@
 {% extends "base.html" %}
 {% block title %}Query Editor{% endblock %}
 {% block content %}
-  <h1>Query Editor</h1>
 
-  <div class="sql-editor">
-    <h2>SQL Editor</h2>
-    <textarea placeholder="Write your SQL query here...">SELECT * FROM sales_data LIMIT 10;</textarea>
-  </div>
+<!-- Monaco Editor CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/loader.min.js"></script>  
+<!-- Title -->
+<h1 class="text-3xl font-bold text-gray-800 mb-6">SQL Query Editor</h1>
 
-  <div class="action-buttons">
-    <button onclick="alert('Run Query')">Run Query</button>
-    <button onclick="alert('Save Query')">Save Query</button>
-    <button onclick="alert('Export Results')">Export Results</button>
-  </div>
+<!-- SQL Editor Section -->
+<h2 class="text-xl font-semibold text-gray-700 mb-2">SQL Editor</h2>
+<div id="sql-editor" class="border rounded-lg" style="height: 300px;"></div>
 
-  <div class="query-results">
-    <h2>Query Results</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Amount</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>John Doe</td>
-          <td>100</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Jane Smith</td>
-          <td>150</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+<!-- Action Buttons -->
+<div class="flex space-x-4 mt-4">
+  <button onclick="runQuery()" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-md transition">Run Query</button>
+  <button onclick="saveQuery()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md transition">Save Query</button>
+  <button onclick="exportResults()" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold px-4 py-2 rounded-md transition">Export Results</button>
+</div>
 
-  <div class="query-history">
-    <h2>Query History</h2>
-    <ul>
-      <li>SELECT * FROM sales_data LIMIT 10; - 10:00 AM</li>
-      <li>SELECT name, amount FROM sales_data; - 9:45 AM</li>
-    </ul>
-  </div>
+<!-- Query Results -->
+<div class="bg-white shadow-lg rounded-lg p-4 mt-6">
+  <h2 class="text-xl font-semibold text-gray-700 mb-2">Query Results</h2>
+  <table class="min-w-full border border-gray-200">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-4 py-2 border text-left">ID</th>
+        <th class="px-4 py-2 border text-left">Name</th>
+        <th class="px-4 py-2 border text-left">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="hover:bg-gray-50">
+        <td class="px-4 py-2 border">1</td>
+        <td class="px-4 py-2 border">John Doe</td>
+        <td class="px-4 py-2 border">$100</td>
+      </tr>
+      <tr class="hover:bg-gray-50">
+        <td class="px-4 py-2 border">2</td>
+        <td class="px-4 py-2 border">Jane Smith</td>
+        <td class="px-4 py-2 border">$150</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Query History -->
+<div class="bg-white shadow-lg rounded-lg p-4 mt-6">
+  <h2 class="text-xl font-semibold text-gray-700 mb-2">Query History</h2>
+  <ul class="space-y-2">
+    <li class="p-2 bg-gray-100 rounded-md">SELECT * FROM sales_data LIMIT 10; <span class="text-sm text-gray-500">- 10:00 AM</span></li>
+    <li class="p-2 bg-gray-100 rounded-md">SELECT name, amount FROM sales_data; <span class="text-sm text-gray-500">- 9:45 AM</span></li>
+  </ul>
+</div>
+<!-- JavaScript to Initialize Monaco Editor -->
+<script>
+  require.config({ paths: { vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs" }});
+  require(["vs/editor/editor.main"], function() {
+      window.editor = monaco.editor.create(document.getElementById("sql-editor"), {
+          value: "SELECT * FROM sales_data LIMIT 10;",
+          language: "sql",
+          theme: "vs-light",
+          fontSize: 16,
+          automaticLayout: true
+      });
+  });
+
+  function runQuery() {
+      alert("Running Query: " + window.editor.getValue());
+  }
+
+  function saveQuery() {
+      alert("Query Saved!");
+  }
+
+  function exportResults() {
+      alert("Exporting Results...");
+  }
+</script>
+
 {% endblock %}

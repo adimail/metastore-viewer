@@ -88,3 +88,140 @@ p {
   font-size: 1em;
   color: #555;
 }
+
+.big-hr {
+  border: 0;
+  border-top: 1px solid #636363;
+  margin: 30px 0;
+}
+
+
+/* 
+Base
+*/
+
+/* Flash messages */
+#flash-message-container {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  width: auto;
+}
+
+.flash-message {
+  padding: 15px 20px;
+  background-color: #4caf50;
+  color: white;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  font-size: 1em;
+}
+
+.flash-message.error {
+  background-color: #e74c3c;
+}
+
+.flash-message.info {
+  background-color: #3498db;
+}
+
+header {
+  width: 100%;
+  background-color: #2d3748;
+  color: #fff;
+  padding: 1rem 2rem;
+}
+
+header .header-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+#sidebar {
+  width: fit-content;
+  background-color: #4a5568;
+  color: #fff;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  position: relative;
+  padding-top: 90px;
+}
+
+#sidebar h2 {
+  padding: 1rem;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+#sidebar a {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: #fff;
+  text-decoration: none;
+  position: relative;
+}
+
+#sidebar a:hover {
+  background-color: #2d3748;
+}
+
+#sidebar a .link-text {
+  margin-left: 1rem;
+  white-space: nowrap;
+  transition: opacity 0.3s;
+}
+
+/* Adjustments for collapsed state */
+#sidebar.collapsed a {
+  justify-content: center;
+}
+
+#sidebar.collapsed a .link-text {
+  display: none;
+}
+
+#sidebar.collapsed h2 {
+  display: none;
+}
+
+#sidebar.collapsed .user-info p {
+  display: none;
+}
+
+#sidebar.collapsed a:hover::after {
+  content: attr(data-title);
+  position: absolute;
+  left: 70px;
+  background-color: #2d3748;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  color: #fff;
+  white-space: nowrap;
+  opacity: 1;
+  z-index: 10;
+  transition: opacity 0.3s;
+}
+
+#container {
+  display: flex;
+}
+
+#main {
+  flex: 1;
+  padding: 1rem;
+  padding-top: 90px;
+}
+
+.user-info {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.user-info p {
+  margin: 0;
+  color: #fff;
+}

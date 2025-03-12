@@ -24,22 +24,27 @@ class User(db.Model, UserMixin):
 class Workspace(db.Model):
     __tablename__ = "workspaces"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(150), unique=True, nullable=False)
-    status = db.Column(db.String(50), nullable=False)  # e.g., "active" or "inactive"
-    region = db.Column(db.String(100), nullable=True)
-    cloud = db.Column(db.String(50), nullable=False)  # e.g., "aws", "azure", "gcp"
+    name = db.Column(db.String(255), nullable=False, unique=True)
+    status = db.Column(db.String(50), nullable=False)
+    region = db.Column(db.String(100), nullable=False)
+    cloud = db.Column(db.String(100), nullable=False)
     catalog = db.Column(db.String(255), nullable=True)
-    clusters = db.Column(db.String(255), nullable=True)
+    clusters = db.Column(db.Integer, nullable=True)
     description = db.Column(db.Text, nullable=True)
-    created_by = db.Column(db.Integer, nullable=False)  # user id who created it
-    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    updated_on = db.Column(db.DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
     
+    owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    owner_name = db.Column(db.String(255), nullable=False)
+    created_by_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    created_by_name = db.Column(db.String(255), nullable=False)
+
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_on = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+
+    owner = db.relationship('User', foreign_keys=[owner_id])
+    created_by = db.relationship('User', foreign_keys=[created_by_id])
     workspace_users = db.relationship("WorkspaceUser", back_populates="workspace", cascade="all, delete-orphan")
     tables = db.relationship("TableMetadata", back_populates="workspace", cascade="all, delete-orphan")
 
-    def __repr__(self):
-        return f"<Workspace {self.name} ({self.cloud})>"
 
 
 class WorkspaceUser(db.Model):

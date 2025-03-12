@@ -1,52 +1,58 @@
 {% extends "base.html" %}
 {% block title %}Settings{% endblock %}
 {% block head %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/settings.css') }}">
+  <script src="https://cdn.tailwindcss.com"></script>
 {% endblock %}
 {% block content %}
-  <h1>Settings</h1>
-  <form method="POST" action="{{ url_for('settings.settings') }}">
-    <fieldset>
-      <legend>S3 Credentials</legend>
-      <div class="form-group">
-        <label for="accessKey">AWS Access Key:</label>
-        <input type="text" id="accessKey" name="accessKey" placeholder="Enter AWS Access Key">
+
+<div class="max-w-4xl">
+  <h1 class="text-3xl font-bold text-gray-800 mb-6">Settings</h1>
+
+  <form method="POST" action="{{ url_for('settings.settings') }}" class="space-y-6">
+
+    <!-- S3 Credentials -->
+    <fieldset class="bg-white shadow-md rounded-lg p-6 border border-gray-200">
+      <legend class="text-lg font-semibold text-gray-700 mb-4">S3 Credentials</legend>
+      <div class="mb-4">
+        <label for="accessKey" class="block text-sm font-medium text-gray-700">AWS Access Key</label>
+        <input type="text" id="accessKey" name="accessKey" placeholder="Enter AWS Access Key"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
       </div>
-      <div class="form-group">
-        <label for="secretKey">AWS Secret Key:</label>
-        <input type="password" id="secretKey" name="secretKey" placeholder="Enter AWS Secret Key">
+      <div>
+        <label for="secretKey" class="block text-sm font-medium text-gray-700">AWS Secret Key</label>
+        <input type="password" id="secretKey" name="secretKey" placeholder="Enter AWS Secret Key"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
       </div>
     </fieldset>
 
-    <fieldset>
-      <legend>Trino Connection</legend>
-      <div class="form-group">
-        <label for="trinoUrl">Trino Server URL:</label>
-        <input type="text" id="trinoUrl" name="trinoUrl" placeholder="Enter Trino Server URL">
+    <!-- Trino Connection -->
+    <fieldset class="bg-white shadow-md rounded-lg p-6 border border-gray-200">
+      <legend class="text-lg font-semibold text-gray-700 mb-4">Trino Connection</legend>
+      <div class="mb-4">
+        <label for="trinoUrl" class="block text-sm font-medium text-gray-700">Trino Server URL</label>
+        <input type="text" id="trinoUrl" name="trinoUrl" placeholder="Enter Trino Server URL"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
       </div>
-      <div class="form-group">
-        <label for="trinoUser">Username:</label>
-        <input type="text" id="trinoUser" name="trinoUser" placeholder="Enter Username">
+      <div class="mb-4">
+        <label for="trinoUser" class="block text-sm font-medium text-gray-700">Username</label>
+        <input type="text" id="trinoUser" name="trinoUser" placeholder="Enter Username"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
       </div>
-      <div class="form-group">
-        <label for="trinoPassword">Password:</label>
-        <input type="password" id="trinoPassword" name="trinoPassword" placeholder="Enter Password">
-      </div>
-    </fieldset>
-
-    <fieldset>
-      <legend>Theme</legend>
-      <div class="form-group">
-        <label for="theme">Select Theme:</label>
-        <select id="theme" name="theme">
-          <option value="light">Light</option>
-          <option value="dark">Dark</option>
-        </select>
+      <div>
+        <label for="trinoPassword" class="block text-sm font-medium text-gray-700">Password</label>
+        <input type="password" id="trinoPassword" name="trinoPassword" placeholder="Enter Password"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
       </div>
     </fieldset>
 
-    <div class="action-buttons">
-      <button type="submit">Save Settings</button>
+    <!-- Save Button -->
+    <div class="flex justify-end">
+      <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transition duration-300">
+        Save Settings
+      </button>
     </div>
+
   </form>
+</div>
+
 {% endblock %}

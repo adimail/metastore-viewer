@@ -7,3 +7,8 @@ metadata_bp = Blueprint("metadata", __name__)
 @login_required
 def metadata():
     return render_template("core/table_metadata_viewer.html")
+
+@metadata_bp.route("/metadata/compare")
+@login_required
+def compare_metadata():
+    return render_template("core/metadata_comparison.html")

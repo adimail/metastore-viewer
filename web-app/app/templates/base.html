@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}Neural Nexus Dashboard{% endblock %}</title>
+    <title>{% block title %}Metastore Viewer{% endblock %}</title>
     
     <link
       rel="stylesheet"
@@ -13,87 +13,97 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/index.css') }}"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+      integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    
     {% block head %}{% endblock %}
-    <style>
-      #flash-message-container {
-        position: fixed;
-        top: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 9999;
-        width: auto;
-      }
-      .flash-message {
-        padding: 15px 20px;
-        background-color: #4caf50;
-        color: white;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        margin-bottom: 10px;
-        font-size: 1em;
-      }
-      .flash-message.error {
-        background-color: #e74c3c;
-      }
-      .flash-message.info {
-        background-color: #3498db;
-      }
-    </style>
   </head>
   <body>
-    {% with messages = get_flashed_messages(with_categories=true) %} {% if
-    messages %}
-    <div id="flash-message-container">
-      {% for category, message in messages %}
-      <div class="flash-message {{ category }}">{{ message }}</div>
-      {% endfor %}
-    </div>
-    {% endif %} {% endwith %}
-
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div id="flash-message-container">
+          {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full z-50">
+      <div class="header-content">
+        <button id="sidebarToggle" class="focus:outline-none">
+          <i class="fas fa-bars text-white"></i>
+        </button>
+        <div class="text-xl font-bold">Metastore Viewer</div>
+      </div>
+    </header>
+    
     <div id="container">
+      <!-- Sidebar -->
       <div id="sidebar">
-        <h2 style="color: white;">Datalake UI</h2>
-        <a href="/">Home</a>
-        <a href="/explorer">Bucket Explorer</a>
-        <a href="/query-editor">Query Editor</a>
-        <a href="/metadata">Metadata Comparison</a>
-        <a href="/settings">Settings</a>
-        <br />
-        <hr />
-        <br />
+        <a href="/" data-title="Home">
+          <i class="fas fa-home"></i>
+          <span class="link-text">Home</span>
+        </a>
+        <a href="/explorer" data-title="Bucket Explorer">
+          <i class="fas fa-box"></i>
+          <span class="link-text">Bucket Explorer</span>
+        </a>
+        <a href="/query-editor" data-title="Query Editor">
+          <i class="fas fa-code"></i>
+          <span class="link-text">Query Editor</span>
+        </a>
+        <a href="/metadata" data-title="Metadata Comparison">
+          <i class="fas fa-table"></i>
+          <span class="link-text">Metadata tables</span>
+        </a>
+        <a href="/metadata/compare" data-title="Metadata Comparison">
+          <i class="fas fa-table"></i>
+          <span class="link-text">Metadata Comparison</span>
+        </a>
+        <a href="/settings" data-title="Settings">
+          <i class="fas fa-cog"></i>
+          <span class="link-text">Settings</span>
+        </a>
+        <hr class="my-4 border-gray-500">
         {% if current_user.is_authenticated %}
-        <div class=""user-info" style="margin-bottom: 20px; text-align: center">
-          <p style="color: #fff; margin: 0">
-            Welcome, {{ current_user.username }}
-          </p>
-          <a
-            href="{{ url_for('workspace.my_workspaces') }}"
-            >All Workspaces</a
-          >
-          <a
-            href="{{ url_for('auth.logout') }}"
-            >Logout</a
-          >
-        </div>
+          <div class="user-info">
+            <p>Welcome, {{ current_user.username }}</p>
+            <a href="{{ url_for('workspace.my_workspaces') }}" data-title="All Workspaces">
+              <i class="fas fa-th-list"></i>
+              <span class="link-text">All Workspaces</span>
+            </a>
+            <a href="{{ url_for('auth.logout') }}" data-title="Logout">
+              <i class="fas fa-sign-out-alt"></i>
+              <span class="link-text">Logout</span>
+            </a>
+          </div>
         {% else %}
-        <div class="login-link" style="margin-bottom: 20px; text-align: center">
-          <a
-            href="{{ url_for('auth.login') }}"
-            >Login</a
-          >
-        </div>
+          <div class="login-link" style="text-align: center; margin-bottom: 20px;">
+            <a href="{{ url_for('auth.login') }}" data-title="Login">
+              <i class="fas fa-sign-in-alt"></i>
+              <span class="link-text">Login</span>
+            </a>
+          </div>
         {% endif %}
       </div>
+      
+      <!-- Main content -->
       <div id="main">
         {% block content %}{% endblock %}
-        <!-- <footer class="footer">
-          <p>
-            Metastore Viewer for Lakehouse Tables on Object Stores<br />
-          </p>
-        </footer> -->
       </div>
     </div>
+    
     {% block scripts %}{% endblock %}
+    <script src="{{ url_for('static', filename='js/session.js') }}"></script>
     <script>
+      // Hide flash messages after 3 seconds
       setTimeout(function () {
         var flashContainer = document.getElementById("flash-message-container");
         if (flashContainer) {

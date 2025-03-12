@@ -18,7 +18,7 @@ def create_workspace():
         clusters = request.form.get("clusters")
         description = request.form.get("description")
 
-        # Check if workspace with same name already exists.
+        # Check if workspace with the same name already exists
         if Workspace.query.filter_by(name=name).first():
             flash("Workspace name already exists. Please choose a different name.", "error")
             return redirect(url_for("workspace.create_workspace"))
@@ -31,21 +31,26 @@ def create_workspace():
             catalog=catalog,
             clusters=clusters,
             description=description,
-            created_by=current_user.id,
+            created_by_id=current_user.id,
+            created_by_name=current_user.username,
+            owner_id=current_user.id,
+            owner_name=current_user.username,
             created_at=datetime.datetime.utcnow(),
             updated_on=datetime.datetime.utcnow(),
         )
         db.session.add(new_workspace)
         db.session.commit()
 
-        # Add the current user as admin of the newly created workspace.
+        # Add the current user as admin of the newly created workspace
         ws_user = WorkspaceUser(user_id=current_user.id, workspace_id=new_workspace.id, role="admin")
         db.session.add(ws_user)
         db.session.commit()
 
         flash("Workspace created successfully!", "success")
         return redirect(url_for("workspace.view_workspace", workspace_id=new_workspace.id))
+    
     return render_template("workspace/create_workspace.html")
+
 
 
 @workspace_bp.route("/workspace/<int:workspace_id>")
@@ -86,3 +91,21 @@ def my_workspaces():
     # To display the workspace details, we extract the workspace from each association.
     user_workspaces = [ws.workspace for ws in current_user.workspaces]
     return render_template("workspace/my_workspaces.html", workspaces=user_workspaces)
+
+@workspace_bp.route('/workspace/<int:workspace_id>/update', methods=['GET', 'POST'])
+@login_required
+def update_workspace(workspace_id):
+    flash(f"Update workspace {workspace_id} feature coming soon!", "info")
+    return redirect(url_for('workspace.view_workspace', workspace_id=workspace_id))
+
+@workspace_bp.route('/workspace/<int:workspace_id>/disable', methods=['POST', 'GET'])
+@login_required
+def disable_workspace(workspace_id):
+    flash(f"Workspace {workspace_id} has been disabled (simulation).", "warning")
+    return redirect(url_for('workspace.view_workspace', workspace_id=workspace_id))
+
+@workspace_bp.route('/workspace/<int:workspace_id>/delete', methods=['POST', 'GET'])
+@login_required
+def delete_workspace(workspace_id):
+    flash(f"Workspace {workspace_id} has been deleted (simulation).", "danger")
+    return redirect(url_for('home.home'))

@@ -3,46 +3,42 @@
 {% block title %}Home | Metastore Viewer for Lakehouse Tables on Object Stores{% endblock %}
 
 {% block content %}
-  <div class="container mx-auto p-6">
-    <div class="p-8">
-      <h1 class="text-3xl font-bold text-gray-800 mb-4">Welcome to Metastore Viewer</h1>
-      <p class="text-gray-600 text-lg mb-6">
-        Metastore Viewer is a data lake management interface designed for interaction with object stores. 
-        It provides tools for exploring storage buckets, querying data, and comparing metadata efficiently.
-      </p>
+<h1 class="text-3xl font-bold text-gray-800 mb-4">Welcome to Metastore Viewer</h1>
+<p class="text-gray-600 text-lg mb-6">
+  Metastore Viewer is a data lake management interface designed for interaction with object stores. 
+  It provides tools for exploring storage buckets, querying data, and comparing metadata efficiently.
+</p>
 
-      <h2 class="text-2xl font-semibold text-gray-800 mt-6 mb-4">Features</h2>
-      <ul class="list-disc list-inside text-gray-700 space-y-2">
-        <li><strong>Bucket Explorer:</strong> Browse and manage your storage buckets.</li>
-        <li><strong>Query Editor:</strong> Run SQL queries on your data lakes.</li>
-        <li><strong>Metadata Comparison:</strong> Compare metadata of different datasets.</li>
-        <li><strong>Settings:</strong> Customize your preferences and configurations.</li>
-      </ul>
+<h2 class="text-2xl font-semibold text-gray-800 mt-6 mb-4">Features</h2>
+<ul class="list-disc list-inside text-gray-700 space-y-2">
+  <li><strong>Bucket Explorer:</strong> Browse and manage your storage buckets.</li>
+  <li><strong>Query Editor:</strong> Run SQL queries on your data lakes.</li>
+  <li><strong>Metadata Comparison:</strong> Compare metadata of different datasets.</li>
+  <li><strong>Settings:</strong> Customize your preferences and configurations.</li>
+</ul>
 
-      <h2 class="text-2xl font-semibold text-gray-800 mt-6 mb-4">How to Use</h2>
-      <ol class="list-decimal list-inside text-gray-700 space-y-2">
-        <li>Login to your account or register if you haven't.</li>
-        <li>Use the <strong>Bucket Explorer</strong> to browse available storage buckets.</li>
-        <li>Write and execute SQL queries in the <strong>Query Editor</strong>.</li>
-        <li>Compare metadata between datasets in the <strong>Metadata Comparison</strong> section.</li>
-        <li>Visit <strong>Settings</strong> to manage configurations.</li>
-      </ol>
+<h2 class="text-2xl font-semibold text-gray-800 mt-6 mb-4">How to Use</h2>
+<ol class="list-decimal list-inside text-gray-700 space-y-2">
+  <li>Login to your account or register if you haven't.</li>
+  <li>Use the <strong>Bucket Explorer</strong> to browse available storage buckets.</li>
+  <li>Write and execute SQL queries in the <strong>Query Editor</strong>.</li>
+  <li>Compare metadata between datasets in the <strong>Metadata Comparison</strong> section.</li>
+  <li>Visit <strong>Settings</strong> to manage configurations.</li>
+</ol>
 
-      <div class="flex flex-col items-center mt-8">
-        <div class="text-gray-600 text-lg mb-4">
-          Ready to get started?
-        </div>
-        <div class="mt-8 flex gap-5">
-          <a href="/explorer" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-lg font-medium transition">
-            Get Started →
-          </a>
-          {% if current_user.is_authenticated and current_user.workspaces|length > 0 %}
-            <a href="{{ url_for('workspace.my_workspaces') }}" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg text-lg font-medium transition">
-              My Workspaces →
-            </a>
-          {% endif %}
-        </div>
-      </div>
-    </div>
+<div class="flex flex-col items-center mt-8">
+  <div class="text-gray-600 text-lg mb-4">
+    Ready to get started?
   </div>
+  <div class="mt-8 flex gap-5">
+    <a href="/explorer" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-lg font-medium transition">
+      Get Started →
+    </a>
+    {% if current_user.is_authenticated and current_user.workspaces|length > 0 %}
+      <a href="{{ url_for('workspace.my_workspaces') }}" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg text-lg font-medium transition">
+        My Workspaces →
+      </a>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}
