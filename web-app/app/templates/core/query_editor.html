@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Query Editor{% endblock %}
+{% block content %}
+  <h1>Query Editor</h1>
+
+  <div class="sql-editor">
+    <h2>SQL Editor</h2>
+    <textarea placeholder="Write your SQL query here...">SELECT * FROM sales_data LIMIT 10;</textarea>
+  </div>
+
+  <div class="action-buttons">
+    <button onclick="alert('Run Query')">Run Query</button>
+    <button onclick="alert('Save Query')">Save Query</button>
+    <button onclick="alert('Export Results')">Export Results</button>
+  </div>
+
+  <div class="query-results">
+    <h2>Query Results</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>John Doe</td>
+          <td>100</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Jane Smith</td>
+          <td>150</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="query-history">
+    <h2>Query History</h2>
+    <ul>
+      <li>SELECT * FROM sales_data LIMIT 10; - 10:00 AM</li>
+      <li>SELECT name, amount FROM sales_data; - 9:45 AM</li>
+    </ul>
+  </div>
+{% endblock %}

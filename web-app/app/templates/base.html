@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Neural Nexus Dashboard{% endblock %}</title>
+    
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/tailwind.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/index.css') }}"
+    />
+    {% block head %}{% endblock %}
+    <style>
+      #flash-message-container {
+        position: fixed;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999;
+        width: auto;
+      }
+      .flash-message {
+        padding: 15px 20px;
+        background-color: #4caf50;
+        color: white;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 10px;
+        font-size: 1em;
+      }
+      .flash-message.error {
+        background-color: #e74c3c;
+      }
+      .flash-message.info {
+        background-color: #3498db;
+      }
+    </style>
+  </head>
+  <body>
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div id="flash-message-container">
+      {% for category, message in messages %}
+      <div class="flash-message {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+
+    <div id="container">
+      <div id="sidebar">
+        <h2 style="color: white;">Datalake UI</h2>
+        <a href="/">Home</a>
+        <a href="/explorer">Bucket Explorer</a>
+        <a href="/query-editor">Query Editor</a>
+        <a href="/metadata">Metadata Comparison</a>
+        <a href="/settings">Settings</a>
+        <br />
+        <hr />
+        <br />
+        {% if current_user.is_authenticated %}
+        <div class=""user-info" style="margin-bottom: 20px; text-align: center">
+          <p style="color: #fff; margin: 0">
+            Welcome, {{ current_user.username }}
+          </p>
+          <div class="bucket-selector">
+            <select id="bucket">
+              <option value="bucket1">Bucket 1</option>
+              <option value="bucket2">Bucket 2</option>
+            </select>
+          </div>
+          <a
+            href="{{ url_for('auth.logout') }}"
+            >Logout</a
+          >
+        </div>
+        {% else %}
+        <div class="login-link" style="margin-bottom: 20px; text-align: center">
+          <a
+            href="{{ url_for('auth.login') }}"
+            >Login</a
+          >
+        </div>
+        {% endif %}
+      </div>
+      <div id="main">
+        {% block content %}{% endblock %}
+        <!-- <footer class="footer">
+          <p>
+            Metastore Viewer for Lakehouse Tables on Object Stores<br />
+          </p>
+        </footer> -->
+      </div>
+    </div>
+    {% block scripts %}{% endblock %}
+    <script>
+      setTimeout(function () {
+        var flashContainer = document.getElementById("flash-message-container");
+        if (flashContainer) {
+          flashContainer.style.display = "none";
+        }
+      }, 3000);
+    </script>
+  </body>
+</html>

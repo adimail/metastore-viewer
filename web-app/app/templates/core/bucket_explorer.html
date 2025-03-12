@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Bucket Explorer{% endblock %}
+{% block content %}
+  <h1>Bucket Explorer</h1>
+
+  <div class="bucket-selector">
+    <label for="bucket">Select S3 Bucket:</label>
+    <select id="bucket">
+      <option value="bucket1">Bucket 1</option>
+      <option value="bucket2">Bucket 2</option>
+    </select>
+  </div>
+
+  <div class="folder-tree">
+    <h2>Folder Tree</h2>
+    <ul>
+      <li>Folder 1
+        <ul>
+          <li>File 1</li>
+          <li>File 2</li>
+        </ul>
+      </li>
+      <li>Folder 2</li>
+    </ul>
+  </div>
+
+  <div class="table-list">
+    <h2>Tables</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Table Name</th>
+          <th>Format</th>
+          <th>Size</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Sales_Data</td>
+          <td>Parquet</td>
+          <td>20 MB</td>
+        </tr>
+        <tr>
+          <td>Inventory</td>
+          <td>Delta</td>
+          <td>15 MB</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="search-bar">
+    <label for="search">Search Tables:</label>
+    <input type="text" id="search" placeholder="Enter table name or format">
+  </div>
+
+  <div class="action-buttons">
+    <button onclick="alert('View Metadata')">View Metadata</button>
+    <button onclick="alert('Query Table')">Query Table</button>
+  </div>
+{% endblock %}

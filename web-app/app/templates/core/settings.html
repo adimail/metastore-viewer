@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/settings.css') }}">
+{% endblock %}
+{% block content %}
+  <h1>Settings</h1>
+  <form method="POST" action="{{ url_for('settings.settings') }}">
+    <fieldset>
+      <legend>S3 Credentials</legend>
+      <div class="form-group">
+        <label for="accessKey">AWS Access Key:</label>
+        <input type="text" id="accessKey" name="accessKey" placeholder="Enter AWS Access Key">
+      </div>
+      <div class="form-group">
+        <label for="secretKey">AWS Secret Key:</label>
+        <input type="password" id="secretKey" name="secretKey" placeholder="Enter AWS Secret Key">
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Trino Connection</legend>
+      <div class="form-group">
+        <label for="trinoUrl">Trino Server URL:</label>
+        <input type="text" id="trinoUrl" name="trinoUrl" placeholder="Enter Trino Server URL">
+      </div>
+      <div class="form-group">
+        <label for="trinoUser">Username:</label>
+        <input type="text" id="trinoUser" name="trinoUser" placeholder="Enter Username">
+      </div>
+      <div class="form-group">
+        <label for="trinoPassword">Password:</label>
+        <input type="password" id="trinoPassword" name="trinoPassword" placeholder="Enter Password">
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Theme</legend>
+      <div class="form-group">
+        <label for="theme">Select Theme:</label>
+        <select id="theme" name="theme">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+        </select>
+      </div>
+    </fieldset>
+
+    <div class="action-buttons">
+      <button type="submit">Save Settings</button>
+    </div>
+  </form>
+{% endblock %}

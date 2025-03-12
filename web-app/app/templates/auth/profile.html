@@ -1,0 +1,21 @@
+{% extends "base.html" %} {% block title %}Login - Quick Flask{%
+endblock %} {% block head %} {{ super() }}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/auth.css') }}"
+/>
+{% endblock %} {% block content %}
+<div class="auth-container">
+  <h2>Your Profile</h2>
+  
+  <div class="profile-section">
+    <img src="{{ profile_picture_url }}" alt="Profile Picture" class="profile-picture">
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Role:</strong> {{ user.role }}</p>
+  </div>
+
+  <form action="{{ url_for('auth.logout') }}" method="GET">
+    <button type="submit" class="button logout-button">Logout</button>
+  </form>
+</div>
+{% endblock %}

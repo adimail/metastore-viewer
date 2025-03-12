@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Metadata Comparison{% endblock %}
+{% block content %}
+  <h1>Metadata Comparison</h1>
+
+  <div class="version-selectors">
+    <label for="version1">Version 1:</label>
+    <select id="version1">
+      <option value="v1">Version 1</option>
+      <option value="v2">Version 2</option>
+    </select>
+    <label for="version2">Version 2:</label>
+    <select id="version2">
+      <option value="v1">Version 1</option>
+      <option value="v2">Version 2</option>
+    </select>
+  </div>
+
+  <div class="diff-viewer">
+    <div class="column">
+      <h2>Version 1 Metadata</h2>
+      <p>[Metadata details for version 1]</p>
+    </div>
+    <div class="column">
+      <h2>Version 2 Metadata</h2>
+      <p>[Metadata details for version 2]</p>
+    </div>
+  </div>
+
+  <div class="change-summary">
+    <h2>Change Summary</h2>
+    <ul>
+      <li>Added column: new_column</li>
+      <li>Removed column: old_column</li>
+      <li>Modified data type: amount (from INT to DECIMAL)</li>
+    </ul>
+  </div>
+{% endblock %}
