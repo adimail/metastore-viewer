@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}View Workspace{% endblock %}
+{% block content %}
+<div class="workspace-container">
+  <h2>Workspace: {{ workspace.name }}</h2>
+  <ul>
+    <li>Status: {{ workspace.status }}</li>
+    <li>Region: {{ workspace.region }}</li>
+    <li>Cloud: {{ workspace.cloud }}</li>
+    <li>Catalog: {{ workspace.catalog }}</li>
+    <li>Clusters: {{ workspace.clusters }}</li>
+    <li>Created By: {{ workspace.created_by }}</li>
+    <li>Created At: {{ workspace.created_at }}</li>
+    <li>Updated On: {{ workspace.updated_on }}</li>
+    {% if workspace.description %}
+      <li>Description: {{ workspace.description }}</li>
+    {% endif %}
+  </ul>
+  <h3>Members</h3>
+  <ul>
+    {% for member in members %}
+      <li>{{ member.user.username }} - {{ member.role }}</li>
+    {% endfor %}
+  </ul>
+  <a href="{{ url_for('workspace.add_member', workspace_id=workspace.id) }}">Add Member</a>
+  <br>
+  <a href="{{ url_for('home.home') }}">Back to Home</a>
+</div>
+{% endblock %}

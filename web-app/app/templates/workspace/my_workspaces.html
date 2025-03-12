@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}My Workspaces{% endblock %}
+{% block content %}
+<div class="workspace-container">
+  <h2>My Workspaces</h2>
+  {% if workspaces %}
+    <ul>
+      {% for ws in workspaces %}
+        <li>
+          <a href="{{ url_for('workspace.view_workspace', workspace_id=ws.id) }}">
+            {{ ws.name }} ({{ ws.cloud }})
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>You are not a member of any workspaces yet.</p>
+  {% endif %}
+  <a href="{{ url_for('workspace.create_workspace') }}">Create New Workspace</a>
+</div>
+{% endblock %}

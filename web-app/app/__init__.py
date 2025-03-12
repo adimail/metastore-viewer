@@ -39,6 +39,7 @@ def create_app():
     from app.blueprints.core.metadata import metadata_bp
     from app.blueprints.core.query_editor import query_editor_bp
     from app.blueprints.core.settings import settings_bp
+    from app.blueprints.core.workspace import workspace_bp
     
 
     app.register_blueprint(home_bp)
@@ -49,6 +50,7 @@ def create_app():
     app.register_blueprint(query_editor_bp)
     app.register_blueprint(metadata_bp)
     app.register_blueprint(settings_bp)
+    app.register_blueprint(workspace_bp)
 
     limiter.limit("200 per hour")(home_bp)
     limiter.limit("200 per hour")(api_bp)
