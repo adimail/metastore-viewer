@@ -1,10 +1,11 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, g
 from flask_cors import CORS
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from app.extensions import db
 from app.blueprints.admin import admin_bp
+from app.models import WorkspaceUser, Workspace
 
 limiter = Limiter(
     key_func=get_remote_address,
@@ -31,6 +32,19 @@ def create_app():
     def load_user(user_id):
         from app.models import User
         return User.query.get(int(user_id))
+
+    @app.before_request
+    def load_global_user_workspace():
+        g.user = current_user if current_user.is_authenticated else None
+        g.workspaces = []
+        
+        if g.user:
+            g.workspaces = (
+                db.session.query(Workspace)
+                .join(WorkspaceUser, Workspace.id == WorkspaceUser.workspace_id)
+                .filter(WorkspaceUser.user_id == g.user.id)
+                .all()
+            )
 
     from app.blueprints.home import home_bp
     from app.blueprints.api import api_bp

@@ -8,11 +8,9 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
-    # Optional global role (could be used for system-wide permissions)
     global_role = db.Column(db.String(50), default="user")
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
-    # Association with workspaces through WorkspaceUser
     workspaces = db.relationship(
         "WorkspaceUser", back_populates="user", cascade="all, delete-orphan"
     )
@@ -31,25 +29,46 @@ class Workspace(db.Model):
     catalog = db.Column(db.String(255), nullable=True)
     clusters = db.Column(db.Integer, nullable=True)
     description = db.Column(db.Text, nullable=True)
-    
-    owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    # New fields for object store & Trino settings
+    endpoint_url = db.Column(
+        db.String(255), nullable=True
+    )  # e.g. s3.amazonaws.com or custom endpoint
+    storage_access_key = db.Column(db.String(255), nullable=True)
+    storage_secret_key = db.Column(db.String(255), nullable=True)
+    default_bucket_name = db.Column(db.String(255), nullable=True)
+
+    trino_url = db.Column(db.String(255), nullable=True)
+    trino_user = db.Column(db.String(255), nullable=True)
+    trino_password = db.Column(db.String(255), nullable=True)
+
+    owner_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     owner_name = db.Column(db.String(255), nullable=False)
-    created_by_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    created_by_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     created_by_name = db.Column(db.String(255), nullable=False)
 
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-    updated_on = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+    updated_on = db.Column(
+        db.DateTime,
+        default=db.func.current_timestamp(),
+        onupdate=db.func.current_timestamp(),
+    )
 
-    owner = db.relationship('User', foreign_keys=[owner_id])
-    created_by = db.relationship('User', foreign_keys=[created_by_id])
-    workspace_users = db.relationship("WorkspaceUser", back_populates="workspace", cascade="all, delete-orphan")
-    tables = db.relationship("TableMetadata", back_populates="workspace", cascade="all, delete-orphan")
+    owner = db.relationship("User", foreign_keys=[owner_id])
+    created_by = db.relationship("User", foreign_keys=[created_by_id])
+    workspace_users = db.relationship(
+        "WorkspaceUser", back_populates="workspace", cascade="all, delete-orphan"
+    )
+    tables = db.relationship(
+        "TableMetadata", back_populates="workspace", cascade="all, delete-orphan"
+    )
 
+    def __repr__(self):
+        return f"<Workspace {self.name}>"
 
 
 class WorkspaceUser(db.Model):
     __tablename__ = "workspace_users"
-    # Composite primary key: a user can have only one role per workspace
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
     workspace_id = db.Column(
         db.Integer, db.ForeignKey("workspaces.id"), primary_key=True
@@ -57,7 +76,6 @@ class WorkspaceUser(db.Model):
     role = db.Column(db.String(50), nullable=False)  # 'admin', 'viewer', or 'editor'
     joined_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
-    # Relationships to the associated User and Workspace
     user = db.relationship("User", back_populates="workspaces")
     workspace = db.relationship("Workspace", back_populates="workspace_users")
 
@@ -70,9 +88,7 @@ class TableMetadata(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     workspace_id = db.Column(db.Integer, db.ForeignKey("workspaces.id"), nullable=False)
     table_name = db.Column(db.String(255), nullable=False)
-    table_path = db.Column(
-        db.String(512), nullable=False
-    )  # For example, an S3 bucket path
+    table_path = db.Column(db.String(512), nullable=False)  # e.g., s3://my-bucket/path
     table_format = db.Column(
         db.String(50), nullable=False
     )  # 'parquet', 'iceberg', 'delta', or 'hudi'
@@ -85,9 +101,11 @@ class TableMetadata(db.Model):
     metadata_json = db.Column(db.Text)
 
     # Automatically track when the metadata was last updated
+    metadata_json = db.Column(db.Text)
     last_updated = db.Column(
         db.DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow
     )
+
     workspace = db.relationship("Workspace", back_populates="tables")
 
     def __repr__(self):

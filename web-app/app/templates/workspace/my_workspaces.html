@@ -1,34 +1,50 @@
 {% extends "base.html" %}
 {% block title %}My Workspaces{% endblock %}
 {% block content %}
-<h2 class="text-3xl font-bold text-gray-800 mb-6">My Workspaces</h2>
 
-<hr class="big-hr"/>
+<h2 class="text-3xl font-bold text-gray-800 mb-6">My Workspaces</h2>
+<hr class="big-hr mb-6" />
 
 {% if workspaces %}
-  <ul class="divide-y divide-gray-200">
+  <!-- Grid Layout for Workspaces -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     {% for ws in workspaces %}
-      <li class="px-6 relative py-4 hover:bg-gray-200 transition bg-gray-300 cursor-pointer rounded-md">
-        <a href="{{ url_for('workspace.view_workspace', workspace_id=ws.id) }}" class="flex justify-between items-center text-lg text-blue-600 hover:text-blue-800">
-          <span class="inset-0 absolute"></span>
-          <div>
-            <span class="font-semibold">{{ ws.name }}</span>
-            <span class="text-sm text-gray-500">({{ ws.cloud }})</span>
+      <div class="bg-gray-100 shadow-lg  p-6 transition hover:shadow-xl border-l-4 
+                  {% if ws.status == 'active' %} border-green-500 {% else %} border-red-500 {% endif %}">
+        <a href="{{ url_for('workspace.view_workspace', workspace_id=ws.id) }}" class="block">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-semibold text-gray-800">
+              <i class="fas fa-folder-open text-blue-500 mr-2"></i> {{ ws.name }}
+            </h3>
+            <span class="text-sm px-3 py-1 rounded-full font-medium 
+                         {% if ws.status == 'active' %} bg-green-100 text-green-600 
+                         {% else %} bg-red-100 text-red-600 {% endif %}">
+              {{ ws.status | capitalize }}
+            </span>
           </div>
-          <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-          </svg>
+          <p class="text-gray-600 text-sm mb-2">
+            <i class="fas fa-globe text-gray-500 mr-2"></i> <strong>Region:</strong> {{ ws.region }}
+          </p>
+          <p class="text-gray-600 text-sm mb-2">
+            <i class="fas fa-cloud text-gray-500 mr-2"></i> <strong>Cloud:</strong> {{ ws.cloud }}
+          </p>
+          <p class="text-gray-600 text-sm">
+            <i class="fas fa-clock text-gray-500 mr-2"></i> <strong>Last Updated:</strong> {{ ws.updated_on.strftime('%b %d, %Y') }}
+          </p>
         </a>
-      </li>
+      </div>
     {% endfor %}
-  </ul>
+  </div>
 {% else %}
   <p class="text-gray-600 text-lg">You are not a member of any workspaces yet.</p>
 {% endif %}
 
-<div class="mt-6">
-  <a href="{{ url_for('workspace.create_workspace') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-lg font-medium transition shadow">
-    + Create New Workspace
+<!-- Create Workspace Button -->
+<div class="mt-8">
+  <a href="{{ url_for('workspace.create_workspace') }}" 
+     class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3  text-lg font-medium transition shadow-lg">
+    <i class="fas fa-plus-circle mr-2"></i> Create New Workspace
   </a>
 </div>
+
 {% endblock %}

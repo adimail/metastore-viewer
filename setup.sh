@@ -4,7 +4,13 @@ set -e
 
 echo "Setting up the environment..."
 
-python3 -m venv .venv
+if [ ! -d ".venv" ]; then
+    echo "Creating virtual environment..."
+    python3 -m venv .venv
+else
+    echo "Virtual environment already exists. Skipping creation."
+fi
+
 source .venv/bin/activate
 
 pip3 install -r web-app/requirements.txt

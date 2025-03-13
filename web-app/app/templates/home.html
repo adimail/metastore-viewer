@@ -31,11 +31,11 @@
     Ready to get started?
   </div>
   <div class="mt-8 flex gap-5">
-    <a href="/explorer" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-lg font-medium transition">
+    <a href="/explorer" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3  text-lg font-medium transition">
       Get Started →
     </a>
     {% if current_user.is_authenticated and current_user.workspaces|length > 0 %}
-      <a href="{{ url_for('workspace.my_workspaces') }}" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg text-lg font-medium transition">
+      <a href="{{ url_for('workspace.my_workspaces') }}" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3  text-lg font-medium transition">
         My Workspaces →
       </a>
     {% endif %}

@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Workspace Settings{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl">
+  <h1 class="text-3xl font-bold text-gray-800 mb-6"> <a href="/settings">Settings</a> > Workspace Settings</h1>
+
+  <form method="POST" action="{{ url_for('settings.workspace_settings', workspace_id=workspace.id) }}" class="space-y-6">
+
+    <!-- Basic Workspace Info -->
+    <fieldset class="bg-gray-50 shadow-inner p-4  border border-gray-200">
+      <legend class="text-lg font-semibold text-gray-700 mb-2">Workspace Info</legend>
+      <div class="mb-4">
+        <label for="name" class="block text-sm font-medium text-gray-700">Workspace Name</label>
+        <input type="text" id="name" name="name" value="{{ workspace.name }}" 
+          class="mt-1 block w-full px-4 py-2 border border-gray-300  focus:ring-blue-500 focus:border-blue-500">
+      </div>
+      <div class="mb-4">
+        <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+        <select id="status" name="status"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300  focus:ring-blue-500 focus:border-blue-500">
+          <option value="active" {% if workspace.status == 'active' %}selected{% endif %}>Active</option>
+          <option value="inactive" {% if workspace.status == 'inactive' %}selected{% endif %}>Inactive</option>
+        </select>
+      </div>
+      <div class="mb-4">
+        <label for="region" class="block text-sm font-medium text-gray-700">Region</label>
+        <input type="text" id="region" name="region" value="{{ workspace.region }}"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300  focus:ring-blue-500 focus:border-blue-500">
+      </div>
+      <div class="mb-4">
+        <label for="cloud" class="block text-sm font-medium text-gray-700">Cloud Provider</label>
+        <select id="cloud" name="cloud"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300  focus:ring-blue-500 focus:border-blue-500">
+          <option value="aws" {% if workspace.cloud == 'aws' %}selected{% endif %}>AWS</option>
+          <option value="azure" {% if workspace.cloud == 'azure' %}selected{% endif %}>Azure</option>
+          <option value="gcp" {% if workspace.cloud == 'gcp' %}selected{% endif %}>GCP</option>
+          <option value="minio" {% if workspace.cloud == 'minio' %}selected{% endif %}>MinIO</option>
+        </select>
+      </div>
+    </fieldset>
+
+    <!-- Object Store Credentials -->
+    <fieldset class="bg-gray-50 shadow-inner p-4  border border-gray-200">
+      <legend class="text-lg font-semibold text-gray-700 mb-2">Object Store Credentials</legend>
+      <div class="mb-4">
+        <label for="endpoint_url" class="block text-sm font-medium text-gray-700">Endpoint URL</label>
+        <input type="text" id="endpoint_url" name="endpoint_url" placeholder="e.g., s3.amazonaws.com"
+               value="{{ workspace.endpoint_url }}"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300  focus:ring-blue-500 focus:border-blue-500">
+      </div>
+      <div class="mb-4">
+        <label for="storage_access_key" class="block text-sm font-medium text-gray-700">Access Key</label>
+        <input type="text" id="storage_access_key" name="storage_access_key" placeholder="Enter Access Key"
+               value="{{ workspace.storage_access_key }}"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300  focus:ring-blue-500 focus:border-blue-500">
+      </div>
+      <div class="mb-4">
+        <label for="storage_secret_key" class="block text-sm font-medium text-gray-700">Secret Key</label>
+        <input type="password" id="storage_secret_key" name="storage_secret_key" placeholder="Enter Secret Key"
+               value="{{ workspace.storage_secret_key }}"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300  focus:ring-blue-500 focus:border-blue-500">
+      </div>
+      <div>
+        <label for="default_bucket_name" class="block text-sm font-medium text-gray-700">Default Bucket Name</label>
+        <input type="text" id="default_bucket_name" name="default_bucket_name" placeholder="my-bucket"
+               value="{{ workspace.default_bucket_name }}"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300  focus:ring-blue-500 focus:border-blue-500">
+      </div>
+    </fieldset>
+
+    <!-- Trino Connection -->
+    <fieldset class="bg-gray-50 shadow-inner p-4  border border-gray-200">
+      <legend class="text-lg font-semibold text-gray-700 mb-2">Trino Connection</legend>
+      <div class="mb-4">
+        <label for="trino_url" class="block text-sm font-medium text-gray-700">Trino Server URL</label>
+        <input type="text" id="trino_url" name="trino_url" placeholder="Enter Trino Server URL"
+               value="{{ workspace.trino_url }}"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300  focus:ring-blue-500 focus:border-blue-500">
+      </div>
+      <div class="mb-4">
+        <label for="trino_user" class="block text-sm font-medium text-gray-700">Username</label>
+        <input type="text" id="trino_user" name="trino_user" placeholder="Enter Username"
+               value="{{ workspace.trino_user }}"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300  focus:ring-blue-500 focus:border-blue-500">
+      </div>
+      <div>
+        <label for="trino_password" class="block text-sm font-medium text-gray-700">Password</label>
+        <input type="password" id="trino_password" name="trino_password" placeholder="Enter Password"
+               value="{{ workspace.trino_password }}"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300  focus:ring-blue-500 focus:border-blue-500">
+      </div>
+    </fieldset>
+
+    <!-- Save Button -->
+    <div class="flex justify-end">
+      <button type="submit" 
+        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6  shadow-md transition duration-300">
+        Save Settings
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}Metastore Viewer{% endblock %}</title>
+    <title>{% block title %}Metastore Viewer for Lakehouse Tables on Object Stores{% endblock %}</title>
     
     <link
       rel="stylesheet"
@@ -36,63 +36,107 @@
     
     <!-- Header -->
     <header class="fixed top-0 left-0 w-full z-50">
-      <div class="header-content">
+      <div class="header-content flex items-center justify-between">
         <button id="sidebarToggle" class="focus:outline-none">
           <i class="fas fa-bars text-white"></i>
         </button>
-        <div class="text-xl font-bold">Metastore Viewer</div>
+        
+        <div class="text-xl font-bold">Metastore Viewer for Lakehouse Tables on Object Stores</div>
+
+        <!-- User Profile and Workspaces Dropdown -->
+        {% if g.user %}
+          <div class="relative">
+            <button id="userDropdownBtn" class="flex items-center space-x-2 focus:outline-none">
+              <i class="fas fa-user-circle text-white text-2xl"></i>
+              <span>{{ g.user.username }}</span>
+              <i class="fas fa-chevron-down text-sm"></i>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div id="userDropdownMenu" class="hidden absolute right-0 mt-2 bg-white text-black shadow-lg w-48">
+              <a href="{{ url_for('auth.profile') }}" class="block px-4 py-2 hover:bg-gray-200">
+                <i class="fas fa-user"></i> Profile
+              </a>
+              
+              <!-- Workspaces -->
+              <div class="border-t my-1"></div>
+              <div class="px-4 py-2 font-bold text-gray-700">Workspaces</div>
+
+              {% if g.workspaces %}
+                {% for workspace in g.workspaces %}
+                  <a href="{{ url_for('workspace.view_workspace', workspace_id=workspace.id) }}" class="block px-4 py-2 hover:bg-gray-200">
+                    <i class="fas fa-th"></i> {{ workspace.name }}
+                  </a>
+                {% endfor %}
+              {% else %}
+                <div class="px-4 py-2 text-gray-500">No workspaces available</div>
+              {% endif %}
+              
+              <!-- Logout -->
+              <div class="border-t my-1"></div>
+              <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2 hover:bg-gray-200">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </a>
+            </div>
+          </div>
+        {% else %}
+          <a href="{{ url_for('auth.login') }}" class="text-white hover:underline">Login</a>
+        {% endif %}
       </div>
     </header>
     
     <div id="container">
       <!-- Sidebar -->
-      <div id="sidebar">
-        <a href="/" data-title="Home">
-          <i class="fas fa-home"></i>
-          <span class="link-text">Home</span>
+    <div id="sidebar">
+        <a href="/" data-title="Home" class="{% if request.path == '/' %}active-link{% endif %}">
+            <i class="fas fa-home"></i>
+            <span class="link-text">Home</span>
         </a>
-        <a href="/explorer" data-title="Bucket Explorer">
-          <i class="fas fa-box"></i>
-          <span class="link-text">Bucket Explorer</span>
+        <a href="/explorer" data-title="Bucket Explorer" class="{% if request.path == '/explorer' %}active-link{% endif %}">
+            <i class="fas fa-box"></i>
+            <span class="link-text">Bucket Explorer</span>
         </a>
-        <a href="/query-editor" data-title="Query Editor">
-          <i class="fas fa-code"></i>
-          <span class="link-text">Query Editor</span>
+        <a href="/query-editor" data-title="Query Editor" class="{% if request.path == '/query-editor' %}active-link{% endif %}">
+            <i class="fas fa-code"></i>
+            <span class="link-text">Query Editor</span>
         </a>
-        <a href="/metadata" data-title="Metadata Comparison">
-          <i class="fas fa-table"></i>
-          <span class="link-text">Metadata tables</span>
+        <a href="/metadata" data-title="Metadata Comparison" class="{% if request.path == '/metadata' %}active-link{% endif %}">
+            <i class="fas fa-table"></i>
+            <span class="link-text">Metadata tables</span>
         </a>
-        <a href="/metadata/compare" data-title="Metadata Comparison">
-          <i class="fas fa-table"></i>
-          <span class="link-text">Metadata Comparison</span>
+        <a href="/metadata/compare" data-title="Metadata Comparison" class="{% if request.path == '/metadata/compare' %}active-link{% endif %}">
+            <i class="fas fa-table"></i>
+            <span class="link-text">Metadata Comparison</span>
         </a>
-        <a href="/settings" data-title="Settings">
-          <i class="fas fa-cog"></i>
-          <span class="link-text">Settings</span>
+        <a href="/settings" data-title="Settings" class="{% if request.path == '/settings' %}active-link{% endif %}">
+            <i class="fas fa-cog"></i>
+            <span class="link-text">Settings</span>
         </a>
         <hr class="my-4 border-gray-500">
         {% if current_user.is_authenticated %}
-          <div class="user-info">
-            <p>Welcome, {{ current_user.username }}</p>
-            <a href="{{ url_for('workspace.my_workspaces') }}" data-title="All Workspaces">
-              <i class="fas fa-th-list"></i>
-              <span class="link-text">All Workspaces</span>
-            </a>
-            <a href="{{ url_for('auth.logout') }}" data-title="Logout">
-              <i class="fas fa-sign-out-alt"></i>
-              <span class="link-text">Logout</span>
-            </a>
-          </div>
+            <div class="user-info">
+                <p>Welcome, {{ current_user.username }}</p>
+                <a href="{{ url_for('workspace.my_workspaces') }}" data-title="All Workspaces"
+                  class="{% if request.path == url_for('workspace.my_workspaces') %}active-link{% endif %}">
+                    <i class="fas fa-th-list"></i>
+                    <span class="link-text">All Workspaces</span>
+                </a>
+                <a href="{{ url_for('auth.logout') }}" data-title="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="link-text">Logout</span>
+                </a>
+            </div>
         {% else %}
-          <div class="login-link" style="text-align: center; margin-bottom: 20px;">
-            <a href="{{ url_for('auth.login') }}" data-title="Login">
-              <i class="fas fa-sign-in-alt"></i>
-              <span class="link-text">Login</span>
-            </a>
-          </div>
+            <div class="login-link" style="text-align: center; margin-bottom: 20px;">
+                <a href="{{ url_for('auth.login') }}" data-title="Login" 
+                  class="{% if request.path == url_for('auth.login') %}active-link{% endif %}">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span class="link-text">Login</span>
+                </a>
+            </div>
         {% endif %}
-      </div>
+    </div>
+
       
       <!-- Main content -->
       <div id="main">
@@ -110,6 +154,20 @@
           flashContainer.style.display = "none";
         }
       }, 3000);
+    </script>
+    <script>
+      document.getElementById('userDropdownBtn').addEventListener('click', function () {
+        document.getElementById('userDropdownMenu').classList.toggle('hidden');
+      });
+
+      document.addEventListener('click', function (event) {
+        var dropdown = document.getElementById('userDropdownMenu');
+        var button = document.getElementById('userDropdownBtn');
+
+        if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+          dropdown.classList.add('hidden');
+        }
+      });
     </script>
   </body>
 </html>

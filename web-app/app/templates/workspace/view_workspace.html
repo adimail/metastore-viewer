@@ -4,19 +4,19 @@
 
 <div class="flex justify-between items-center mb-4">
   <h2 class="text-3xl font-bold text-gray-800">
-    Workspace <i class="fas fa-chevron-right scale-75"></i> {{ workspace.name }}
+    <a href="/my_workspaces">My Workspaces</a> <i class="fas fa-chevron-right scale-75"></i> {{ workspace.name }}
   </h2>
   <div class="flex space-x-3">
     <a href="{{ url_for('workspace.update_workspace', workspace_id=workspace.id) }}" 
-       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition">
+       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2  font-medium transition">
       <i class="fas fa-edit"></i> Update
     </a>
     <a href="{{ url_for('workspace.disable_workspace', workspace_id=workspace.id) }}" 
-       class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg font-medium transition">
+       class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2  font-medium transition">
       <i class="fas fa-ban"></i> Disable
     </a>
     <a href="{{ url_for('workspace.delete_workspace', workspace_id=workspace.id) }}" 
-       class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition">
+       class="bg-red-600 hover:bg-red-700 text-white px-4 py-2  font-medium transition">
       <i class="fas fa-trash"></i> Delete
     </a>
   </div>
@@ -77,7 +77,7 @@
 
 <h3 class="text-2xl font-semibold text-gray-800 mt-6 mb-4">Members</h3>
 {% if members %}
-  <div class="bg-gray-100 p-4 rounded-lg">
+  <div class="bg-gray-100 p-4 ">
     <ul class="divide-y divide-gray-300">
       {% for member in members %}
         <li class="py-2">
@@ -93,8 +93,13 @@
 
 <div class="mt-6 flex space-x-4">
   <a href="{{ url_for('workspace.add_member', workspace_id=workspace.id) }}" 
-      class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-lg font-medium transition shadow">
-    + Add Member
+      class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3  text-lg font-medium transition shadow flex items-center">
+    <i class="fas fa-user-plus mr-2"></i> Add Member
+  </a>
+  
+  <a href="{{ url_for('settings.workspace_settings', workspace_id=workspace.id) }}" 
+      class="bg-green-600 hover:bg-green-700 text-white px-6 py-3  text-lg font-medium transition shadow flex items-center">
+    <i class="fas fa-cog mr-2"></i> Edit Workspace
   </a>
 </div>
 {% endblock %}
