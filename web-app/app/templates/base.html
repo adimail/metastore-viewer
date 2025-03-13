@@ -3,24 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>{% block title %}Metastore Viewer for Lakehouse Tables on Object Stores{% endblock %}</title>
+
+    <!-- SEO Metadata -->
+    <meta name="description" content="Metastore Viewer for Lakehouse Tables on Object Stores - Explore, Query, and Compare metadata efficiently." />
+    <meta name="keywords" content="Metastore, Data Lakehouse, Object Storage, Query Editor, Metadata Comparison, SQL, Data Engineering" />
+    <meta name="author" content="Aditya Godse, Parth Lhase, Prajwal Kumbhar, Rohit Kshirsagar" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://yourwebsite.com/" />
+
+    <!-- Open Graph (Facebook, LinkedIn) -->
+    <meta property="og:title" content="Metastore Viewer for Lakehouse Tables" />
+    <meta property="og:description" content="Explore and manage metadata for your Data Lakehouse tables with ease." />
+    <meta property="og:image" content="{{ url_for('static', filename='images/og-image.png') }}" />
+    <meta property="og:url" content="https://yourwebsite.com/" />
+    <meta property="og:type" content="website" />
     
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/tailwind.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/index.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
-      integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Metastore Viewer for Lakehouse Tables" />
+    <meta name="twitter:description" content="Explore, query, and compare metadata for Data Lakehouse tables." />
+    <meta name="twitter:image" content="{{ url_for('static', filename='images/og-image.png') }}" />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon-96x96.png') }}" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}" />
+    <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}" />
+
+    <!-- CSS Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     {% block head %}{% endblock %}
   </head>
   <body>
@@ -141,6 +158,9 @@
       <!-- Main content -->
       <div id="main">
         {% block content %}{% endblock %}
+        <footer>
+            <p>&copy; 2025 Aditya Godse, Parth Lhase, Rohit Kshirsagar, Prajwal Kumbhar</p>
+        </footer>
       </div>
     </div>
     
