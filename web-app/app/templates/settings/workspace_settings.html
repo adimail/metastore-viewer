@@ -138,10 +138,78 @@ block content %}
         </div>
     </form>
     <hr class="my-10" />
-    <!-- Buckets Section -->
-    <fieldset class="bg-white shadow-md rounded-lg p-6 border border-gray-100">
+    <!-- People Section -->
+    <fieldset class="bg-white shadow-md rounded-lg p-6 border border-gray-100 mt-8">
         <legend class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-            <i class="fas fa-box-open mr-2 text-blue-500"></i>Buckets
+            <i class="fas fa-users mr-2 text-blue-500"></i>People ({{
+            workspace.workspace_users | length }})
+        </legend>
+        <div class="mb-6">
+            {% if workspace.workspace_users %}
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    {% for ws_user in workspace.workspace_users %}
+                        <div class="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition duration-200 flex flex-col">
+                            <!-- Profile Image and User Info -->
+                            <div class="flex items-center space-x-4">
+                                <img src="{{ ws_user.user.profile_image if ws_user.user.profile_image else 'https://robohash.org/' + ws_user.user.username + '.png' }}"
+                                     alt="{{ ws_user.user.username }}'s Profile Picture"
+                                     class="w-16 h-16 rounded-full border-2 border-blue-500 object-cover" />
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-2">
+                                        <span class="font-medium text-gray-900 text-lg">
+                                            <i class="fas fa-user text-gray-500 mr-2"></i>{{
+                                            ws_user.user.username }}
+                                        </span>
+                                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">{{ ws_user.role | capitalize }}</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600 mt-1">Joined: {{ ws_user.joined_at.strftime("%Y-%m-%d") }}</p>
+                                </div>
+                            </div>
+                            <!-- Remove Button (for admins) -->
+                            {% set current_ws_user = workspace.workspace_users |
+                                                        selectattr('user_id', 'equalto', current_user.id) | first %}
+                            {% if
+                                current_ws_user and current_ws_user.role == 'admin' and
+                                ws_user.user_id != current_user.id %}
+                                <div class="mt-4 flex justify-end">
+                                    <form method="POST"
+                                          action="{{ url_for('workspace.remove_member', workspace_id=workspace.id, user_id=ws_user.user_id) }}">
+                                        <button type="submit"
+                                                class="text-red-600 hover:text-red-800 flex items-center text-sm font-medium"
+                                                onclick="return confirm('Are you sure you want to remove {{ ws_user.user.username }} from this workspace?');">
+                                            <i class="fas fa-trash mr-1"></i>Remove
+                                        </button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-gray-500 italic text-center py-4">
+                    <i class="fas fa-exclamation-circle mr-2"></i>No people in this
+                    workspace.
+                </p>
+            {% endif %}
+        </div>
+        {% set current_ws_user = workspace.workspace_users | selectattr('user_id',
+                'equalto', current_user.id) | first %}
+        {% if current_ws_user and
+            current_ws_user.role == 'admin' %}
+            <div>
+                <h3 class="text-md font-semibold text-gray-900 mb-2">Add New Member</h3>
+                <a href="{{ url_for('workspace.add_member', workspace_id=workspace.id) }}"
+                   class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-200">
+                    <i class="fas fa-user-plus mr-2"></i>Add Member
+                </a>
+            </div>
+        {% endif %}
+    </fieldset>
+    <!-- Buckets Section -->
+    <fieldset class="bg-white shadow-md rounded-lg p-6 border border-gray-100 mt-10">
+        <legend class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+            <i class="fas fa-box-open mr-2 text-blue-500"></i>Buckets ({{
+            workspace.buckets | length }})
         </legend>
         <div class="mb-6">
             {% if workspace.buckets %}

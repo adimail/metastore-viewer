@@ -65,8 +65,16 @@ def create_workspace():
 def view_workspace(workspace_id):
     workspace = Workspace.query.get_or_404(workspace_id)
     members = WorkspaceUser.query.filter_by(workspace_id=workspace_id).all()
+
+    owner = User.query.get_or_404(workspace.owner_id)
+    created_by = User.query.get_or_404(workspace.created_by_id)
+
     return render_template(
-        "workspace/view_workspace.html", workspace=workspace, members=members
+        "workspace/view_workspace.html",
+        workspace=workspace,
+        members=members,
+        owner=owner,
+        created_by=created_by,
     )
 
 
@@ -125,3 +133,58 @@ def disable_workspace(workspace_id):
 def delete_workspace(workspace_id):
     flash(f"Workspace {workspace_id} has been deleted (simulation).", "danger")
     return redirect(url_for("home.home"))
+
+
+@workspace_bp.route(
+    "/workspace/<int:workspace_id>/remove_member/<int:user_id>", methods=["POST"]
+)
+@login_required
+def remove_member(workspace_id, user_id):
+    try:
+        # Fetch the workspace
+        workspace = Workspace.query.get_or_404(workspace_id)
+
+        # Check if the current user is an admin
+        current_ws_user = WorkspaceUser.query.filter_by(
+            user_id=current_user.id, workspace_id=workspace_id
+        ).first()
+        if not current_ws_user or current_ws_user.role != "admin":
+            flash(
+                "You do not have permission to remove members from this workspace.",
+                "danger",
+            )
+            return redirect(
+                url_for("settings.workspace_settings", workspace_id=workspace_id)
+            )
+
+        # Prevent removing oneself
+        if user_id == current_user.id:
+            flash("You cannot remove yourself from the workspace.", "danger")
+            return redirect(
+                url_for("settings.workspace_settings", workspace_id=workspace_id)
+            )
+
+        # Fetch the WorkspaceUser entry to remove
+        ws_user = WorkspaceUser.query.filter_by(
+            user_id=user_id, workspace_id=workspace_id
+        ).first()
+        if not ws_user:
+            flash("User not found in this workspace.", "danger")
+            return redirect(
+                url_for("settings.workspace_settings", workspace_id=workspace_id)
+            )
+
+        # Delete the WorkspaceUser entry
+        db.session.delete(ws_user)
+        db.session.commit()
+
+        flash(
+            f"User '{ws_user.user.username}' has been removed from the workspace.",
+            "success",
+        )
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Failed to remove user: {str(e)}", "danger")
+        print(f"Error removing user {user_id} from workspace {workspace_id}: {str(e)}")
+
+    return redirect(url_for("settings.workspace_settings", workspace_id=workspace_id))

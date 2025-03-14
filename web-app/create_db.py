@@ -16,205 +16,212 @@ with app.app_context():
             username="adimail",
             password=generate_password_hash("adimail", method="pbkdf2:sha256"),
         )
-        LhaseParth2610 = User(
-            username="LhaseParth2610",
-            password=generate_password_hash("LhaseParth2610", method="pbkdf2:sha256"),
+        parth = User(
+            username="parth",
+            password=generate_password_hash("parth", method="pbkdf2:sha256"),
         )
-        prajwalkumbhar29 = User(
-            username="prajwalkumbhar29",
-            password=generate_password_hash("prajwalkumbhar29", method="pbkdf2:sha256"),
+        rohit = User(
+            username="rohit",
+            password=generate_password_hash("rohit", method="pbkdf2:sha256"),
         )
-        rohitkshirsagar19 = User(
-            username="rohitkshirsagar19",
-            password=generate_password_hash(
-                "rohitkshirsagar19", method="pbkdf2:sha256"
-            ),
+        prajwal = User(
+            username="prajwal",
+            password=generate_password_hash("prajwal", method="pbkdf2:sha256"),
         )
-        alice = User(
-            username="alice",
-            password=generate_password_hash("alice", method="pbkdf2:sha256"),
+        admin = User(
+            username="admin",
+            password=generate_password_hash("admin", method="pbkdf2:sha256"),
             global_role="admin",
         )
-        bob = User(
-            username="bob",
-            password=generate_password_hash("bob", method="pbkdf2:sha256"),
-        )
-        charlie = User(
-            username="charlie",
-            password=generate_password_hash("charlie", method="pbkdf2:sha256"),
-        )
 
-        db.session.add_all(
-            [
-                adimail,
-                LhaseParth2610,
-                prajwalkumbhar29,
-                rohitkshirsagar19,
-                alice,
-                bob,
-                charlie,
-            ]
-        )
+        db.session.add_all([adimail, parth, rohit, prajwal, admin])
         db.session.commit()
 
-        # Create Workspaces
-        workspace1 = Workspace(
-            name="DataLake",
+        # Create Main Workspace
+        main_workspace = Workspace(
+            name="COEP Inspiron Workspace",
             status="active",
             region="us-east-1",
             cloud="AWS",
             catalog="Glue",
-            clusters=3,
-            description="Centralized Data Lake for analytics",
-            trino_url="trino.aws.com",
+            clusters=4,
+            description="Primary workspace for team collaboration and data analysis",
+            trino_url="trino.mainworkspace.com",
             trino_user="admin",
-            trino_password="trino_secret",
-            owner_id=adimail.id,
-            created_by_id=alice.id,
+            trino_password="main_secret",
+            owner_id=admin.id,
+            created_by_id=admin.id,
+            created_at=datetime.datetime.utcnow(),
+            updated_on=datetime.datetime.utcnow(),
         )
 
-        workspace2 = Workspace(
-            name="MLPlatform",
-            status="active",
-            region="eu-west-1",
+        # Create Dummy Workspace (Inactive)
+        dummy_workspace = Workspace(
+            name="DummyWorkspace",
+            status="inactive",
+            region="us-west-1",
             cloud="Azure",
             catalog="Data Catalog",
-            clusters=5,
-            description="Machine Learning Platform",
-            trino_url="trino.azure.com",
-            trino_user="ml_admin",
-            trino_password="ml_secret",
-            owner_id=LhaseParth2610.id,
-            created_by_id=bob.id,
+            clusters=1,
+            description="Inactive dummy workspace for admin",
+            trino_url="trino.dummy.com",
+            trino_user="admin",
+            trino_password="dummy_secret",
+            owner_id=admin.id,
+            created_by_id=admin.id,
+            created_at=datetime.datetime.utcnow(),
+            updated_on=datetime.datetime.utcnow(),
         )
 
-        db.session.add_all([workspace1, workspace2])
+        db.session.add_all([main_workspace, dummy_workspace])
         db.session.commit()
 
-        # Create Buckets
+        # Assign Users to Main Workspace
+        ws_users = [
+            WorkspaceUser(
+                user_id=adimail.id, workspace_id=main_workspace.id, role="admin"
+            ),
+            WorkspaceUser(
+                user_id=parth.id, workspace_id=main_workspace.id, role="editor"
+            ),
+            WorkspaceUser(
+                user_id=rohit.id, workspace_id=main_workspace.id, role="editor"
+            ),
+            WorkspaceUser(
+                user_id=prajwal.id, workspace_id=main_workspace.id, role="editor"
+            ),
+            WorkspaceUser(
+                user_id=admin.id, workspace_id=main_workspace.id, role="admin"
+            ),
+        ]
+
+        # Assign Users to Dummy Workspace
+        dummy_ws_users = [
+            WorkspaceUser(
+                user_id=admin.id, workspace_id=dummy_workspace.id, role="admin"
+            ),
+            WorkspaceUser(
+                user_id=adimail.id, workspace_id=dummy_workspace.id, role="admin"
+            ),
+        ]
+
+        db.session.add_all(ws_users + dummy_ws_users)
+        db.session.commit()
+
+        # Create Buckets for Main Workspace
         bucket1 = Bucket(
-            name="datalake-raw",
+            name="main-raw-data",
             cloud_provider="AWS",
             region="us-east-1",
             endpoint_url="s3.amazonaws.com",
-            storage_access_key="ACCESS_KEY_1",
-            storage_secret_key="SECRET_KEY_1",
-            bucket_path="s3://datalake-raw",
+            storage_access_key="MAIN_ACCESS_KEY_1",
+            storage_secret_key="MAIN_SECRET_KEY_1",
+            bucket_path="s3://main-raw-data",
             status="active",
             storage_class="STANDARD",
-            workspace_id=workspace1.id,
-            total_size=1024000,
-            object_count=1500,
+            workspace_id=main_workspace.id,
+            total_size=5242880,  # 5GB
+            object_count=5000,
         )
 
         bucket2 = Bucket(
-            name="datalake-processed",
+            name="main-processed-data",
             cloud_provider="AWS",
             region="us-east-1",
             endpoint_url="s3.amazonaws.com",
-            storage_access_key="ACCESS_KEY_2",
-            storage_secret_key="SECRET_KEY_2",
-            bucket_path="s3://datalake-processed",
+            storage_access_key="MAIN_ACCESS_KEY_2",
+            storage_secret_key="MAIN_SECRET_KEY_2",
+            bucket_path="s3://main-processed-data",
             status="active",
             storage_class="STANDARD",
-            workspace_id=workspace1.id,
-            total_size=512000,
-            object_count=800,
+            workspace_id=main_workspace.id,
+            total_size=3145728,  # 3GB
+            object_count=3000,
         )
 
+        # Create Bucket for Dummy Workspace
         bucket3 = Bucket(
-            name="ml-training",
+            name="dummy-data",
             cloud_provider="Azure",
-            region="eu-west-1",
+            region="us-west-1",
             endpoint_url="azure.blob.core.windows.net",
-            storage_access_key="AZURE_ACCESS_KEY_1",
-            storage_secret_key="AZURE_SECRET_KEY_1",
-            bucket_path="azure://ml-training",
-            status="active",
+            storage_access_key="DUMMY_ACCESS_KEY",
+            storage_secret_key="DUMMY_SECRET_KEY",
+            bucket_path="azure://dummy-data",
+            status="inactive",  # Matching workspace status
             storage_class="STANDARD",
-            workspace_id=workspace2.id,
-            total_size=2048000,
-            object_count=2000,
+            workspace_id=dummy_workspace.id,
+            total_size=1048576,  # 1GB
+            object_count=1000,
         )
 
-        bucket4 = Bucket(
-            name="ml-models",
-            cloud_provider="Azure",
-            region="eu-west-1",
-            endpoint_url="azure.blob.core.windows.net",
-            storage_access_key="AZURE_ACCESS_KEY_2",
-            storage_secret_key="AZURE_SECRET_KEY_2",
-            bucket_path="azure://ml-models",
-            status="active",
-            storage_class="STANDARD",
-            workspace_id=workspace2.id,
-            total_size=768000,
-            object_count=300,
-        )
-
-        db.session.add_all([bucket1, bucket2, bucket3, bucket4])
+        db.session.add_all([bucket1, bucket2, bucket3])
         db.session.commit()
 
-        # Assign Users to Workspaces
-        workspace_user1 = WorkspaceUser(
-            user_id=adimail.id, workspace_id=workspace1.id, role="admin"
-        )
-        workspace_user2 = WorkspaceUser(
-            user_id=LhaseParth2610.id, workspace_id=workspace1.id, role="viewer"
-        )
-        workspace_user3 = WorkspaceUser(
-            user_id=prajwalkumbhar29.id, workspace_id=workspace2.id, role="admin"
-        )
-        workspace_user4 = WorkspaceUser(
-            user_id=rohitkshirsagar19.id, workspace_id=workspace2.id, role="editor"
-        )
+        # Create Multiple Tables with Data for Main Workspace
+        tables = [
+            TableMetadata(
+                workspace_id=main_workspace.id,
+                bucket_id=bucket1.id,
+                table_name="customer_transactions",
+                table_path="s3://main-raw-data/customer_transactions",
+                table_format="parquet",
+                metadata_json='{"columns": ["id", "customer_id", "amount", "date"], "num_rows": 2000000, "partitions": ["date"]}',
+                last_updated=datetime.datetime.utcnow(),
+            ),
+            TableMetadata(
+                workspace_id=main_workspace.id,
+                bucket_id=bucket1.id,
+                table_name="user_logs",
+                table_path="s3://main-raw-data/user_logs",
+                table_format="parquet",
+                metadata_json='{"columns": ["user_id", "timestamp", "action"], "num_rows": 1500000}',
+                last_updated=datetime.datetime.utcnow(),
+            ),
+            TableMetadata(
+                workspace_id=main_workspace.id,
+                bucket_id=bucket1.id,
+                table_name="product_inventory",
+                table_path="s3://main-raw-data/product_inventory",
+                table_format="delta",
+                metadata_json='{"columns": ["product_id", "name", "quantity", "price"], "num_rows": 500000}',
+                last_updated=datetime.datetime.utcnow(),
+            ),
+            TableMetadata(
+                workspace_id=main_workspace.id,
+                bucket_id=bucket2.id,
+                table_name="sales_analytics",
+                table_path="s3://main-processed-data/sales_analytics",
+                table_format="iceberg",
+                metadata_json='{"columns": ["date", "region", "sales", "profit"], "num_rows": 1000000, "partitions": ["region"]}',
+                last_updated=datetime.datetime.utcnow(),
+            ),
+            TableMetadata(
+                workspace_id=main_workspace.id,
+                bucket_id=bucket2.id,
+                table_name="customer_insights",
+                table_path="s3://main-processed-data/customer_insights",
+                table_format="hudi",
+                metadata_json='{"columns": ["customer_id", "segment", "lifetime_value"], "num_rows": 800000, "update_strategy": "merge"}',
+                last_updated=datetime.datetime.utcnow(),
+            ),
+            TableMetadata(
+                workspace_id=main_workspace.id,
+                bucket_id=bucket2.id,
+                table_name="daily_metrics",
+                table_path="s3://main-processed-data/daily_metrics",
+                table_format="parquet",
+                metadata_json='{"columns": ["date", "views", "clicks", "conversions"], "num_rows": 1200000}',
+                last_updated=datetime.datetime.utcnow(),
+            ),
+        ]
 
-        db.session.add_all(
-            [workspace_user1, workspace_user2, workspace_user3, workspace_user4]
-        )
+        db.session.add_all(tables)
         db.session.commit()
 
-        # Create Table Metadata with Bucket Reference
-        table1 = TableMetadata(
-            workspace_id=workspace1.id,
-            bucket_id=bucket1.id,
-            table_name="customer_data",
-            table_path="s3://datalake-raw/customer_data",
-            table_format="parquet",
-            metadata_json='{"columns": ["id", "name", "email"], "num_rows": 1000000}',
+        print(
+            "Database populated successfully with COEP Inspiron Workspace and DummyWorkspace!"
         )
-
-        table2 = TableMetadata(
-            workspace_id=workspace1.id,
-            bucket_id=bucket2.id,
-            table_name="sales_records",
-            table_path="s3://datalake-processed/sales",
-            table_format="iceberg",
-            metadata_json='{"columns": ["date", "amount", "customer_id"], "partitions": ["date"]}',
-        )
-
-        table3 = TableMetadata(
-            workspace_id=workspace2.id,
-            bucket_id=bucket3.id,
-            table_name="training_data",
-            table_path="azure://ml-training/data",
-            table_format="delta",
-            metadata_json='{"version": "1.0", "columns": ["feature1", "feature2", "label"]}',
-        )
-
-        table4 = TableMetadata(
-            workspace_id=workspace2.id,
-            bucket_id=bucket4.id,
-            table_name="model_metadata",
-            table_path="azure://ml-models/metadata",
-            table_format="hudi",
-            metadata_json='{"columns": ["model_id", "accuracy", "timestamp"], "update_strategy": "merge"}',
-        )
-
-        db.session.add_all([table1, table2, table3, table4])
-        db.session.commit()
-
-        print("Database populated successfully!")
 
     except Exception as e:
         db.session.rollback()
