@@ -7,46 +7,46 @@ content %}
 
   {% if workspaces %}
   <!-- Grid Layout for Workspaces -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    {% for ws in workspaces %}
-    <div
-      class="bg-gray-100 shadow-lg p-6 transition hover:shadow-xl border-l-4 {% if ws.status == 'active' %} border-green-500 {% else %} border-red-500 {% endif %}"
-    >
-      <a
-        href="{{ url_for('workspace.view_workspace', workspace_id=ws.id) }}"
-        class="block"
-      >
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-xl font-semibold text-gray-800">
-            <i class="fas fa-folder-open text-blue-500 mr-2"></i> {{ ws.name }}
-          </h3>
-          <span
-            class="text-sm px-3 py-1 rounded-full font-medium {% if ws.status == 'active' %} bg-green-100 text-green-600 {% else %} bg-red-100 text-red-600 {% endif %}"
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {% for ws in workspaces %}
+        <div
+          class="bg-gray-100 shadow-lg p-6 transition hover:shadow-xl border-l-4 {% if ws.status == 'active' %} border-green-500 {% else %} border-red-500 {% endif %}"
+        >
+          <a
+            href="{{ url_for('workspace.view_workspace', workspace_id=ws.id) }}"
+            class="block"
           >
-            {{ ws.status | capitalize }}
-          </span>
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-xl font-semibold text-gray-800">
+                <i class="fas fa-folder-open text-blue-500 mr-2"></i> {{ ws.name }}
+              </h3>
+              <span
+                class="text-sm px-3 py-1 rounded-full font-medium {% if ws.status == 'active' %} bg-green-100 text-green-600 {% else %} bg-red-100 text-red-600 {% endif %}"
+              >
+                {{ ws.status | capitalize }}
+              </span>
+            </div>
+            <p class="text-gray-600 text-sm mb-2">
+              <i class="fas fa-globe text-gray-500 mr-2"></i>
+              <strong>Region:</strong> {{ ws.region }}
+            </p>
+            <p class="text-gray-600 text-sm mb-2">
+              <i class="fas fa-cloud text-gray-500 mr-2"></i>
+              <strong>Cloud:</strong> {{ ws.cloud }}
+            </p>
+            <p class="text-gray-600 text-sm">
+              <i class="fas fa-clock text-gray-500 mr-2"></i>
+              <strong>Last Updated:</strong> {{ ws.updated_on.strftime('%b %d, %Y')
+              }}
+            </p>
+          </a>
         </div>
-        <p class="text-gray-600 text-sm mb-2">
-          <i class="fas fa-globe text-gray-500 mr-2"></i>
-          <strong>Region:</strong> {{ ws.region }}
-        </p>
-        <p class="text-gray-600 text-sm mb-2">
-          <i class="fas fa-cloud text-gray-500 mr-2"></i>
-          <strong>Cloud:</strong> {{ ws.cloud }}
-        </p>
-        <p class="text-gray-600 text-sm">
-          <i class="fas fa-clock text-gray-500 mr-2"></i>
-          <strong>Last Updated:</strong> {{ ws.updated_on.strftime('%b %d, %Y')
-          }}
-        </p>
-      </a>
+      {% endfor %}
     </div>
-    {% endfor %}
-  </div>
   {% else %}
-  <p class="text-gray-600 text-lg">
-    You are not a member of any workspaces yet.
-  </p>
+    <p class="text-gray-600 text-lg">
+      You are not a member of any workspaces yet.
+    </p>
   {% endif %}
 
   <!-- Create Workspace Button -->

@@ -8,36 +8,36 @@ block content %}
 
   <!-- Workspace Metadata -->
   {% if bucket.workspace %}
-  <div class="bg-gray-50 p-6 shadow-md mb-6">
-    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Workspace Details</h2>
-    <div class="grid grid-cols-2 gap-4 text-gray-700">
-      <div>
-        <strong class="text-gray-900">Workspace:</strong>
-        <a
-          href="{{ url_for('workspace.view_workspace', workspace_id=bucket.workspace.id) }}"
-          class="text-blue-600 hover:underline"
-        >
-          {{ bucket.workspace.name }}
-        </a>
-      </div>
-      <div>
-        <strong class="text-gray-900">Region:</strong> {{
-        bucket.workspace.region }}
-      </div>
-      <div>
-        <strong class="text-gray-900">Cloud Provider:</strong> {{
-        bucket.workspace.cloud }}
-      </div>
-      <div>
-        <strong class="text-gray-900">Status:</strong>
-        <span
-          class="px-2 py-1 text-white {% if bucket.workspace.status == 'active' %}bg-green-500{% else %}bg-red-500{% endif %}"
-        >
-          {{ bucket.workspace.status }}
-        </span>
+    <div class="bg-gray-50 p-6 shadow-md mb-6">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Workspace Details</h2>
+      <div class="grid grid-cols-2 gap-4 text-gray-700">
+        <div>
+          <strong class="text-gray-900">Workspace:</strong>
+          <a
+            href="{{ url_for('workspace.view_workspace', workspace_id=bucket.workspace.id) }}"
+            class="text-blue-600 hover:underline"
+          >
+            {{ bucket.workspace.name }}
+          </a>
+        </div>
+        <div>
+          <strong class="text-gray-900">Region:</strong> {{
+          bucket.workspace.region }}
+        </div>
+        <div>
+          <strong class="text-gray-900">Cloud Provider:</strong> {{
+          bucket.workspace.cloud }}
+        </div>
+        <div>
+          <strong class="text-gray-900">Status:</strong>
+          <span
+            class="px-2 py-1 text-white {% if bucket.workspace.status == 'active' %}bg-green-500{% else %}bg-red-500{% endif %}"
+          >
+            {{ bucket.workspace.status }}
+          </span>
+        </div>
       </div>
     </div>
-  </div>
   {% endif %}
 
   <!-- Bucket Metadata -->
@@ -90,50 +90,50 @@ block content %}
     </h2>
 
     {% if bucket.tables %}
-    <ul class="space-y-3">
-      {% for tbl in bucket.tables %}
-      <li
-        class="bg-white p-4 shadow-md hover:shadow-lg transition duration-200 rounded"
-      >
-        <details class="group">
-          <summary
-            class="cursor-pointer font-semibold text-blue-600 group-open:text-blue-800 flex justify-between items-center"
+      <ul class="space-y-3">
+        {% for tbl in bucket.tables %}
+          <li
+            class="bg-white p-4 shadow-md hover:shadow-lg transition duration-200 rounded"
           >
-            <span
-              >📁 {{ tbl.table_name }}
-              <span class="text-sm text-gray-500"
-                >({{ tbl.table_format }})</span
-              ></span
-            >
-            <span
-              class="text-gray-500 group-open:rotate-90 transition-transform"
-              >▶</span
-            >
-          </summary>
-          <ul class="ml-6 mt-3 space-y-2 text-gray-700">
-            <li>
-              <strong>Path:</strong>
-              <span class="text-gray-600">{{ tbl.table_path }}</span>
-            </li>
-            <li>
-              <strong>Metadata:</strong>
-              <span class="text-gray-600"
-                >{{ tbl.metadata_json[:100] }}...</span
+            <details class="group">
+              <summary
+                class="cursor-pointer font-semibold text-blue-600 group-open:text-blue-800 flex justify-between items-center"
               >
-            </li>
-            <li>
-              <strong>Last Updated:</strong>
-              <span class="text-gray-600"
-                >{{ tbl.last_updated.strftime('%Y-%m-%d %H:%M') }}</span
-              >
-            </li>
-          </ul>
-        </details>
-      </li>
-      {% endfor %}
-    </ul>
+                <span
+                >📁 {{ tbl.table_name }}
+                  <span class="text-sm text-gray-500"
+                  >({{ tbl.table_format }})</span
+                    ></span
+                    >
+                    <span
+                      class="text-gray-500 group-open:rotate-90 transition-transform"
+                    >▶</span
+                      >
+                    </summary>
+                    <ul class="ml-6 mt-3 space-y-2 text-gray-700">
+                      <li>
+                        <strong>Path:</strong>
+                        <span class="text-gray-600">{{ tbl.table_path }}</span>
+                      </li>
+                      <li>
+                        <strong>Metadata:</strong>
+                        <span class="text-gray-600"
+                        >{{ tbl.metadata_json[:100] }}...</span
+                          >
+                        </li>
+                        <li>
+                          <strong>Last Updated:</strong>
+                          <span class="text-gray-600"
+                          >{{ tbl.last_updated.strftime('%Y-%m-%d %H:%M') }}</span
+                            >
+                          </li>
+                        </ul>
+                      </details>
+                    </li>
+        {% endfor %}
+      </ul>
     {% else %}
-    <p class="text-gray-500">No tables found in this bucket.</p>
+      <p class="text-gray-500">No tables found in this bucket.</p>
     {% endif %}
   </div>
 </div>

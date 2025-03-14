@@ -105,14 +105,14 @@ content %}
           </td>
         </tr>
         {% if workspace.description %}
-        <tr>
-          <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
-            Description
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-gray-700">
-            {{ workspace.description }}
-          </td>
-        </tr>
+          <tr>
+            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
+              Description
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-gray-700">
+              {{ workspace.description }}
+            </td>
+          </tr>
         {% endif %}
       </tbody>
     </table>
@@ -120,18 +120,18 @@ content %}
 
   <h3 class="text-2xl font-semibold text-gray-800 mt-6 mb-4">Members</h3>
   {% if members %}
-  <div class="bg-gray-100 p-4">
-    <ul class="divide-y divide-gray-300">
-      {% for member in members %}
-      <li class="py-2">
-        <span class="font-medium">{{ member.user.username }}</span> -
-        <span class="text-gray-600">{{ member.role }}</span>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
+    <div class="bg-gray-100 p-4">
+      <ul class="divide-y divide-gray-300">
+        {% for member in members %}
+          <li class="py-2">
+            <span class="font-medium">{{ member.user.username }}</span> -
+            <span class="text-gray-600">{{ member.role }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
   {% else %}
-  <p class="text-gray-600">No members added yet.</p>
+    <p class="text-gray-600">No members added yet.</p>
   {% endif %}
 
   <div class="mt-6 flex space-x-4">
