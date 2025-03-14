@@ -5,6 +5,7 @@ endblock %} {% block head %} {{ super() }}
   href="{{ url_for('static', filename='css/auth.css') }}"
 />
 {% endblock %} {% block content %}
+<div>
 <div class="auth-container">
   <h2>Login</h2>
   <form method="POST" action="{{ url_for('auth.login') }}">
@@ -20,5 +21,6 @@ endblock %} {% block head %} {{ super() }}
   </div>
 
   <img src="{{ url_for('static', filename='img/login.jpeg') }}">
+</div>
 </div>
 {% endblock %}

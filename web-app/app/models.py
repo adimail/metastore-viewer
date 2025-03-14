@@ -30,13 +30,10 @@ class Workspace(db.Model):
     clusters = db.Column(db.Integer, nullable=True)
     description = db.Column(db.Text, nullable=True)
 
-    # New fields for object store & Trino settings
-    endpoint_url = db.Column(
-        db.String(255), nullable=True
-    )  # e.g. s3.amazonaws.com or custom endpoint
+    # Object Store Details (Now moved to Bucket model)
+    endpoint_url = db.Column(db.String(255), nullable=True)
     storage_access_key = db.Column(db.String(255), nullable=True)
     storage_secret_key = db.Column(db.String(255), nullable=True)
-    default_bucket_name = db.Column(db.String(255), nullable=True)
 
     trino_url = db.Column(db.String(255), nullable=True)
     trino_user = db.Column(db.String(255), nullable=True)
@@ -54,6 +51,7 @@ class Workspace(db.Model):
         onupdate=db.func.current_timestamp(),
     )
 
+    # Relationships
     owner = db.relationship("User", foreign_keys=[owner_id])
     created_by = db.relationship("User", foreign_keys=[created_by_id])
     workspace_users = db.relationship(
@@ -62,6 +60,9 @@ class Workspace(db.Model):
     tables = db.relationship(
         "TableMetadata", back_populates="workspace", cascade="all, delete-orphan"
     )
+    buckets = db.relationship(
+        "Bucket", back_populates="workspace", cascade="all, delete-orphan"
+    )  # New relationship
 
     def __repr__(self):
         return f"<Workspace {self.name}>"
@@ -87,6 +88,7 @@ class TableMetadata(db.Model):
     __tablename__ = "table_metadata"
     id = db.Column(db.Integer, primary_key=True)
     workspace_id = db.Column(db.Integer, db.ForeignKey("workspaces.id"), nullable=False)
+    bucket_id = db.Column(db.Integer, db.ForeignKey('buckets.id'), nullable=False)
     table_name = db.Column(db.String(255), nullable=False)
     table_path = db.Column(db.String(512), nullable=False)  # e.g., s3://my-bucket/path
     table_format = db.Column(
@@ -107,6 +109,28 @@ class TableMetadata(db.Model):
     )
 
     workspace = db.relationship("Workspace", back_populates="tables")
+    bucket = db.relationship("Bucket", back_populates="tables")
 
     def __repr__(self):
         return f"<TableMetadata {self.table_name} ({self.table_format})>"
+
+
+class Bucket(db.Model):
+    __tablename__ = "buckets"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False, unique=True)
+    cloud_provider = db.Column(db.String(50), nullable=False)
+    region = db.Column(db.String(100), nullable=False)
+    status = db.Column(db.String(50), nullable=False, default="active")
+    storage_class = db.Column(db.String(50), nullable=False, default="STANDARD")
+    total_size = db.Column(db.BigInteger, default=0)
+    object_count = db.Column(db.BigInteger, default=0)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_on = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+    
+    workspace_id = db.Column(db.Integer, db.ForeignKey("workspaces.id"), nullable=False)
+    workspace = db.relationship("Workspace", back_populates="buckets")
+    tables = db.relationship("TableMetadata", back_populates="bucket", cascade="all, delete-orphan")
+
+    def __repr__(self):
+        return f"<Bucket {self.name} ({self.cloud_provider})>"

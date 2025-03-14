@@ -109,23 +109,23 @@
             <i class="fas fa-home"></i>
             <span class="link-text">Home</span>
         </a>
-        <a href="/explorer" data-title="Bucket Explorer" class="{% if request.path == '/explorer' %}active-link{% endif %}">
+        <a href="/explorer" data-title="Bucket Explorer" class="{% if request.path.startswith('/explorer') %}active-link{% endif %}">
             <i class="fas fa-box"></i>
             <span class="link-text">Bucket Explorer</span>
         </a>
-        <a href="/query-editor" data-title="Query Editor" class="{% if request.path == '/query-editor' %}active-link{% endif %}">
+        <a href="/query-editor" data-title="Query Editor" class="{% if request.path.startswith('/query-editor') %}active-link{% endif %}">
             <i class="fas fa-code"></i>
             <span class="link-text">Query Editor</span>
         </a>
-        <a href="/metadata" data-title="Metadata Comparison" class="{% if request.path == '/metadata' %}active-link{% endif %}">
+        <a href="/metadata" data-title="Metadata Comparison" class="{% if request.path.startswith('/metadata') %}active-link{% endif %}">
             <i class="fas fa-table"></i>
             <span class="link-text">Metadata tables</span>
         </a>
-        <a href="/metadata/compare" data-title="Metadata Comparison" class="{% if request.path == '/metadata/compare' %}active-link{% endif %}">
+        <a href="/compare-metatables" data-title="Metadata Comparison" class="{% if request.path.startswith('/compare-metatables') %}active-link{% endif %}">
             <i class="fas fa-table"></i>
             <span class="link-text">Metadata Comparison</span>
         </a>
-        <a href="/settings" data-title="Settings" class="{% if request.path == '/settings' %}active-link{% endif %}">
+        <a href="/settings" data-title="Settings" class="{% if request.path.startswith('/settings') %}active-link{% endif %}">
             <i class="fas fa-cog"></i>
             <span class="link-text">Settings</span>
         </a>

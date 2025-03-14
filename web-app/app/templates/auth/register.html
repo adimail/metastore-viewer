@@ -5,6 +5,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
 {% endblock %}
 {% block content %}
+<div>
 <div class="auth-container">
   <h2>Register</h2>
   <form method="POST" action="{{ url_for('auth.register') }}">
@@ -25,5 +26,6 @@
     </p>
   </div>
   <img src="{{ url_for('static', filename='img/register.jpeg') }}" alt="Register">
+</div>
 </div>
 {% endblock %}

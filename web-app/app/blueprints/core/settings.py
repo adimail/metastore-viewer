@@ -105,7 +105,6 @@ def workspace_settings(workspace_id):
         workspace.endpoint_url = request.form.get("endpoint_url", workspace.endpoint_url)
         workspace.storage_access_key = request.form.get("storage_access_key", workspace.storage_access_key)
         workspace.storage_secret_key = request.form.get("storage_secret_key", workspace.storage_secret_key)
-        workspace.default_bucket_name = request.form.get("default_bucket_name", workspace.default_bucket_name)
         
         workspace.trino_url = request.form.get("trino_url", workspace.trino_url)
         workspace.trino_user = request.form.get("trino_user", workspace.trino_user)

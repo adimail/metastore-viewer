@@ -2,6 +2,7 @@
 {% block title %}View Workspace{% endblock %}
 {% block content %}
 
+<div>
 <div class="flex justify-between items-center mb-4">
   <h2 class="text-3xl font-bold text-gray-800">
     <a href="/my_workspaces">My Workspaces</a> <i class="fas fa-chevron-right scale-75"></i> {{ workspace.name }}
@@ -101,5 +102,6 @@
       class="bg-green-600 hover:bg-green-700 text-white px-6 py-3  text-lg font-medium transition shadow flex items-center">
     <i class="fas fa-cog mr-2"></i> Edit Workspace
   </a>
+</div>
 </div>
 {% endblock %}

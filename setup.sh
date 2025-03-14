@@ -2,6 +2,12 @@
 
 set -e
 
+if [[ "$1" == "db" ]]; then
+    echo "Running create_db.py..."
+    python3 web-app/create_db.py
+    exit 0
+fi
+
 echo "Setting up the environment..."
 
 if [ ! -d ".venv" ]; then

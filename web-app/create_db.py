@@ -1,9 +1,8 @@
 from app.extensions import db
-from app.models import User, Workspace, WorkspaceUser, TableMetadata
+from app.models import User, Workspace, WorkspaceUser, TableMetadata, Bucket
 from werkzeug.security import generate_password_hash
 import datetime
 
-# Create a Flask application context
 from app import create_app
 
 app = create_app()
@@ -24,7 +23,7 @@ with app.app_context():
         charlie = User(username="charlie", password=generate_password_hash("charlie", method="pbkdf2:sha256"))
 
         db.session.add_all([adimail, LhaseParth2610, prajwalkumbhar29, rohitkshirsagar19, alice, bob, charlie])
-        db.session.commit()  # Commit to generate IDs
+        db.session.commit()
 
         # Create Workspaces
         workspace1 = Workspace(
@@ -38,7 +37,6 @@ with app.app_context():
             endpoint_url="s3.amazonaws.com",
             storage_access_key="ACCESS_KEY",
             storage_secret_key="SECRET_KEY",
-            default_bucket_name="datalake-bucket",
             trino_url="trino.aws.com",
             trino_user="admin",
             trino_password="trino_secret",
@@ -59,7 +57,6 @@ with app.app_context():
             endpoint_url="azure.blob.core.windows.net",
             storage_access_key="AZURE_ACCESS_KEY",
             storage_secret_key="AZURE_SECRET_KEY",
-            default_bucket_name="ml-data",
             trino_url="trino.azure.com",
             trino_user="ml_admin",
             trino_password="ml_secret",
@@ -70,7 +67,14 @@ with app.app_context():
         )
 
         db.session.add_all([workspace1, workspace2])
-        db.session.commit()  # Commit to generate IDs
+        db.session.commit()
+
+        # Create Buckets
+        bucket1 = Bucket(name="datalake-bucket", cloud_provider="AWS", region="us-east-1", workspace_id=workspace1.id)
+        bucket2 = Bucket(name="ml-data", cloud_provider="Azure", region="eu-west-1", workspace_id=workspace2.id)
+
+        db.session.add_all([bucket1, bucket2])
+        db.session.commit()
 
         # Assign Users to Workspaces
         workspace_user1 = WorkspaceUser(user_id=adimail.id, workspace_id=workspace1.id, role="admin")
@@ -81,9 +85,10 @@ with app.app_context():
         db.session.add_all([workspace_user1, workspace_user2, workspace_user3, workspace_user4])
         db.session.commit()
 
-        # Create Table Metadata for Workspaces
+        # Create Table Metadata with Bucket Reference
         table1 = TableMetadata(
             workspace_id=workspace1.id,
+            bucket_id=bucket1.id,
             table_name="customer_data",
             table_path="s3://datalake-bucket/customer_data",
             table_format="parquet",
@@ -92,6 +97,7 @@ with app.app_context():
 
         table2 = TableMetadata(
             workspace_id=workspace1.id,
+            bucket_id=bucket1.id,
             table_name="sales_records",
             table_path="s3://datalake-bucket/sales",
             table_format="iceberg",
@@ -100,6 +106,7 @@ with app.app_context():
 
         table3 = TableMetadata(
             workspace_id=workspace2.id,
+            bucket_id=bucket2.id,
             table_name="ml_models",
             table_path="azure://ml-data/models",
             table_format="delta",
@@ -108,6 +115,7 @@ with app.app_context():
 
         table4 = TableMetadata(
             workspace_id=workspace2.id,
+            bucket_id=bucket2.id,
             table_name="training_data",
             table_path="azure://ml-data/training",
             table_format="hudi",
