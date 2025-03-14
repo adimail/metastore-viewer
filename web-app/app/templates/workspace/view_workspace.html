@@ -115,6 +115,10 @@
                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md font-medium transition duration-200 shadow-md flex items-center justify-center">
                     <i class="fas fa-user-plus mr-2"></i>Add Member
                 </a>
+                <a href="{{ url_for('settings.add_bucket', workspace_id=workspace.id) }}"
+                   class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-md font-medium transition duration-200 shadow-md flex items-center justify-center">
+                    <i class="fas fa-database mr-2"></i>Add Datasource
+                </a>
                 <a href="{{ url_for('settings.workspace_settings', workspace_id=workspace.id) }}"
                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-md font-medium transition duration-200 shadow-md flex items-center justify-center">
                     <i class="fas fa-cog mr-2"></i>Edit Workspace Settings

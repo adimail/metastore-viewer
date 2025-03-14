@@ -10,6 +10,11 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150), nullable=False)
     global_role = db.Column(db.String(50), default="user")
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    updated_on = db.Column(
+        db.DateTime,
+        default=db.func.current_timestamp(),
+        onupdate=db.func.current_timestamp(),
+    )
 
     workspaces = db.relationship(
         "WorkspaceUser", back_populates="user", cascade="all, delete-orphan"
