@@ -1,10 +1,12 @@
-{% extends "base.html" %} {% block title %}Admin{% endblock %} {% block content
-%}
-<div class="admin">
-  <h2>This is only visible to admins</h2>
-  <p>
-    If you are logged in and your role is 'admin', you will see this page.
-    Otherwise, you will be shown a 403 error.
-  </p>
-</div>
+{% extends "base.html" %}
+{% block title %}Admin{% endblock %}
+{% block content
+    %}
+    <div class="admin">
+        <h2>This is only visible to admins</h2>
+        <p>
+            If you are logged in and your role is 'admin', you will see this page.
+            Otherwise, you will be shown a 403 error.
+        </p>
+    </div>
 {% endblock %}

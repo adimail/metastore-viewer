@@ -1,153 +1,100 @@
-{% extends "base.html" %} {% block title %}View Workspace{% endblock %} {% block
-content %}
-
-<div>
-  <div class="flex justify-between items-center mb-4">
-    <h2 class="text-3xl font-bold text-gray-800">
-      <a href="/my_workspaces">My Workspaces</a>
-      <i class="fas fa-chevron-right scale-75"></i> {{ workspace.name }}
-    </h2>
-    <div class="flex space-x-3">
-      <a
-        href="{{ url_for('workspace.update_workspace', workspace_id=workspace.id) }}"
-        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 font-medium transition"
-      >
-        <i class="fas fa-edit"></i> Update
-      </a>
-      <a
-        href="{{ url_for('workspace.disable_workspace', workspace_id=workspace.id) }}"
-        class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 font-medium transition"
-      >
-        <i class="fas fa-ban"></i> Disable
-      </a>
-      <a
-        href="{{ url_for('workspace.delete_workspace', workspace_id=workspace.id) }}"
-        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 font-medium transition"
-      >
-        <i class="fas fa-trash"></i> Delete
-      </a>
-    </div>
-  </div>
-
-  <div class="border-t border-gray-200 pt-4 truncate">
-    <table class="min-w-full divide-y divide-gray-200">
-      <tbody class="bg-white divide-y divide-gray-200">
-        <tr>
-          <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
-            Status
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-gray-700">
-            {{ workspace.status }}
-          </td>
-        </tr>
-        <tr>
-          <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
-            Region
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-gray-700">
-            {{ workspace.region }}
-          </td>
-        </tr>
-        <tr>
-          <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
-            Cloud
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-gray-700">
-            {{ workspace.cloud }}
-          </td>
-        </tr>
-        <tr>
-          <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
-            Catalog
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-gray-700">
-            {{ workspace.catalog }}
-          </td>
-        </tr>
-        <tr>
-          <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
-            Clusters
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-gray-700">
-            {{ workspace.clusters }}
-          </td>
-        </tr>
-        <tr>
-          <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
-            Owner
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-gray-700">
-            {{ workspace.owner_name }}
-          </td>
-        </tr>
-        <tr>
-          <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
-            Created By
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-gray-700">
-            {{ workspace.created_by_name }}
-          </td>
-        </tr>
-        <tr>
-          <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
-            Created At
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-gray-700">
-            {{ workspace.created_at }}
-          </td>
-        </tr>
-        <tr>
-          <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
-            Updated On
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-gray-700">
-            {{ workspace.updated_on }}
-          </td>
-        </tr>
-        {% if workspace.description %}
-          <tr>
-            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
-              Description
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-gray-700">
-              {{ workspace.description }}
-            </td>
-          </tr>
+{% extends "base.html" %}
+{% block title %}View Workspace{% endblock %}
+{% block
+    content %}
+    <div>
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-3xl font-bold text-gray-800">
+                <a href="/my_workspaces">My Workspaces</a>
+                <i class="fas fa-chevron-right scale-75"></i> {{ workspace.name }}
+            </h2>
+            <div class="flex space-x-3">
+                <a href="{{ url_for('workspace.update_workspace', workspace_id=workspace.id) }}"
+                   class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 font-medium transition">
+                    <i class="fas fa-edit"></i> Update
+                </a>
+                <a href="{{ url_for('workspace.disable_workspace', workspace_id=workspace.id) }}"
+                   class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 font-medium transition">
+                    <i class="fas fa-ban"></i> Disable
+                </a>
+                <a href="{{ url_for('workspace.delete_workspace', workspace_id=workspace.id) }}"
+                   class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 font-medium transition">
+                    <i class="fas fa-trash"></i> Delete
+                </a>
+            </div>
+        </div>
+        <div class="border-t border-gray-200 pt-4 truncate">
+            <table class="min-w-full divide-y divide-gray-200">
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Status</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ workspace.status }}</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Region</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ workspace.region }}</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Cloud</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ workspace.cloud }}</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Catalog</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ workspace.catalog }}</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Clusters</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ workspace.clusters }}</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Owner</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ workspace.owner_name }}</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Created By</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ workspace.created_by_name }}</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Created At</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ workspace.created_at }}</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Updated On</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ workspace.updated_on }}</td>
+                    </tr>
+                    {% if workspace.description %}
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Description</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-700">{{ workspace.description }}</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        <h3 class="text-2xl font-semibold text-gray-800 mt-6 mb-4">Members</h3>
+        {% if members %}
+            <div class="bg-gray-100 p-4">
+                <ul class="divide-y divide-gray-300">
+                    {% for member in members %}
+                        <li class="py-2">
+                            <span class="font-medium">{{ member.user.username }}</span> -
+                            <span class="text-gray-600">{{ member.role }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% else %}
+            <p class="text-gray-600">No members added yet.</p>
         {% endif %}
-      </tbody>
-    </table>
-  </div>
-
-  <h3 class="text-2xl font-semibold text-gray-800 mt-6 mb-4">Members</h3>
-  {% if members %}
-    <div class="bg-gray-100 p-4">
-      <ul class="divide-y divide-gray-300">
-        {% for member in members %}
-          <li class="py-2">
-            <span class="font-medium">{{ member.user.username }}</span> -
-            <span class="text-gray-600">{{ member.role }}</span>
-          </li>
-        {% endfor %}
-      </ul>
+        <div class="mt-6 flex space-x-4">
+            <a href="{{ url_for('workspace.add_member', workspace_id=workspace.id) }}"
+               class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 text-lg font-medium transition shadow flex items-center">
+                <i class="fas fa-user-plus mr-2"></i> Add Member
+            </a>
+            <a href="{{ url_for('settings.workspace_settings', workspace_id=workspace.id) }}"
+               class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 text-lg font-medium transition shadow flex items-center">
+                <i class="fas fa-cog mr-2"></i> Edit Workspace
+            </a>
+        </div>
     </div>
-  {% else %}
-    <p class="text-gray-600">No members added yet.</p>
-  {% endif %}
-
-  <div class="mt-6 flex space-x-4">
-    <a
-      href="{{ url_for('workspace.add_member', workspace_id=workspace.id) }}"
-      class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 text-lg font-medium transition shadow flex items-center"
-    >
-      <i class="fas fa-user-plus mr-2"></i> Add Member
-    </a>
-
-    <a
-      href="{{ url_for('settings.workspace_settings', workspace_id=workspace.id) }}"
-      class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 text-lg font-medium transition shadow flex items-center"
-    >
-      <i class="fas fa-cog mr-2"></i> Edit Workspace
-    </a>
-  </div>
-</div>
 {% endblock %}

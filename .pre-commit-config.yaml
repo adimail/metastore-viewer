@@ -1,17 +1,17 @@
 repos:
   - repo: https://github.com/psf/black
-    rev: 24.2.0
+    rev: 25.1.0
     hooks:
       - id: black
 
-  - repo: https://github.com/rtts/djhtml
-    rev: 3.0.7
+  - repo: https://github.com/Riverside-Healthcare/djLint
+    rev: v1.36.4
     hooks:
-      - id: djhtml
+      - id: djlint
+        args: ["--reformat", "--profile=jinja"]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
-      - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: mixed-line-ending
