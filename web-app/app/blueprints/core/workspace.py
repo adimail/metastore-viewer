@@ -94,16 +94,16 @@ def add_member(workspace_id):
         db.session.commit()
         flash("Member added successfully!", "success")
         return redirect(url_for("workspace.view_workspace", workspace_id=workspace_id))
-    return render_template("workspace/add_member.html", workspace=workspace)
+    return render_template("settings/add_workspace_member.html", workspace=workspace)
 
 
-@workspace_bp.route("/my_workspaces")
+@workspace_bp.route("/workspace")
 @login_required
-def my_workspaces():
+def workspace():
     # current_user.workspaces is a list of WorkspaceUser entries.
     # To display the workspace details, we extract the workspace from each association.
     user_workspaces = [ws.workspace for ws in current_user.workspaces]
-    return render_template("workspace/my_workspaces.html", workspaces=user_workspaces)
+    return render_template("workspace/workspace.html", workspaces=user_workspaces)
 
 
 @workspace_bp.route("/workspace/<int:workspace_id>/update", methods=["GET", "POST"])

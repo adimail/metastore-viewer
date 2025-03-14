@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}
+    Add New member to workspace{%
+    endblock %}
+    {% block content %}
+        <div class="max-w-5xl">
+            <h1 class="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+                <a href="/settings"
+                   class="text-blue-600 hover:text-blue-800 transition duration-200">
+                    <i class="fas fa-cog mr-2"></i>Settings
+                </a>
+                <span class="mx-2 text-gray-500">/</span>
+                <a class="text-blue-600 hover:text-blue-800 transition duration-200"
+                   href="{{ url_for('settings.workspace_settings', workspace_id=workspace.id) }}">
+                    <span>Workspace: {{ workspace.name }}</span></a>
+                <span class="mx-2 text-gray-500">/</span>
+                <span>Members</span>
+                <span class="mx-2 text-gray-500">/</span>
+                <span>Add</span>
+            </h1>
+            <form method="POST"
+                  action="{{ url_for('workspace.add_member', workspace_id=workspace.id) }}"
+                  class="space-y-4">
+                <!-- Username -->
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                    <input type="text"
+                           id="username"
+                           name="username"
+                           required
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                </div>
+                <!-- Role Selection -->
+                <div>
+                    <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+                    <select id="role"
+                            name="role"
+                            required
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 bg-white shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">Select Role</option>
+                        <option value="admin">Admin</option>
+                        <option value="viewer">Viewer</option>
+                        <option value="editor">Editor</option>
+                    </select>
+                </div>
+                <!-- Submit Button -->
+                <div>
+                    <button type="submit"
+                            class="w-full bg-blue-600 text-white font-semibold py-2 px-4 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition">
+                        Add Member
+                    </button>
+                </div>
+            </form>
+            <!-- Back to Workspace Link -->
+            <div class="mt-4 text-center">
+                <a href="{{ url_for('workspace.view_workspace', workspace_id=workspace.id) }}"
+                   class="text-blue-600 hover:underline">Back to Workspace</a>
+            </div>
+        </div>
+    {% endblock %}

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from app import db
-from app.models import Workspace, WorkspaceUser, Bucket
+from app.models import Workspace, WorkspaceUser, Bucket, TableMetadata
 from werkzeug.security import generate_password_hash
 
 settings_bp = Blueprint("settings", __name__)
@@ -280,25 +280,39 @@ def edit_bucket(workspace_id, bucket_id):
 )
 @login_required
 def delete_bucket(workspace_id, bucket_id):
-    workspace = Workspace.query.get_or_404(workspace_id)
-    bucket = Bucket.query.get_or_404(bucket_id)
+    try:
+        workspace = Workspace.query.get_or_404(workspace_id)
+        bucket = Bucket.query.get_or_404(bucket_id)
 
-    ws_user = WorkspaceUser.query.filter_by(
-        user_id=current_user.id, workspace_id=workspace.id
-    ).first()
-    if not ws_user or ws_user.role not in ["admin", "editor"]:
-        flash("You do not have permission to delete this bucket.", "danger")
-        return redirect(
-            url_for("settings.workspace_settings", workspace_id=workspace.id)
+        # Debug user permissions
+        ws_user = WorkspaceUser.query.filter_by(
+            user_id=current_user.id, workspace_id=workspace.id
+        ).first()
+        print(f"User: {current_user.id}, Role: {ws_user.role if ws_user else 'None'}")
+        if not ws_user or ws_user.role not in ["admin", "editor"]:
+            flash("You do not have permission to delete this bucket.", "danger")
+            return redirect(
+                url_for("settings.workspace_settings", workspace_id=workspace.id)
+            )
+
+        print(
+            f"Bucket Workspace ID: {bucket.workspace_id}, Requested Workspace ID: {workspace_id}"
         )
+        if bucket.workspace_id != workspace_id:
+            flash("Bucket does not belong to this workspace.", "danger")
+            return redirect(
+                url_for("settings.workspace_settings", workspace_id=workspace.id)
+            )
 
-    if bucket.workspace_id != workspace_id:
-        flash("Bucket does not belong to this workspace.", "danger")
-        return redirect(
-            url_for("settings.workspace_settings", workspace_id=workspace.id)
-        )
+        tables = TableMetadata.query.filter_by(bucket_id=bucket_id).all()
+        print(f"Related tables: {len(tables)}")
 
-    db.session.delete(bucket)
-    db.session.commit()
-    flash("Bucket removed successfully.", "success")
+        db.session.delete(bucket)
+        db.session.commit()
+        flash("Bucket removed successfully.", "success")
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error deleting bucket: {str(e)}")
+        flash(f"Failed to delete bucket: {str(e)}", "danger")
+
     return redirect(url_for("settings.workspace_settings", workspace_id=workspace.id))
