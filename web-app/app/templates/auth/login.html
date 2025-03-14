@@ -1,26 +1,26 @@
-{% extends "base.html" %} {% block title %}Login - Quick Flask{%
-endblock %} {% block head %} {{ super() }}
+{% extends "base.html" %} {% block title %}Login - Quick Flask{% endblock %} {%
+block head %} {{ super() }}
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/auth.css') }}"
 />
 {% endblock %} {% block content %}
 <div>
-<div class="auth-container">
-  <h2>Login</h2>
-  <form method="POST" action="{{ url_for('auth.login') }}">
-    <input type="text" name="username" placeholder="Username" required />
-    <input type="password" name="password" placeholder="Password" required />
-    <input type="submit" class="button" value="Login" />
-  </form>
-  <div class="auth-link">
-    <p>
-      Don't have an account?
-      <a href="{{ url_for('auth.register') }}">Register here</a>
-    </p>
-  </div>
+  <div class="auth-container">
+    <h2>Login</h2>
+    <form method="POST" action="{{ url_for('auth.login') }}">
+      <input type="text" name="username" placeholder="Username" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <input type="submit" class="button" value="Login" />
+    </form>
+    <div class="auth-link">
+      <p>
+        Don't have an account?
+        <a href="{{ url_for('auth.register') }}">Register here</a>
+      </p>
+    </div>
 
-  <img src="{{ url_for('static', filename='img/login.jpeg') }}">
-</div>
+    <img src="{{ url_for('static', filename='img/login.jpeg') }}" />
+  </div>
 </div>
 {% endblock %}

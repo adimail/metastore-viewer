@@ -4,6 +4,7 @@ from app.models import db, Workspace, WorkspaceUser, Bucket
 
 explorer_bp = Blueprint("explorer", __name__)
 
+
 @explorer_bp.route("/explorer")
 @login_required
 def explorer():
@@ -23,6 +24,7 @@ def explorer():
 
     return render_template("core/explorer.html", workspaces=workspaces)
 
+
 @explorer_bp.route("/explorer/bucket/<int:bucket_id>")
 @login_required
 def view_bucket(bucket_id):
@@ -32,7 +34,9 @@ def view_bucket(bucket_id):
     bucket = Bucket.query.get_or_404(bucket_id)
 
     # Ensure the user is part of the workspace that owns this bucket
-    ws_user = WorkspaceUser.query.filter_by(user_id=current_user.id, workspace_id=bucket.workspace_id).first()
+    ws_user = WorkspaceUser.query.filter_by(
+        user_id=current_user.id, workspace_id=bucket.workspace_id
+    ).first()
     if not ws_user:
         flash("You do not have access to this bucket.", "error")
         return redirect(url_for("explorer.explorer"))

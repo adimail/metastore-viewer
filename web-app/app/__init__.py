@@ -13,11 +13,12 @@ limiter = Limiter(
     storage_uri="memory://",
 )
 
+
 def create_app():
     app = Flask(__name__)
     CORS(app)
     app.config["SECRET_KEY"] = "nqMt+o1BxO2Wkaj4ogmFtg=="
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///site.db"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["SESSION_COOKIE_HTTPONLY"] = True
     app.config["SESSION_COOKIE_SECURE"] = True
@@ -26,18 +27,19 @@ def create_app():
 
     db.init_app(app)
     login_manager = LoginManager(app)
-    login_manager.login_view = 'auth.login'
+    login_manager.login_view = "auth.login"
 
     @login_manager.user_loader
     def load_user(user_id):
         from app.models import User
+
         return User.query.get(int(user_id))
 
     @app.before_request
     def load_global_user_workspace():
         g.user = current_user if current_user.is_authenticated else None
         g.workspaces = []
-        
+
         if g.user:
             g.workspaces = (
                 db.session.query(Workspace)
@@ -54,11 +56,10 @@ def create_app():
     from app.blueprints.core.query_editor import query_editor_bp
     from app.blueprints.core.settings import settings_bp
     from app.blueprints.core.workspace import workspace_bp
-    
 
     app.register_blueprint(home_bp)
     app.register_blueprint(auth_bp)
-    app.register_blueprint(api_bp, url_prefix='/api')
+    app.register_blueprint(api_bp, url_prefix="/api")
     app.register_blueprint(admin_bp)
     app.register_blueprint(explorer_bp)
     app.register_blueprint(query_editor_bp)
@@ -81,13 +82,15 @@ def create_app():
     @app.errorhandler(404)
     @app.errorhandler(500)
     def handle_errors(error):
-        return render_template(
-            "errors/error.html",
-            error_code=error.code,
-            error_message=error.name,
-            error_description=error.description,
-        ), error.code
-
+        return (
+            render_template(
+                "errors/error.html",
+                error_code=error.code,
+                error_message=error.name,
+                error_description=error.description,
+            ),
+            error.code,
+        )
 
     @app.errorhandler(429)
     def rate_limit_exceeded(e):

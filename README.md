@@ -30,7 +30,35 @@ npx tailwindcss -i ./app/static/css/input.css -o ./app/static/css/tailwind.css -
 
 ---
 
+## Pre-commit Hook Setup
+
+To maintain code quality and enforce consistent formatting, this project uses **pre-commit hooks**. These hooks automatically format Python, Jinja, JavaScript, and TypeScript files and check for common issues.
+
+### Install and Activate Pre-commit:
+
+1. **Install the pre-commit hooks (Do it only once)**:
+
+   ```sh
+   pre-commit install
+   ```
+
+2. **Run pre-commit manually on all files (first-time setup)**:
+   ```sh
+   pre-commit run --all-files
+   ```
+
+### What Does Pre-commit Do?
+
+- Formats **Python** files using `black`
+- Formats **Jinja & HTML** files using `djhtml`
+- Formats **JavaScript & TypeScript** files using `prettier`
+- Runs **ESLint** on JS/TS files
+- Cleans up **trailing whitespace & newlines**
+
+---
+
 ## Notes
 
 - **TailwindCSS:** The provided command runs Tailwind in watch mode, automatically updating the CSS whenever changes are made to `input.css`.
 - **Server Startup:** Adjust the startup command based on your application server. The example uses either `flask run` or `python app.py` depending on your configuration.
+- **Pre-commit Hooks:** Run `pre-commit run --all-files` whenever new hooks are added or if you encounter formatting issues.

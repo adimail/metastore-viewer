@@ -12,17 +12,51 @@ with app.app_context():
 
     try:
         # Create Users
-        adimail = User(username="adimail", password=generate_password_hash("adimail", method="pbkdf2:sha256"))
-        LhaseParth2610 = User(username="LhaseParth2610", password=generate_password_hash("LhaseParth2610", method="pbkdf2:sha256"))
-        prajwalkumbhar29 = User(username="prajwalkumbhar29", password=generate_password_hash("prajwalkumbhar29", method="pbkdf2:sha256"))
-        rohitkshirsagar19 = User(username="rohitkshirsagar19", password=generate_password_hash("rohitkshirsagar19", method="pbkdf2:sha256"))
-        
-        # Additional users
-        alice = User(username="alice", password=generate_password_hash("alice", method="pbkdf2:sha256"), global_role="admin")
-        bob = User(username="bob", password=generate_password_hash("bob", method="pbkdf2:sha256"))
-        charlie = User(username="charlie", password=generate_password_hash("charlie", method="pbkdf2:sha256"))
+        adimail = User(
+            username="adimail",
+            password=generate_password_hash("adimail", method="pbkdf2:sha256"),
+        )
+        LhaseParth2610 = User(
+            username="LhaseParth2610",
+            password=generate_password_hash("LhaseParth2610", method="pbkdf2:sha256"),
+        )
+        prajwalkumbhar29 = User(
+            username="prajwalkumbhar29",
+            password=generate_password_hash("prajwalkumbhar29", method="pbkdf2:sha256"),
+        )
+        rohitkshirsagar19 = User(
+            username="rohitkshirsagar19",
+            password=generate_password_hash(
+                "rohitkshirsagar19", method="pbkdf2:sha256"
+            ),
+        )
 
-        db.session.add_all([adimail, LhaseParth2610, prajwalkumbhar29, rohitkshirsagar19, alice, bob, charlie])
+        # Additional users
+        alice = User(
+            username="alice",
+            password=generate_password_hash("alice", method="pbkdf2:sha256"),
+            global_role="admin",
+        )
+        bob = User(
+            username="bob",
+            password=generate_password_hash("bob", method="pbkdf2:sha256"),
+        )
+        charlie = User(
+            username="charlie",
+            password=generate_password_hash("charlie", method="pbkdf2:sha256"),
+        )
+
+        db.session.add_all(
+            [
+                adimail,
+                LhaseParth2610,
+                prajwalkumbhar29,
+                rohitkshirsagar19,
+                alice,
+                bob,
+                charlie,
+            ]
+        )
         db.session.commit()
 
         # Create Workspaces
@@ -70,19 +104,39 @@ with app.app_context():
         db.session.commit()
 
         # Create Buckets
-        bucket1 = Bucket(name="datalake-bucket", cloud_provider="AWS", region="us-east-1", workspace_id=workspace1.id)
-        bucket2 = Bucket(name="ml-data", cloud_provider="Azure", region="eu-west-1", workspace_id=workspace2.id)
+        bucket1 = Bucket(
+            name="datalake-bucket",
+            cloud_provider="AWS",
+            region="us-east-1",
+            workspace_id=workspace1.id,
+        )
+        bucket2 = Bucket(
+            name="ml-data",
+            cloud_provider="Azure",
+            region="eu-west-1",
+            workspace_id=workspace2.id,
+        )
 
         db.session.add_all([bucket1, bucket2])
         db.session.commit()
 
         # Assign Users to Workspaces
-        workspace_user1 = WorkspaceUser(user_id=adimail.id, workspace_id=workspace1.id, role="admin")
-        workspace_user2 = WorkspaceUser(user_id=LhaseParth2610.id, workspace_id=workspace1.id, role="viewer")
-        workspace_user3 = WorkspaceUser(user_id=prajwalkumbhar29.id, workspace_id=workspace2.id, role="admin")
-        workspace_user4 = WorkspaceUser(user_id=rohitkshirsagar19.id, workspace_id=workspace2.id, role="editor")
+        workspace_user1 = WorkspaceUser(
+            user_id=adimail.id, workspace_id=workspace1.id, role="admin"
+        )
+        workspace_user2 = WorkspaceUser(
+            user_id=LhaseParth2610.id, workspace_id=workspace1.id, role="viewer"
+        )
+        workspace_user3 = WorkspaceUser(
+            user_id=prajwalkumbhar29.id, workspace_id=workspace2.id, role="admin"
+        )
+        workspace_user4 = WorkspaceUser(
+            user_id=rohitkshirsagar19.id, workspace_id=workspace2.id, role="editor"
+        )
 
-        db.session.add_all([workspace_user1, workspace_user2, workspace_user3, workspace_user4])
+        db.session.add_all(
+            [workspace_user1, workspace_user2, workspace_user3, workspace_user4]
+        )
         db.session.commit()
 
         # Create Table Metadata with Bucket Reference

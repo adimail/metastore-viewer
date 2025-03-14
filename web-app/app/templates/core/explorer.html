@@ -1,49 +1,54 @@
-{% extends "base.html" %}
-{% block title %}Explorer{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Explorer{% endblock %} {% block
+content %}
 <div class="">
   <h1 class="text-3xl font-extrabold text-gray-900 mb-6">Bucket Explorer</h1>
 
   {% if workspaces %}
-    <div class="mb-6">
-      <h2 class="text-xl font-semibold text-gray-700">Workspaces</h2>
-      <ul class="flex flex-wrap gap-4">
-        {% for ws in workspaces %}
-          <li class="bg-gray-200 px-4 py-2 rounded font-medium">
-            {{ ws.name }}
-          </li>
+  <div class="mb-6">
+    <h2 class="text-xl font-semibold text-gray-700">Workspaces</h2>
+    <ul class="flex flex-wrap gap-4">
+      {% for ws in workspaces %}
+      <li class="bg-gray-200 px-4 py-2 rounded font-medium">{{ ws.name }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <!-- Display Buckets by Workspace -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {% for ws in workspaces %} {% if ws.buckets %}
+    <div
+      class="bg-gray-100 shadow-lg p-6 transition hover:shadow-xl border-l-4 border-blue-500"
+    >
+      <h3 class="text-lg font-semibold text-gray-800 mb-3">
+        <i class="fas fa-folder-open text-blue-500 mr-2"></i> {{ ws.name }} -
+        Buckets
+      </h3>
+      <ul class="space-y-2">
+        {% for b in ws.buckets %}
+        <li>
+          <a
+            href="{{ url_for('explorer.view_bucket', bucket_id=b.id) }}"
+            class="block bg-white p-4 shadow-md rounded hover:bg-gray-50 transition"
+          >
+            <strong class="text-gray-800">{{ b.name }}</strong>
+            <span class="text-gray-600 text-sm ml-2"
+              >({{ b.cloud_provider }})</span
+            >
+            <p class="text-gray-500 text-sm mt-1">
+              <i class="fas fa-globe mr-1"></i> {{ b.region }}
+            </p>
+          </a>
+        </li>
         {% endfor %}
       </ul>
     </div>
-
-    <!-- Display Buckets by Workspace -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {% for ws in workspaces %}
-        {% if ws.buckets %}
-          <div class="bg-gray-100 shadow-lg p-6 transition hover:shadow-xl border-l-4 border-blue-500">
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">
-              <i class="fas fa-folder-open text-blue-500 mr-2"></i> {{ ws.name }} - Buckets
-            </h3>
-            <ul class="space-y-2">
-              {% for b in ws.buckets %}
-                <li>
-                  <a href="{{ url_for('explorer.view_bucket', bucket_id=b.id) }}"
-                     class="block bg-white p-4 shadow-md rounded hover:bg-gray-50 transition">
-                    <strong class="text-gray-800">{{ b.name }}</strong> 
-                    <span class="text-gray-600 text-sm ml-2">({{ b.cloud_provider }})</span>
-                    <p class="text-gray-500 text-sm mt-1"><i class="fas fa-globe mr-1"></i> {{ b.region }}</p>
-                  </a>
-                </li>
-              {% endfor %}
-            </ul>
-          </div>
-        {% endif %}
-      {% endfor %}
-    </div>
+    {% endif %} {% endfor %}
+  </div>
 
   {% else %}
-    <p class="text-gray-600 text-lg">You are not a member of any workspaces yet.</p>
+  <p class="text-gray-600 text-lg">
+    You are not a member of any workspaces yet.
+  </p>
   {% endif %}
 </div>
 {% endblock %}

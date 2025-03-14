@@ -3,6 +3,7 @@ from flask_login import login_required
 
 query_editor_bp = Blueprint("query_editor", __name__)
 
+
 @query_editor_bp.route("/query-editor")
 @login_required
 def query_editor():

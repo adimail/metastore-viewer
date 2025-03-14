@@ -6,6 +6,7 @@ import datetime
 
 workspace_bp = Blueprint("workspace", __name__)
 
+
 @workspace_bp.route("/workspace/create", methods=["GET", "POST"])
 @login_required
 def create_workspace():
@@ -20,7 +21,10 @@ def create_workspace():
 
         # Check if workspace with the same name already exists
         if Workspace.query.filter_by(name=name).first():
-            flash("Workspace name already exists. Please choose a different name.", "error")
+            flash(
+                "Workspace name already exists. Please choose a different name.",
+                "error",
+            )
             return redirect(url_for("workspace.create_workspace"))
 
         new_workspace = Workspace(
@@ -42,15 +46,18 @@ def create_workspace():
         db.session.commit()
 
         # Add the current user as admin of the newly created workspace
-        ws_user = WorkspaceUser(user_id=current_user.id, workspace_id=new_workspace.id, role="admin")
+        ws_user = WorkspaceUser(
+            user_id=current_user.id, workspace_id=new_workspace.id, role="admin"
+        )
         db.session.add(ws_user)
         db.session.commit()
 
         flash("Workspace created successfully!", "success")
-        return redirect(url_for("workspace.view_workspace", workspace_id=new_workspace.id))
-    
-    return render_template("workspace/create_workspace.html")
+        return redirect(
+            url_for("workspace.view_workspace", workspace_id=new_workspace.id)
+        )
 
+    return render_template("workspace/create_workspace.html")
 
 
 @workspace_bp.route("/workspace/<int:workspace_id>")
@@ -58,7 +65,9 @@ def create_workspace():
 def view_workspace(workspace_id):
     workspace = Workspace.query.get_or_404(workspace_id)
     members = WorkspaceUser.query.filter_by(workspace_id=workspace_id).all()
-    return render_template("workspace/view_workspace.html", workspace=workspace, members=members)
+    return render_template(
+        "workspace/view_workspace.html", workspace=workspace, members=members
+    )
 
 
 @workspace_bp.route("/workspace/<int:workspace_id>/add_member", methods=["GET", "POST"])
@@ -73,10 +82,14 @@ def add_member(workspace_id):
             flash("User not found.", "error")
             return redirect(url_for("workspace.add_member", workspace_id=workspace_id))
         # Check if the user is already a member.
-        if WorkspaceUser.query.filter_by(workspace_id=workspace_id, user_id=user.id).first():
+        if WorkspaceUser.query.filter_by(
+            workspace_id=workspace_id, user_id=user.id
+        ).first():
             flash("User is already a member of this workspace.", "error")
             return redirect(url_for("workspace.add_member", workspace_id=workspace_id))
-        new_member = WorkspaceUser(user_id=user.id, workspace_id=workspace_id, role=role)
+        new_member = WorkspaceUser(
+            user_id=user.id, workspace_id=workspace_id, role=role
+        )
         db.session.add(new_member)
         db.session.commit()
         flash("Member added successfully!", "success")
@@ -92,20 +105,23 @@ def my_workspaces():
     user_workspaces = [ws.workspace for ws in current_user.workspaces]
     return render_template("workspace/my_workspaces.html", workspaces=user_workspaces)
 
-@workspace_bp.route('/workspace/<int:workspace_id>/update', methods=['GET', 'POST'])
+
+@workspace_bp.route("/workspace/<int:workspace_id>/update", methods=["GET", "POST"])
 @login_required
 def update_workspace(workspace_id):
     flash(f"Update workspace {workspace_id} feature coming soon!", "info")
-    return redirect(url_for('workspace.view_workspace', workspace_id=workspace_id))
+    return redirect(url_for("workspace.view_workspace", workspace_id=workspace_id))
 
-@workspace_bp.route('/workspace/<int:workspace_id>/disable', methods=['POST', 'GET'])
+
+@workspace_bp.route("/workspace/<int:workspace_id>/disable", methods=["POST", "GET"])
 @login_required
 def disable_workspace(workspace_id):
     flash(f"Workspace {workspace_id} has been disabled (simulation).", "warning")
-    return redirect(url_for('workspace.view_workspace', workspace_id=workspace_id))
+    return redirect(url_for("workspace.view_workspace", workspace_id=workspace_id))
 
-@workspace_bp.route('/workspace/<int:workspace_id>/delete', methods=['POST', 'GET'])
+
+@workspace_bp.route("/workspace/<int:workspace_id>/delete", methods=["POST", "GET"])
 @login_required
 def delete_workspace(workspace_id):
     flash(f"Workspace {workspace_id} has been deleted (simulation).", "danger")
-    return redirect(url_for('home.home'))
+    return redirect(url_for("home.home"))

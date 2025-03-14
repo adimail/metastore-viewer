@@ -3,3 +3,4 @@ flask-cors
 Flask-Limiter
 Flask-SQLAlchemy
 Flask-Login
+pre-commit

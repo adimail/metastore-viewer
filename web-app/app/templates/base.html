@@ -4,166 +4,272 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>{% block title %}Metastore Viewer for Lakehouse Tables on Object Stores{% endblock %}</title>
+    <title>
+      {% block title %}Metastore Viewer for Lakehouse Tables on Object Stores{%
+      endblock %}
+    </title>
 
     <!-- SEO Metadata -->
-    <meta name="description" content="Metastore Viewer for Lakehouse Tables on Object Stores - Explore, Query, and Compare metadata efficiently." />
-    <meta name="keywords" content="Metastore, Data Lakehouse, Object Storage, Query Editor, Metadata Comparison, SQL, Data Engineering" />
-    <meta name="author" content="Aditya Godse, Parth Lhase, Prajwal Kumbhar, Rohit Kshirsagar" />
+    <meta
+      name="description"
+      content="Metastore Viewer for Lakehouse Tables on Object Stores - Explore, Query, and Compare metadata efficiently."
+    />
+    <meta
+      name="keywords"
+      content="Metastore, Data Lakehouse, Object Storage, Query Editor, Metadata Comparison, SQL, Data Engineering"
+    />
+    <meta
+      name="author"
+      content="Aditya Godse, Parth Lhase, Prajwal Kumbhar, Rohit Kshirsagar"
+    />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://yourwebsite.com/" />
 
     <!-- Open Graph (Facebook, LinkedIn) -->
     <meta property="og:title" content="Metastore Viewer for Lakehouse Tables" />
-    <meta property="og:description" content="Explore and manage metadata for your Data Lakehouse tables with ease." />
-    <meta property="og:image" content="{{ url_for('static', filename='images/og-image.png') }}" />
+    <meta
+      property="og:description"
+      content="Explore and manage metadata for your Data Lakehouse tables with ease."
+    />
+    <meta
+      property="og:image"
+      content="{{ url_for('static', filename='images/og-image.png') }}"
+    />
     <meta property="og:url" content="https://yourwebsite.com/" />
     <meta property="og:type" content="website" />
-    
+
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Metastore Viewer for Lakehouse Tables" />
-    <meta name="twitter:description" content="Explore, query, and compare metadata for Data Lakehouse tables." />
-    <meta name="twitter:image" content="{{ url_for('static', filename='images/og-image.png') }}" />
+    <meta
+      name="twitter:title"
+      content="Metastore Viewer for Lakehouse Tables"
+    />
+    <meta
+      name="twitter:description"
+      content="Explore, query, and compare metadata for Data Lakehouse tables."
+    />
+    <meta
+      name="twitter:image"
+      content="{{ url_for('static', filename='images/og-image.png') }}"
+    />
 
     <!-- Favicons -->
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon-96x96.png') }}" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}" />
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}" />
-    <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='favicon-96x96.png') }}"
+      sizes="96x96"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="{{ url_for('static', filename='favicon.svg') }}"
+    />
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='favicon.ico') }}"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="{{ url_for('static', filename='apple-touch-icon.png') }}"
+    />
+    <link
+      rel="manifest"
+      href="{{ url_for('static', filename='site.webmanifest') }}"
+    />
 
     <!-- CSS Styles -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/tailwind.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/index.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+      integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
 
     {% block head %}{% endblock %}
   </head>
   <body>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <div id="flash-message-container">
-          {% for category, message in messages %}
-            <div class="flash-message {{ category }}">{{ message }}</div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
-    
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <div id="flash-message-container">
+      {% for category, message in messages %}
+      <div class="flash-message {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+
     <!-- Header -->
     <header class="fixed top-0 left-0 w-full z-50">
       <div class="header-content flex items-center justify-between">
         <button id="sidebarToggle" class="focus:outline-none">
           <i class="fas fa-bars text-white"></i>
         </button>
-        
-        <div class="text-xl font-bold">Metastore Viewer for Lakehouse Tables on Object Stores</div>
+
+        <div class="text-xl font-bold">
+          Metastore Viewer for Lakehouse Tables on Object Stores
+        </div>
 
         <!-- User Profile and Workspaces Dropdown -->
         {% if g.user %}
-          <div class="relative">
-            <button id="userDropdownBtn" class="flex items-center space-x-2 focus:outline-none">
-              <i class="fas fa-user-circle text-white text-2xl"></i>
-              <span>{{ g.user.username }}</span>
-              <i class="fas fa-chevron-down text-sm"></i>
-            </button>
-            
-            <!-- Dropdown Menu -->
-            <div id="userDropdownMenu" class="hidden absolute right-0 mt-2 bg-white text-black shadow-lg w-48">
-              <a href="{{ url_for('auth.profile') }}" class="block px-4 py-2 hover:bg-gray-200">
-                <i class="fas fa-user"></i> Profile
-              </a>
-              
-              <!-- Workspaces -->
-              <div class="border-t my-1"></div>
-              <div class="px-4 py-2 font-bold text-gray-700">Workspaces</div>
+        <div class="relative">
+          <button
+            id="userDropdownBtn"
+            class="flex items-center space-x-2 focus:outline-none"
+          >
+            <i class="fas fa-user-circle text-white text-2xl"></i>
+            <span>{{ g.user.username }}</span>
+            <i class="fas fa-chevron-down text-sm"></i>
+          </button>
 
-              {% if g.workspaces %}
-                {% for workspace in g.workspaces %}
-                  <a href="{{ url_for('workspace.view_workspace', workspace_id=workspace.id) }}" class="block px-4 py-2 hover:bg-gray-200">
-                    <i class="fas fa-th"></i> {{ workspace.name }}
-                  </a>
-                {% endfor %}
-              {% else %}
-                <div class="px-4 py-2 text-gray-500">No workspaces available</div>
-              {% endif %}
-              
-              <!-- Logout -->
-              <div class="border-t my-1"></div>
-              <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2 hover:bg-gray-200">
-                <i class="fas fa-sign-out-alt"></i> Logout
-              </a>
-            </div>
+          <!-- Dropdown Menu -->
+          <div
+            id="userDropdownMenu"
+            class="hidden absolute right-0 mt-2 bg-white text-black shadow-lg w-48"
+          >
+            <a
+              href="{{ url_for('auth.profile') }}"
+              class="block px-4 py-2 hover:bg-gray-200"
+            >
+              <i class="fas fa-user"></i> Profile
+            </a>
+
+            <!-- Workspaces -->
+            <div class="border-t my-1"></div>
+            <div class="px-4 py-2 font-bold text-gray-700">Workspaces</div>
+
+            {% if g.workspaces %} {% for workspace in g.workspaces %}
+            <a
+              href="{{ url_for('workspace.view_workspace', workspace_id=workspace.id) }}"
+              class="block px-4 py-2 hover:bg-gray-200"
+            >
+              <i class="fas fa-th"></i> {{ workspace.name }}
+            </a>
+            {% endfor %} {% else %}
+            <div class="px-4 py-2 text-gray-500">No workspaces available</div>
+            {% endif %}
+
+            <!-- Logout -->
+            <div class="border-t my-1"></div>
+            <a
+              href="{{ url_for('auth.logout') }}"
+              class="block px-4 py-2 hover:bg-gray-200"
+            >
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
           </div>
+        </div>
         {% else %}
-          <a href="{{ url_for('auth.login') }}" class="text-white hover:underline">Login</a>
+        <a href="{{ url_for('auth.login') }}" class="text-white hover:underline"
+          >Login</a
+        >
         {% endif %}
       </div>
     </header>
-    
+
     <div id="container">
       <!-- Sidebar -->
-    <div id="sidebar">
-        <a href="/" data-title="Home" class="{% if request.path == '/' %}active-link{% endif %}">
-            <i class="fas fa-home"></i>
-            <span class="link-text">Home</span>
+      <div id="sidebar">
+        <a
+          href="/"
+          data-title="Home"
+          class="{% if request.path == '/' %}active-link{% endif %}"
+        >
+          <i class="fas fa-home"></i>
+          <span class="link-text">Home</span>
         </a>
-        <a href="/explorer" data-title="Bucket Explorer" class="{% if request.path.startswith('/explorer') %}active-link{% endif %}">
-            <i class="fas fa-box"></i>
-            <span class="link-text">Bucket Explorer</span>
+        <a
+          href="/explorer"
+          data-title="Bucket Explorer"
+          class="{% if request.path.startswith('/explorer') %}active-link{% endif %}"
+        >
+          <i class="fas fa-box"></i>
+          <span class="link-text">Bucket Explorer</span>
         </a>
-        <a href="/query-editor" data-title="Query Editor" class="{% if request.path.startswith('/query-editor') %}active-link{% endif %}">
-            <i class="fas fa-code"></i>
-            <span class="link-text">Query Editor</span>
+        <a
+          href="/query-editor"
+          data-title="Query Editor"
+          class="{% if request.path.startswith('/query-editor') %}active-link{% endif %}"
+        >
+          <i class="fas fa-code"></i>
+          <span class="link-text">Query Editor</span>
         </a>
-        <a href="/metadata" data-title="Metadata Comparison" class="{% if request.path.startswith('/metadata') %}active-link{% endif %}">
-            <i class="fas fa-table"></i>
-            <span class="link-text">Metadata tables</span>
+        <a
+          href="/metadata"
+          data-title="Metadata Comparison"
+          class="{% if request.path.startswith('/metadata') %}active-link{% endif %}"
+        >
+          <i class="fas fa-table"></i>
+          <span class="link-text">Metadata tables</span>
         </a>
-        <a href="/compare-metatables" data-title="Metadata Comparison" class="{% if request.path.startswith('/compare-metatables') %}active-link{% endif %}">
-            <i class="fas fa-table"></i>
-            <span class="link-text">Metadata Comparison</span>
+        <a
+          href="/compare-metatables"
+          data-title="Metadata Comparison"
+          class="{% if request.path.startswith('/compare-metatables') %}active-link{% endif %}"
+        >
+          <i class="fas fa-table"></i>
+          <span class="link-text">Metadata Comparison</span>
         </a>
-        <a href="/settings" data-title="Settings" class="{% if request.path.startswith('/settings') %}active-link{% endif %}">
-            <i class="fas fa-cog"></i>
-            <span class="link-text">Settings</span>
+        <a
+          href="/settings"
+          data-title="Settings"
+          class="{% if request.path.startswith('/settings') %}active-link{% endif %}"
+        >
+          <i class="fas fa-cog"></i>
+          <span class="link-text">Settings</span>
         </a>
-        <hr class="my-4 border-gray-500">
+        <hr class="my-4 border-gray-500" />
         {% if current_user.is_authenticated %}
-            <div class="user-info">
-                <p>Welcome, {{ current_user.username }}</p>
-                <a href="{{ url_for('workspace.my_workspaces') }}" data-title="All Workspaces"
-                  class="{% if request.path == url_for('workspace.my_workspaces') %}active-link{% endif %}">
-                    <i class="fas fa-th-list"></i>
-                    <span class="link-text">All Workspaces</span>
-                </a>
-                <a href="{{ url_for('auth.logout') }}" data-title="Logout">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span class="link-text">Logout</span>
-                </a>
-            </div>
+        <div class="user-info">
+          <p>Welcome, {{ current_user.username }}</p>
+          <a
+            href="{{ url_for('workspace.my_workspaces') }}"
+            data-title="All Workspaces"
+            class="{% if request.path == url_for('workspace.my_workspaces') %}active-link{% endif %}"
+          >
+            <i class="fas fa-th-list"></i>
+            <span class="link-text">All Workspaces</span>
+          </a>
+          <a href="{{ url_for('auth.logout') }}" data-title="Logout">
+            <i class="fas fa-sign-out-alt"></i>
+            <span class="link-text">Logout</span>
+          </a>
+        </div>
         {% else %}
-            <div class="login-link" style="text-align: center; margin-bottom: 20px;">
-                <a href="{{ url_for('auth.login') }}" data-title="Login" 
-                  class="{% if request.path == url_for('auth.login') %}active-link{% endif %}">
-                    <i class="fas fa-sign-in-alt"></i>
-                    <span class="link-text">Login</span>
-                </a>
-            </div>
+        <div class="login-link" style="text-align: center; margin-bottom: 20px">
+          <a
+            href="{{ url_for('auth.login') }}"
+            data-title="Login"
+            class="{% if request.path == url_for('auth.login') %}active-link{% endif %}"
+          >
+            <i class="fas fa-sign-in-alt"></i>
+            <span class="link-text">Login</span>
+          </a>
+        </div>
         {% endif %}
-    </div>
+      </div>
 
-      
       <!-- Main content -->
       <div id="main">
         {% block content %}{% endblock %}
         <footer>
-            <p>&copy; 2025 Aditya Godse, Parth Lhase, Rohit Kshirsagar, Prajwal Kumbhar</p>
+          <p>
+            &copy; 2025 Aditya Godse, Parth Lhase, Rohit Kshirsagar, Prajwal
+            Kumbhar
+          </p>
         </footer>
       </div>
     </div>
-    
+
     {% block scripts %}{% endblock %}
     <script src="{{ url_for('static', filename='js/session.js') }}"></script>
     <script>
@@ -176,16 +282,23 @@
       }, 3000);
     </script>
     <script>
-      document.getElementById('userDropdownBtn').addEventListener('click', function () {
-        document.getElementById('userDropdownMenu').classList.toggle('hidden');
-      });
+      document
+        .getElementById("userDropdownBtn")
+        .addEventListener("click", function () {
+          document
+            .getElementById("userDropdownMenu")
+            .classList.toggle("hidden");
+        });
 
-      document.addEventListener('click', function (event) {
-        var dropdown = document.getElementById('userDropdownMenu');
-        var button = document.getElementById('userDropdownBtn');
+      document.addEventListener("click", function (event) {
+        var dropdown = document.getElementById("userDropdownMenu");
+        var button = document.getElementById("userDropdownBtn");
 
-        if (!button.contains(event.target) && !dropdown.contains(event.target)) {
-          dropdown.classList.add('hidden');
+        if (
+          !button.contains(event.target) &&
+          !dropdown.contains(event.target)
+        ) {
+          dropdown.classList.add("hidden");
         }
       });
     </script>

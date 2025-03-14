@@ -1,26 +1,32 @@
-{% extends "base.html" %}
-{% block title %}Metadata Comparison{% endblock %}
-{% block content %}
+{% extends "base.html" %} {% block title %}Metadata Comparison{% endblock %} {%
+block content %}
 
 <!-- Diff2HTML CDN for side-by-side metadata comparison -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/diff2html/3.4.34/diff2html.min.css" />
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/diff2html/3.4.34/diff2html.min.css"
+/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/diff2html/3.4.34/diff2html-ui.min.js"></script>
 
 <!-- Page Title -->
 <h1 class="text-3xl font-bold text-gray-800 mb-6">Metadata Comparison</h1>
 
 <!-- Version Selectors -->
-<div class="bg-white shadow-md  p-4 flex space-x-4">
+<div class="bg-white shadow-md p-4 flex space-x-4">
   <div class="w-1/2">
-    <label for="version1" class="text-gray-700 font-medium">Select Version 1:</label>
-    <select id="version1" class="w-full border-gray-300  p-2 mt-1">
+    <label for="version1" class="text-gray-700 font-medium"
+      >Select Version 1:</label
+    >
+    <select id="version1" class="w-full border-gray-300 p-2 mt-1">
       <option value="v1">Version 1</option>
       <option value="v2">Version 2</option>
     </select>
   </div>
   <div class="w-1/2">
-    <label for="version2" class="text-gray-700 font-medium">Select Version 2:</label>
-    <select id="version2" class="w-full border-gray-300  p-2 mt-1">
+    <label for="version2" class="text-gray-700 font-medium"
+      >Select Version 2:</label
+    >
+    <select id="version2" class="w-full border-gray-300 p-2 mt-1">
       <option value="v1">Version 1</option>
       <option value="v2">Version 2</option>
     </select>
@@ -29,11 +35,10 @@
 
 <!-- Metadata Comparison Section -->
 <div class="grid grid-cols-2 gap-4 mt-6">
-  
   <!-- Version 1 Metadata -->
-  <div class="bg-white shadow-md  p-4">
+  <div class="bg-white shadow-md p-4">
     <h2 class="text-xl font-semibold text-gray-700 mb-2">Version 1 Metadata</h2>
-    <pre class="bg-gray-100 p-3  text-sm text-gray-800">
+    <pre class="bg-gray-100 p-3 text-sm text-gray-800">
 {
 "table": "sales_data",
 "columns": ["id", "name", "amount"],
@@ -47,9 +52,9 @@
   </div>
 
   <!-- Version 2 Metadata -->
-  <div class="bg-white shadow-md  p-4">
+  <div class="bg-white shadow-md p-4">
     <h2 class="text-xl font-semibold text-gray-700 mb-2">Version 2 Metadata</h2>
-    <pre class="bg-gray-100 p-3  text-sm text-gray-800">
+    <pre class="bg-gray-100 p-3 text-sm text-gray-800">
 {
 "table": "sales_data",
 "columns": ["id", "name", "amount", "new_column"],
@@ -62,21 +67,27 @@
 }
     </pre>
   </div>
-
 </div>
 
 <!-- Change Summary -->
-<div class="bg-white shadow-md  p-4 mt-6">
+<div class="bg-white shadow-md p-4 mt-6">
   <h2 class="text-xl font-semibold text-gray-700 mb-2">Change Summary</h2>
   <ul class="space-y-2">
-    <li class="p-2 bg-green-100  text-green-700">➕ Added column: <strong>new_column</strong></li>
-    <li class="p-2 bg-red-100  text-red-700">❌ Removed column: <strong>old_column</strong></li>
-    <li class="p-2 bg-yellow-100  text-yellow-700">⚠️ Modified data type: <strong>amount</strong> (from <strong>INT</strong> to <strong>DECIMAL</strong>)</li>
+    <li class="p-2 bg-green-100 text-green-700">
+      ➕ Added column: <strong>new_column</strong>
+    </li>
+    <li class="p-2 bg-red-100 text-red-700">
+      ❌ Removed column: <strong>old_column</strong>
+    </li>
+    <li class="p-2 bg-yellow-100 text-yellow-700">
+      ⚠️ Modified data type: <strong>amount</strong> (from
+      <strong>INT</strong> to <strong>DECIMAL</strong>)
+    </li>
   </ul>
 </div>
 
 <!-- Metadata Diff Viewer -->
-<div class="bg-white shadow-md  p-4 mt-6">
+<div class="bg-white shadow-md p-4 mt-6">
   <h2 class="text-xl font-semibold text-gray-700 mb-2">Metadata Differences</h2>
   <div id="diff-container"></div>
 </div>
@@ -106,10 +117,14 @@
 
   function generateDiff() {
     const diffString = Diff2Html.getJsonFromDiffString(
-      Diff2Html.diffLines(oldMetadata, newMetadata)
+      Diff2Html.diffLines(oldMetadata, newMetadata),
     );
     const diffContainer = document.getElementById("diff-container");
-    diffContainer.innerHTML = Diff2Html.html(diffString, { drawFileList: false, matching: "lines", outputFormat: "side-by-side" });
+    diffContainer.innerHTML = Diff2Html.html(diffString, {
+      drawFileList: false,
+      matching: "lines",
+      outputFormat: "side-by-side",
+    });
   }
 
   window.onload = generateDiff;

@@ -1,23 +1,41 @@
-{% extends "base.html" %}
-{% block title %}Add Member{% endblock %}
-{% block content %}
+{% extends "base.html" %} {% block title %}Add Member{% endblock %} {% block
+content %}
 <div class="max-w-2xl">
-  <h2 class="text-2xl font-bold text-gray-800 mb-4">Add Member to Workspace: <span class="text-blue-600">{{ workspace.name }}</span></h2>
-  
-  <form method="POST" action="{{ url_for('workspace.add_member', workspace_id=workspace.id) }}" class="space-y-4">
-    
+  <h2 class="text-2xl font-bold text-gray-800 mb-4">
+    Add Member to Workspace:
+    <span class="text-blue-600">{{ workspace.name }}</span>
+  </h2>
+
+  <form
+    method="POST"
+    action="{{ url_for('workspace.add_member', workspace_id=workspace.id) }}"
+    class="space-y-4"
+  >
     <!-- Username -->
     <div>
-      <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
-      <input type="text" id="username" name="username" required
-        class="mt-1 block w-full px-4 py-2 border border-gray-300  shadow-sm focus:ring-blue-500 focus:border-blue-500">
+      <label for="username" class="block text-sm font-medium text-gray-700"
+        >Username</label
+      >
+      <input
+        type="text"
+        id="username"
+        name="username"
+        required
+        class="mt-1 block w-full px-4 py-2 border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+      />
     </div>
 
     <!-- Role Selection -->
     <div>
-      <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
-      <select id="role" name="role" required
-        class="mt-1 block w-full px-4 py-2 border border-gray-300 bg-white  shadow-sm focus:ring-blue-500 focus:border-blue-500">
+      <label for="role" class="block text-sm font-medium text-gray-700"
+        >Role</label
+      >
+      <select
+        id="role"
+        name="role"
+        required
+        class="mt-1 block w-full px-4 py-2 border border-gray-300 bg-white shadow-sm focus:ring-blue-500 focus:border-blue-500"
+      >
         <option value="">Select Role</option>
         <option value="admin">Admin</option>
         <option value="viewer">Viewer</option>
@@ -27,8 +45,10 @@
 
     <!-- Submit Button -->
     <div>
-      <button type="submit"
-        class="w-full bg-blue-600 text-white font-semibold py-2 px-4  hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition">
+      <button
+        type="submit"
+        class="w-full bg-blue-600 text-white font-semibold py-2 px-4 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition"
+      >
         Add Member
       </button>
     </div>
@@ -36,7 +56,11 @@
 
   <!-- Back to Workspace Link -->
   <div class="mt-4 text-center">
-    <a href="{{ url_for('workspace.view_workspace', workspace_id=workspace.id) }}" class="text-blue-600 hover:underline">Back to Workspace</a>
+    <a
+      href="{{ url_for('workspace.view_workspace', workspace_id=workspace.id) }}"
+      class="text-blue-600 hover:underline"
+      >Back to Workspace</a
+    >
   </div>
 </div>
 {% endblock %}
