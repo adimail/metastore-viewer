@@ -30,8 +30,6 @@ with app.app_context():
                 "rohitkshirsagar19", method="pbkdf2:sha256"
             ),
         )
-
-        # Additional users
         alice = User(
             username="alice",
             password=generate_password_hash("alice", method="pbkdf2:sha256"),
@@ -68,16 +66,11 @@ with app.app_context():
             catalog="Glue",
             clusters=3,
             description="Centralized Data Lake for analytics",
-            endpoint_url="s3.amazonaws.com",
-            storage_access_key="ACCESS_KEY",
-            storage_secret_key="SECRET_KEY",
             trino_url="trino.aws.com",
             trino_user="admin",
             trino_password="trino_secret",
             owner_id=adimail.id,
-            owner_name=adimail.username,
             created_by_id=alice.id,
-            created_by_name=alice.username,
         )
 
         workspace2 = Workspace(
@@ -88,16 +81,11 @@ with app.app_context():
             catalog="Data Catalog",
             clusters=5,
             description="Machine Learning Platform",
-            endpoint_url="azure.blob.core.windows.net",
-            storage_access_key="AZURE_ACCESS_KEY",
-            storage_secret_key="AZURE_SECRET_KEY",
             trino_url="trino.azure.com",
             trino_user="ml_admin",
             trino_password="ml_secret",
             owner_id=LhaseParth2610.id,
-            owner_name=LhaseParth2610.username,
             created_by_id=bob.id,
-            created_by_name=bob.username,
         )
 
         db.session.add_all([workspace1, workspace2])
@@ -105,19 +93,66 @@ with app.app_context():
 
         # Create Buckets
         bucket1 = Bucket(
-            name="datalake-bucket",
+            name="datalake-raw",
             cloud_provider="AWS",
             region="us-east-1",
+            endpoint_url="s3.amazonaws.com",
+            storage_access_key="ACCESS_KEY_1",
+            storage_secret_key="SECRET_KEY_1",
+            bucket_path="s3://datalake-raw",
+            status="active",
+            storage_class="STANDARD",
             workspace_id=workspace1.id,
-        )
-        bucket2 = Bucket(
-            name="ml-data",
-            cloud_provider="Azure",
-            region="eu-west-1",
-            workspace_id=workspace2.id,
+            total_size=1024000,
+            object_count=1500,
         )
 
-        db.session.add_all([bucket1, bucket2])
+        bucket2 = Bucket(
+            name="datalake-processed",
+            cloud_provider="AWS",
+            region="us-east-1",
+            endpoint_url="s3.amazonaws.com",
+            storage_access_key="ACCESS_KEY_2",
+            storage_secret_key="SECRET_KEY_2",
+            bucket_path="s3://datalake-processed",
+            status="active",
+            storage_class="STANDARD",
+            workspace_id=workspace1.id,
+            total_size=512000,
+            object_count=800,
+        )
+
+        bucket3 = Bucket(
+            name="ml-training",
+            cloud_provider="Azure",
+            region="eu-west-1",
+            endpoint_url="azure.blob.core.windows.net",
+            storage_access_key="AZURE_ACCESS_KEY_1",
+            storage_secret_key="AZURE_SECRET_KEY_1",
+            bucket_path="azure://ml-training",
+            status="active",
+            storage_class="STANDARD",
+            workspace_id=workspace2.id,
+            total_size=2048000,
+            object_count=2000,
+        )
+
+        bucket4 = Bucket(
+            name="ml-models",
+            cloud_provider="Azure",
+            region="eu-west-1",
+            endpoint_url="azure.blob.core.windows.net",
+            storage_access_key="AZURE_ACCESS_KEY_2",
+            storage_secret_key="AZURE_SECRET_KEY_2",
+            bucket_path="azure://ml-models",
+            status="active",
+            storage_class="STANDARD",
+            workspace_id=workspace2.id,
+            total_size=768000,
+            object_count=300,
+        )
+
+        db.session.add_all([bucket1, bucket2, bucket3, bucket4])
         db.session.commit()
 
         # Assign Users to Workspaces
@@ -144,36 +179,36 @@ with app.app_context():
             workspace_id=workspace1.id,
             bucket_id=bucket1.id,
             table_name="customer_data",
-            table_path="s3://datalake-bucket/customer_data",
+            table_path="s3://datalake-raw/customer_data",
             table_format="parquet",
             metadata_json='{"columns": ["id", "name", "email"], "num_rows": 1000000}',
         )
 
         table2 = TableMetadata(
             workspace_id=workspace1.id,
-            bucket_id=bucket1.id,
+            bucket_id=bucket2.id,
             table_name="sales_records",
-            table_path="s3://datalake-bucket/sales",
+            table_path="s3://datalake-processed/sales",
             table_format="iceberg",
             metadata_json='{"columns": ["date", "amount", "customer_id"], "partitions": ["date"]}',
         )
 
         table3 = TableMetadata(
             workspace_id=workspace2.id,
-            bucket_id=bucket2.id,
-            table_name="ml_models",
-            table_path="azure://ml-data/models",
+            bucket_id=bucket3.id,
+            table_name="training_data",
+            table_path="azure://ml-training/data",
             table_format="delta",
-            metadata_json='{"version": "1.0", "columns": ["model_id", "accuracy", "timestamp"]}',
+            metadata_json='{"version": "1.0", "columns": ["feature1", "feature2", "label"]}',
         )
 
         table4 = TableMetadata(
             workspace_id=workspace2.id,
-            bucket_id=bucket2.id,
-            table_name="training_data",
-            table_path="azure://ml-data/training",
+            bucket_id=bucket4.id,
+            table_name="model_metadata",
+            table_path="azure://ml-models/metadata",
             table_format="hudi",
-            metadata_json='{"columns": ["feature1", "feature2", "label"], "update_strategy": "merge"}',
+            metadata_json='{"columns": ["model_id", "accuracy", "timestamp"], "update_strategy": "merge"}',
         )
 
         db.session.add_all([table1, table2, table3, table4])

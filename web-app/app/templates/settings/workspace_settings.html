@@ -2,15 +2,17 @@
 {% block title %}Workspace Settings{% endblock %}
 {%
 block content %}
-<div class="max-w-3xl">
+<div class="max-w-5xl">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">
-        <a href="/settings">Settings</a> > Workspace Settings
+        <a href="/settings" class="text-blue-600 hover:underline">Settings</a> >
+        Workspace > {{ workspace.name }}
     </h1>
+    <!-- Workspace Settings Form -->
     <form method="POST"
           action="{{ url_for('settings.workspace_settings', workspace_id=workspace.id) }}"
           class="space-y-6">
         <!-- Basic Workspace Info -->
-        <fieldset class="bg-gray-50 shadow-inner p-4 border border-gray-200">
+        <fieldset class="bg-gray-50 shadow-inner p-4 border border-gray-200 rounded">
             <legend class="text-lg font-semibold text-gray-700 mb-2">Workspace Info</legend>
             <div class="mb-4">
                 <label for="name" class="block text-sm font-medium text-gray-700">Workspace Name</label>
@@ -18,9 +20,8 @@ block content %}
                        id="name"
                        name="name"
                        value="{{ workspace.name }}"
-                       class="mt-1 block w-full px-4 py-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500" />
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500" />
             </div>
-            <!-- Status -->
             <fieldset class="mb-4">
                 <legend class="text-sm font-medium text-gray-700">Status</legend>
                 <div class="mt-1 p-4 bg-gray-100 border border-gray-300 rounded">
@@ -56,7 +57,7 @@ block content %}
                 </div>
                 <select id="region"
                         name="region"
-                        class="mt-2 block w-full px-4 py-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+                        class="mt-2 block w-full px-4 py-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500">
                     <option value="" disabled selected>Select a new region</option>
                     {% for region in ["us-east-1", "us-west-1", "eu-central-1",
                         "ap-southeast-1"] %}
@@ -64,20 +65,17 @@ block content %}
                     {% endfor %}
                 </select>
             </div>
-            <!-- Cloud Provider -->
             <fieldset class="mb-4">
                 <legend class="text-sm font-medium text-gray-700">Cloud Provider</legend>
-                <!-- Display current cloud provider -->
                 <div class="mt-1 p-4 bg-gray-100 border border-gray-300 rounded">
                     <p class="text-gray-700">
                         Current Cloud Provider:
                         <strong>{{ workspace.cloud | upper }}</strong>
                     </p>
                 </div>
-                <!-- Dropdown to select a new provider -->
                 <select id="cloud"
                         name="cloud"
-                        class="mt-2 block w-full px-4 py-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+                        class="mt-2 block w-full px-4 py-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500">
                     <option value="" disabled selected>Select a new cloud provider</option>
                     {% for provider in ['aws', 'azure', 'gcp', 'minio'] %}
                         <option value="{{ provider }}">{{ provider | upper }}</option>
@@ -85,41 +83,8 @@ block content %}
                 </select>
             </fieldset>
         </fieldset>
-        <!-- Object Store Credentials -->
-        <fieldset class="bg-gray-50 shadow-inner p-4 border border-gray-200">
-            <legend class="text-lg font-semibold text-gray-700 mb-2">Object Store Credentials</legend>
-            <div class="mb-4">
-                <label for="endpoint_url" class="block text-sm font-medium text-gray-700">Endpoint URL</label>
-                <input type="text"
-                       id="endpoint_url"
-                       name="endpoint_url"
-                       placeholder="e.g., s3.amazonaws.com"
-                       value="{{ workspace.endpoint_url }}"
-                       class="mt-1 block w-full px-4 py-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500" />
-            </div>
-            <div class="mb-4">
-                <label for="storage_access_key"
-                       class="block text-sm font-medium text-gray-700">Access Key</label>
-                <input type="text"
-                       id="storage_access_key"
-                       name="storage_access_key"
-                       placeholder="Enter Access Key"
-                       value="{{ workspace.storage_access_key }}"
-                       class="mt-1 block w-full px-4 py-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500" />
-            </div>
-            <div class="mb-4">
-                <label for="storage_secret_key"
-                       class="block text-sm font-medium text-gray-700">Secret Key</label>
-                <input type="password"
-                       id="storage_secret_key"
-                       name="storage_secret_key"
-                       placeholder="Enter Secret Key"
-                       value="{{ workspace.storage_secret_key }}"
-                       class="mt-1 block w-full px-4 py-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500" />
-            </div>
-        </fieldset>
         <!-- Trino Connection -->
-        <fieldset class="bg-gray-50 shadow-inner p-4 border border-gray-200">
+        <fieldset class="bg-gray-50 shadow-inner p-4 border border-gray-200 rounded">
             <legend class="text-lg font-semibold text-gray-700 mb-2">Trino Connection</legend>
             <div class="mb-4">
                 <label for="trino_url" class="block text-sm font-medium text-gray-700">Trino Server URL</label>
@@ -128,7 +93,7 @@ block content %}
                        name="trino_url"
                        placeholder="Enter Trino Server URL"
                        value="{{ workspace.trino_url }}"
-                       class="mt-1 block w-full px-4 py-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500" />
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500" />
             </div>
             <div class="mb-4">
                 <label for="trino_user" class="block text-sm font-medium text-gray-700">Username</label>
@@ -137,7 +102,7 @@ block content %}
                        name="trino_user"
                        placeholder="Enter Username"
                        value="{{ workspace.trino_user }}"
-                       class="mt-1 block w-full px-4 py-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500" />
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500" />
             </div>
             <div class="mb-4">
                 <label for="trino_password" class="block text-sm font-medium text-gray-700">Password</label>
@@ -146,14 +111,56 @@ block content %}
                        name="trino_password"
                        placeholder="Enter Password"
                        value="{{ workspace.trino_password }}"
-                       class="mt-1 block w-full px-4 py-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500" />
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500" />
             </div>
         </fieldset>
-        <!-- Save Button -->
+        <!-- Buckets Section -->
+        <fieldset class="bg-gray-50 shadow-inner p-4 border border-gray-200 rounded">
+            <legend class="text-lg font-semibold text-gray-700 mb-2">Buckets</legend>
+            <!-- List Existing Buckets -->
+            <div class="mb-4">
+                {% if workspace.buckets %}
+                    <ul class="list-disc pl-6 text-gray-700">
+                        {% for bucket in workspace.buckets %}
+                            <li class="flex justify-between items-center py-2 border-b">
+                                <div>
+                                    <span class="font-medium">{{ bucket.name }} ({{ bucket.cloud_provider | upper }})</span>
+                                    <span class="text-xs text-gray-500">- {{ bucket.region | upper }}</span>
+                                    <br />
+                                    <span class="text-sm text-gray-600">Path: {{ bucket.bucket_path }}</span>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <a href="{{ url_for('settings.edit_bucket', workspace_id=workspace.id, bucket_id=bucket.id) }}"
+                                       class="text-blue-600 hover:text-blue-800 text-sm">Edit</a>
+                                    <form method="POST"
+                                          action="{{ url_for('settings.delete_bucket', workspace_id=workspace.id, bucket_id=bucket.id) }}">
+                                        <button type="submit"
+                                                class="text-red-600 hover:text-red-800 text-sm"
+                                                onclick="return confirm('Are you sure you want to remove this bucket?');">
+                                            Remove
+                                        </button>
+                                    </form>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-gray-500">No buckets associated with this workspace.</p>
+                {% endif %}
+            </div>
+            <!-- Add Bucket Link -->
+            <div class="mt-4">
+                <h3 class="text-md font-semibold text-gray-700 mb-2">Add New Bucket</h3>
+                <a href="{{ url_for('settings.add_bucket', workspace_id=workspace.id) }}"
+                   class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block">
+                    Add Bucket
+                </a>
+            </div>
+        </fieldset>
         <div class="flex justify-end">
             <button type="submit"
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 shadow-md transition duration-300">
-                Save Settings
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow-md transition duration-300">
+                Save Workspace Settings
             </button>
         </div>
     </form>

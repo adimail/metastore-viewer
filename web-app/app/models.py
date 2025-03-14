@@ -30,19 +30,13 @@ class Workspace(db.Model):
     clusters = db.Column(db.Integer, nullable=True)
     description = db.Column(db.Text, nullable=True)
 
-    # Object Store Details (Now moved to Bucket model)
-    endpoint_url = db.Column(db.String(255), nullable=True)
-    storage_access_key = db.Column(db.String(255), nullable=True)
-    storage_secret_key = db.Column(db.String(255), nullable=True)
-
+    # Trino credentials remain here as they are workspace-wide
     trino_url = db.Column(db.String(255), nullable=True)
     trino_user = db.Column(db.String(255), nullable=True)
-    trino_password = db.Column(db.String(255), nullable=True)
+    trino_password = db.Column(db.String(255), nullable=True)  # Encrypt in app logic
 
     owner_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    owner_name = db.Column(db.String(255), nullable=False)
     created_by_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    created_by_name = db.Column(db.String(255), nullable=False)
 
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_on = db.Column(
@@ -62,7 +56,7 @@ class Workspace(db.Model):
     )
     buckets = db.relationship(
         "Bucket", back_populates="workspace", cascade="all, delete-orphan"
-    )  # New relationship
+    )
 
     def __repr__(self):
         return f"<Workspace {self.name}>"
@@ -90,20 +84,18 @@ class TableMetadata(db.Model):
     workspace_id = db.Column(db.Integer, db.ForeignKey("workspaces.id"), nullable=False)
     bucket_id = db.Column(db.Integer, db.ForeignKey("buckets.id"), nullable=False)
     table_name = db.Column(db.String(255), nullable=False)
-    table_path = db.Column(db.String(512), nullable=False)  # e.g., s3://my-bucket/path
+    table_path = db.Column(db.String(512), nullable=False)
     table_format = db.Column(
         db.String(50), nullable=False
     )  # 'parquet', 'iceberg', 'delta', or 'hudi'
 
-    # A JSON-serialized field that stores all extracted metadata.
-    # For Parquet, this can include file-level metadata, row groups, and column details.
-    # For Iceberg, it may store table-level metadata, snapshots, partition specs, etc.
-    # For Delta, it can hold transaction logs, checkpoint metadata, etc.
-    # For Hudi, it can capture commit timelines, incremental changes, and clustering metrics.
-    metadata_json = db.Column(db.Text)
+    # Optional: Add uniqueness constraint per workspace if needed
+    # __table_args__ = (db.UniqueConstraint("workspace_id", "table_name", name="uniq_workspace_table"),)
 
-    # Automatically track when the metadata was last updated
-    metadata_json = db.Column(db.Text)
+    # JSON-serialized metadata field
+    # Consider db.JSONB if using PostgreSQL for better querying
+    metadata_json = db.Column(db.Text, nullable=True)
+
     last_updated = db.Column(
         db.DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow
     )
@@ -117,14 +109,26 @@ class TableMetadata(db.Model):
 
 class Bucket(db.Model):
     __tablename__ = "buckets"
+    __table_args__ = (
+        db.UniqueConstraint("cloud_provider", "name", name="uniq_cloud_name"),
+    )
+
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), nullable=False, unique=True)
+    name = db.Column(db.String(255), nullable=False)
     cloud_provider = db.Column(db.String(50), nullable=False)
     region = db.Column(db.String(100), nullable=False)
+    endpoint_url = db.Column(db.String(255), nullable=True)
+    storage_access_key = db.Column(db.String(255), nullable=True)
+    storage_secret_key = db.Column(
+        db.String(255), nullable=True
+    )  # Encrypt in app logic
+
+    bucket_path = db.Column(db.String(500), nullable=False)
     status = db.Column(db.String(50), nullable=False, default="active")
     storage_class = db.Column(db.String(50), nullable=False, default="STANDARD")
-    total_size = db.Column(db.BigInteger, default=0)
-    object_count = db.Column(db.BigInteger, default=0)
+    total_size = db.Column(db.BigInteger, default=0)  # Update via background job
+    object_count = db.Column(db.BigInteger, default=0)  # Update via background job
+
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_on = db.Column(
         db.DateTime,
@@ -138,5 +142,9 @@ class Bucket(db.Model):
         "TableMetadata", back_populates="bucket", cascade="all, delete-orphan"
     )
 
+    def get_path(self):
+        """Helper method to derive bucket path dynamically."""
+        return f"{self.cloud_provider}://{self.name}"
+
     def __repr__(self):
-        return f"<Bucket {self.name} ({self.cloud_provider})>"
+        return f"<Bucket {self.name} ({self.cloud_provider}) - Path: {self.get_path()}>"
