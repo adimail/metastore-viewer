@@ -12,14 +12,12 @@ workspace_bp = Blueprint("workspace", __name__)
 def create_workspace():
     if request.method == "POST":
         name = request.form.get("name")
-        status = request.form.get("status")
         region = request.form.get("region")
         cloud = request.form.get("cloud")
         catalog = request.form.get("catalog")
         clusters = request.form.get("clusters")
         description = request.form.get("description")
 
-        # Check if workspace with the same name already exists
         if Workspace.query.filter_by(name=name).first():
             flash(
                 "Workspace name already exists. Please choose a different name.",
@@ -29,23 +27,19 @@ def create_workspace():
 
         new_workspace = Workspace(
             name=name,
-            status=status,
             region=region,
             cloud=cloud,
             catalog=catalog,
             clusters=clusters,
             description=description,
             created_by_id=current_user.id,
-            created_by_name=current_user.username,
             owner_id=current_user.id,
-            owner_name=current_user.username,
             created_at=datetime.datetime.utcnow(),
             updated_on=datetime.datetime.utcnow(),
         )
         db.session.add(new_workspace)
         db.session.commit()
 
-        # Add the current user as admin of the newly created workspace
         ws_user = WorkspaceUser(
             user_id=current_user.id, workspace_id=new_workspace.id, role="admin"
         )

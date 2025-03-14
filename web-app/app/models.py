@@ -23,7 +23,7 @@ class Workspace(db.Model):
     __tablename__ = "workspaces"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False, unique=True)
-    status = db.Column(db.String(50), nullable=False)
+    status = db.Column(db.String(50), nullable=False, default="active")
     region = db.Column(db.String(100), nullable=False)
     cloud = db.Column(db.String(100), nullable=False)
     catalog = db.Column(db.String(255), nullable=True)
