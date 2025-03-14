@@ -3,99 +3,105 @@
 {%
 block content %}
 <div class="max-w-3xl">
-    <h2 class="text-2xl font-bold text-gray-800 mb-4">Create Workspace</h2>
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">
+        <i class="fas fa-briefcase"></i> Create Workspace
+    </h2>
     <form method="POST"
           action="{{ url_for('workspace.create_workspace') }}"
           class="space-y-6">
         <!-- Workspace Name -->
         <div>
-            <label for="name" class="block text-sm font-medium text-gray-700">Workspace Name</label>
+            <label for="workspace_name" class="block text-sm font-medium text-gray-700">
+                <i class="fas fa-folder"></i> Workspace Name
+            </label>
             <input type="text"
-                   id="name"
-                   name="name"
+                   id="workspace_name"
+                   name="workspace_name"
                    required
                    class="mt-1 block w-full px-4 py-2 border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
-            <p class="mt-1 text-sm text-gray-500">A unique name to identify your workspace</p>
+            <p class="mt-1 text-sm text-gray-500">A unique name to identify your workspace.</p>
         </div>
-        <!-- Region -->
+        <!-- Separator -->
+        <hr class="border-gray-300 my-4" />
+        <h3 class="text-xl font-semibold text-gray-700">
+            <i class="fas fa-database"></i> Catalog Information
+        </h3>
+        <!-- Catalog Name -->
         <div>
-            <label for="region" class="block text-sm font-medium text-gray-700">Region</label>
-            <select id="region"
-                    name="region"
-                    required
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 bg-white shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                <option value="">Select Region</option>
-                <option value="ap-south-1">Asia Pacific (Mumbai)</option>
-                <option value="us-east-1">US East (N. Virginia)</option>
-                <option value="us-east-2">US East (Ohio)</option>
-                <option value="us-west-1">US West (N. California)</option>
-                <option value="us-west-2">US West (Oregon)</option>
-                <option value="ap-southeast-1">Asia Pacific (Singapore)</option>
-                <option value="ap-southeast-2">Asia Pacific (Sydney)</option>
-                <option value="eu-central-1">Europe (Frankfurt)</option>
-                <option value="eu-west-1">Europe (Ireland)</option>
-                <option value="eu-west-2">Europe (London)</option>
-            </select>
-            <p class="mt-1 text-sm text-gray-500">The geographic location where your workspace resources will be hosted</p>
+            <label for="catalog_name" class="block text-sm font-medium text-gray-700">
+                <i class="fas fa-book"></i> Catalog Name
+            </label>
+            <input type="text"
+                   id="catalog_name"
+                   name="catalog_name"
+                   required
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+            <p class="mt-1 text-sm text-gray-500">A unique identifier for your catalog.</p>
+        </div>
+        <!-- Object Store Path -->
+        <div>
+            <label for="object_store" class="block text-sm font-medium text-gray-700">
+                <i class="fas fa-cloud"></i> Object Store Path
+            </label>
+            <input type="text"
+                   id="object_store"
+                   name="object_store"
+                   required
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+            <p class="mt-1 text-sm text-gray-500">Specify the storage path (e.g., s3://bucket-name/path).</p>
         </div>
         <!-- Cloud Provider -->
         <div>
-            <label for="cloud" class="block text-sm font-medium text-gray-700">Cloud</label>
-            <select id="cloud"
-                    name="cloud"
+            <label for="cloud_provider" class="block text-sm font-medium text-gray-700">
+                <i class="fas fa-server"></i> Cloud Provider
+            </label>
+            <select id="cloud_provider"
+                    name="cloud_provider"
                     required
                     class="mt-1 block w-full px-4 py-2 border border-gray-300 bg-white shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                <option value="">Select Cloud</option>
+                <option value="">Select Provider</option>
                 <option value="aws">AWS</option>
-                <option value="azure">Azure</option>
                 <option value="gcp">GCP</option>
+                <option value="azure">Azure</option>
             </select>
-            <p class="mt-1 text-sm text-gray-500">
-                The cloud service provider that will host your workspace (Amazon Web
-                Services, Microsoft Azure, or Google Cloud Platform)
-            </p>
+            <p class="mt-1 text-sm text-gray-500">Choose the cloud provider where your catalog is stored.</p>
         </div>
-        <!-- Catalog -->
+        <!-- Access Key -->
         <div>
-            <label for="catalog" class="block text-sm font-medium text-gray-700">Catalog</label>
+            <label for="access_key" class="block text-sm font-medium text-gray-700">
+                <i class="fas fa-key"></i> Access Key
+            </label>
             <input type="text"
-                   id="catalog"
-                   name="catalog"
+                   id="access_key"
+                   name="access_key"
                    class="mt-1 block w-full px-4 py-2 border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
-            <p class="mt-1 text-sm text-gray-500">
-                Optional: The catalog URL or identifier for data organization and
-                metadata management
-            </p>
+            <p class="mt-1 text-sm text-gray-500">(Optional) Provide an access key for authentication.</p>
         </div>
-        <!-- Clusters -->
+        <!-- Secret Key -->
         <div>
-            <label for="clusters" class="block text-sm font-medium text-gray-700">Clusters</label>
-            <input type="text"
-                   id="clusters"
-                   name="clusters"
+            <label for="secret_key" class="block text-sm font-medium text-gray-700">
+                <i class="fas fa-user-secret"></i> Secret Key
+            </label>
+            <input type="password"
+                   id="secret_key"
+                   name="secret_key"
                    class="mt-1 block w-full px-4 py-2 border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
-            <p class="mt-1 text-sm text-gray-500">Optional: Number or identifier of computing clusters for your workspace</p>
-        </div>
-        <!-- Description -->
-        <div>
-            <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-            <textarea id="description"
-                      name="description"
-                      class="mt-1 block w-full px-4 py-2 border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
-            <p class="mt-1 text-sm text-gray-500">Optional: A brief description of your workspace's purpose or details</p>
+            <p class="mt-1 text-sm text-gray-500">(Optional) Provide a secret key for authentication.</p>
         </div>
         <!-- Submit Button -->
         <div>
             <button type="submit"
                     class="w-full bg-blue-600 text-white font-semibold py-2 px-4 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition">
-                Create Workspace
+                <i class="fas fa-plus-circle"></i> Create Workspace
             </button>
         </div>
     </form>
     <!-- Back to Home Link -->
     <div class="mt-4 text-center">
         <a href="{{ url_for('home.home') }}"
-           class="text-blue-600 hover:underline">Back to Home</a>
+           class="text-blue-600 hover:underline">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
     </div>
 </div>
 {% endblock %}

@@ -3,18 +3,18 @@
 set -e
 
 if [[ "$1" == "db" ]]; then
-    echo "Running create_db.py..."
-    python3 web-app/create_db.py
-    exit 0
+	echo "Running create_db.py..."
+	python3 web-app/create_db.py
+	exit 0
 fi
 
 echo "Setting up the environment..."
 
 if [ ! -d ".venv" ]; then
-    echo "Creating virtual environment..."
-    python3 -m venv .venv
+	echo "Creating virtual environment..."
+	python3 -m venv .venv
 else
-    echo "Virtual environment already exists. Skipping creation."
+	echo "Virtual environment already exists. Skipping creation."
 fi
 
 source .venv/bin/activate

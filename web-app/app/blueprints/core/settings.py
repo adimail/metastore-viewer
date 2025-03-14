@@ -70,8 +70,9 @@ def leave_workspace(workspace_id):
         )
         return redirect(url_for("settings.settings"))
 
-    db.session.delete(workspace_user)
-    db.session.commit()
+    flash("Delete options are prohibited in this prototype.", "danger")
+    # db.session.delete(workspace_user)
+    # db.session.commit()
 
     flash("You have successfully left the workspace.", "success")
     return redirect(url_for("settings.settings"))
@@ -91,9 +92,10 @@ def delete_workspace(workspace_id):
         flash("You do not have permission to delete this workspace.", "danger")
         return redirect(url_for("settings.settings"))
 
-    WorkspaceUser.query.filter_by(workspace_id=workspace_id).delete()
-    db.session.delete(workspace)
-    db.session.commit()
+    flash("Delete options are prohibited in this prototype.", "danger")
+    # WorkspaceUser.query.filter_by(workspace_id=workspace_id).delete()
+    # db.session.delete(workspace)
+    # db.session.commit()
 
     flash("Workspace successfully deleted.", "success")
     return redirect(url_for("settings.settings"))
@@ -116,8 +118,6 @@ def workspace_settings(workspace_id):
         # Update only Workspace model fields
         workspace.name = request.form.get("name", workspace.name)
         workspace.status = request.form.get("status", workspace.status)
-        workspace.region = request.form.get("region", workspace.region)
-        workspace.cloud = request.form.get("cloud", workspace.cloud)
         workspace.trino_url = request.form.get("trino_url", workspace.trino_url)
         workspace.trino_user = request.form.get("trino_user", workspace.trino_user)
         workspace.trino_password = request.form.get(
@@ -307,9 +307,10 @@ def delete_bucket(workspace_id, bucket_id):
         tables = TableMetadata.query.filter_by(bucket_id=bucket_id).all()
         print(f"Related tables: {len(tables)}")
 
-        db.session.delete(bucket)
-        db.session.commit()
-        flash("Bucket removed successfully.", "success")
+        flash("Delete options are prohibited in this prototype.", "danger")
+        # db.session.delete(bucket)
+        # db.session.commit()
+        # flash("Bucket removed successfully.", "success")
     except Exception as e:
         db.session.rollback()
         print(f"Error deleting bucket: {str(e)}")

@@ -34,57 +34,62 @@
                 </div>
             </div>
             <!-- Workspace Details -->
-            <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+            <div class="bg-gray-100 shadow-lg p-6 transition hover:shadow-xl mb-10 border-l-4 border-blue-500">
                 <h3 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
                     <i class="fas fa-info-circle mr-2 text-blue-500"></i>Workspace Details
                 </h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div class="space-y-3">
-                        <p class="text-gray-700">
-                            <span class="font-medium">Status:</span>
-                            <span class="inline-block px-2 py-1 text-sm rounded-full {{ 'bg-green-100 text-green-800' if workspace.status == 'active' else 'bg-red-100 text-red-800' }}">
-                                {{ workspace.status | capitalize }}
-                            </span>
+                    <!-- Left Column: Core Info -->
+                    <div class="space-y-4">
+                        <p class="text-gray-700 flex items-center">
+                            <i class="fas fa-cloud mr-2 text-gray-500"></i>
+                            <span class="font-medium">Provider:</span>
+                            <span class="ml-2">{{ workspace.catalog.cloud_provider }}</span>
                         </p>
-                        <p class="text-gray-700">
-                            <span class="font-medium">Region:</span> {{ workspace.region }}
+                        <p class="text-gray-700 flex items-center">
+                            <i class="fas fa-database mr-2 text-gray-500"></i>
+                            <span class="font-medium">Catalog:</span>
+                            <span class="ml-2">{{ workspace.catalog.name }}</span>
                         </p>
-                        <p class="text-gray-700">
-                            <span class="font-medium">Cloud:</span> {{ workspace.cloud | upper }}
+                        <p class="text-gray-700 flex items-center">
+                            <i class="fas fa-folder-open mr-2 text-gray-500"></i>
+                            <span class="font-medium">Object Store:</span>
+                            <span class="ml-2 truncate" title="{{ workspace.catalog.object_store }}">{{ workspace.catalog.object_store }}</span>
                         </p>
-                        <p class="text-gray-700">
-                            <span class="font-medium">Catalog:</span> {{ workspace.catalog or
-                            'N/A' }}
-                        </p>
-                        <p class="text-gray-700">
-                            <span class="font-medium">Clusters:</span> {{ workspace.clusters or
-                            'N/A' }}
+                        <p class="text-gray-600 text-sm mb-2">
+                            <i class="fas fa-box text-gray-500 mr-2"></i>
+                            <strong>Buckets:</strong> {{ workspace.buckets | length }}
                         </p>
                     </div>
-                    <div class="space-y-3">
-                        <p class="text-gray-700">
-                            <span class="font-medium">Owner:</span> {{ owner.username }}
+                    <!-- Right Column: Metadata -->
+                    <div class="space-y-4">
+                        <p class="text-gray-700 flex items-center">
+                            <i class="fas fa-user mr-2 text-gray-500"></i>
+                            <span class="font-medium">Owner:</span>
+                            <span class="ml-2">{{ owner.username }}</span>
                         </p>
-                        <p class="text-gray-700">
-                            <span class="font-medium">Created By:</span> {{ created_by.username }}
+                        <p class="text-gray-700 flex items-center">
+                            <i class="fas fa-calendar-plus mr-2 text-gray-500"></i>
+                            <span class="font-medium">Created At:</span>
+                            <span class="ml-2">{{ workspace.created_at.strftime("%Y-%m-%d %H:%M UTC") }}</span>
                         </p>
-                        <p class="text-gray-700">
-                            <span class="font-medium">Created At:</span> {{ workspace.created_at.strftime("%Y-%m-%d %H:%M") }}
-                        </p>
-                        <p class="text-gray-700">
-                            <span class="font-medium">Updated On:</span> {{ workspace.updated_on.strftime("%Y-%m-%d %H:%M") }}
+                        <p class="text-gray-700 flex items-center">
+                            <i class="fas fa-clock mr-2 text-gray-500"></i>
+                            <span class="font-medium">Last Updated:</span>
+                            <span class="ml-2">{{ workspace.updated_on.strftime("%Y-%m-%d %H:%M UTC") }}</span>
                         </p>
                         {% if workspace.description %}
-                            <p class="text-gray-700">
-                                <span class="font-medium">Description:</span> {{ workspace.description
-                                }}
+                            <p class="text-gray-700 flex items-start">
+                                <i class="fas fa-info-circle mr-2 text-gray-500 mt-1"></i>
+                                <span class="font-medium">Description:</span>
+                                <span class="ml-2">{{ workspace.description }}</span>
                             </p>
                         {% endif %}
                     </div>
                 </div>
             </div>
             <!-- Members Section -->
-            <div class="bg-white shadow-md rounded-lg p-6">
+            <div class="bg-gray-200 shadow-lg p-6 transition hover:shadow-xl mb-10 border-l-4 border-red-500">
                 <h3 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
                     <i class="fas fa-users mr-2 text-blue-500"></i>Members ({{ members |
                     length }})
@@ -109,6 +114,25 @@
                     </p>
                 {% endif %}
             </div>
+            {% if workspace.buckets %}
+                <div class="bg-gray-100 shadow-lg p-6 transition hover:shadow-xl mb-10 border-l-4 border-blue-500">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Buckets</h3>
+                    <ul class="space-y-2">
+                        {% for b in workspace.buckets %}
+                            <li>
+                                <a href="{{ url_for('explorer.view_bucket', bucket_id=b.id) }}"
+                                   class="block bg-white p-4 shadow-md rounded hover:bg-gray-50 transition">
+                                    <strong class="text-gray-800">{{ b.name }}</strong>
+                                    <span class="text-gray-600 text-sm ml-2">({{ b.cloud_provider }})</span>
+                                    <p class="text-gray-500 text-sm mt-1">
+                                        <i class="fas fa-globe mr-1"></i> {{ b.region }}
+                                    </p>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
             <!-- Action Buttons -->
             <div class="mt-8 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                 <a href="{{ url_for('workspace.add_member', workspace_id=workspace.id) }}"

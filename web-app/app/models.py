@@ -24,21 +24,32 @@ class User(db.Model, UserMixin):
         return f"<User {self.username}>"
 
 
+class Catalog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), unique=True, nullable=False)
+    object_store = db.Column(
+        db.String(512), nullable=False
+    )  # e.g., s3://bucket-name/path
+    cloud_provider = db.Column(db.String(50), nullable=False)  # AWS, GCP, Azure
+    access_key = db.Column(db.String(255), nullable=False)  # Store securely
+    secret_key = db.Column(db.String(255), nullable=False)  # Store securely
+
+
 class Workspace(db.Model):
     __tablename__ = "workspaces"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False, unique=True)
     status = db.Column(db.String(50), nullable=False, default="active")
-    region = db.Column(db.String(100), nullable=False)
-    cloud = db.Column(db.String(100), nullable=False)
-    catalog = db.Column(db.String(255), nullable=True)
-    clusters = db.Column(db.Integer, nullable=True)
+
+    catalog = db.relationship("Catalog", backref=db.backref("workspaces", lazy=True))
+    catalog_id = db.Column(db.Integer, db.ForeignKey("catalog.id"), nullable=False)
+
     description = db.Column(db.Text, nullable=True)
 
     # Trino credentials remain here as they are workspace-wide
     trino_url = db.Column(db.String(255), nullable=True)
     trino_user = db.Column(db.String(255), nullable=True)
-    trino_password = db.Column(db.String(255), nullable=True)  # Encrypt in app logic
+    trino_password = db.Column(db.String(255), nullable=True)
 
     owner_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     created_by_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
@@ -97,6 +108,11 @@ class TableMetadata(db.Model):
     # Optional: Add uniqueness constraint per workspace if needed
     # __table_args__ = (db.UniqueConstraint("workspace_id", "table_name", name="uniq_workspace_table"),)
 
+    # Catalog-related details
+    catalog_name = db.Column(db.String(255), nullable=True)
+    schema_name = db.Column(db.String(255), nullable=True)  # Schema within the catalog
+    table_metadata_json = db.Column(db.Text, nullable=True)  # JSON-serialized metadata
+
     # JSON-serialized metadata field
     # Consider db.JSONB if using PostgreSQL for better querying
     metadata_json = db.Column(db.Text, nullable=True)
@@ -124,9 +140,7 @@ class Bucket(db.Model):
     region = db.Column(db.String(100), nullable=False)
     endpoint_url = db.Column(db.String(255), nullable=True)
     storage_access_key = db.Column(db.String(255), nullable=True)
-    storage_secret_key = db.Column(
-        db.String(255), nullable=True
-    )  # Encrypt in app logic
+    storage_secret_key = db.Column(db.String(255), nullable=True)
 
     bucket_path = db.Column(db.String(500), nullable=False)
     status = db.Column(db.String(50), nullable=False, default="active")

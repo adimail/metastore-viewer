@@ -1,5 +1,5 @@
 from app.extensions import db
-from app.models import User, Workspace, WorkspaceUser, TableMetadata, Bucket
+from app.models import User, Workspace, WorkspaceUser, TableMetadata, Bucket, Catalog
 from werkzeug.security import generate_password_hash
 import datetime
 
@@ -37,14 +37,30 @@ with app.app_context():
         db.session.add_all([adimail, parth, rohit, prajwal, admin])
         db.session.commit()
 
-        # Create Main Workspace
+        aws_catalog = Catalog(
+            name="Company catalog",
+            object_store="s3://myCatalog-bucket",
+            cloud_provider="AWS",
+            access_key="AWS_ACCESS_KEY",
+            secret_key="AWS_SECRET_KEY",
+        )
+
+        azure_catalog = Catalog(
+            name="Azure Data Catalog",
+            object_store="azure://data-catalog",
+            cloud_provider="Azure",
+            access_key="AZURE_ACCESS_KEY",
+            secret_key="AZURE_SECRET_KEY",
+        )
+
+        db.session.add_all([aws_catalog, azure_catalog])
+        db.session.commit()
+
+        # Create Workspaces
         main_workspace = Workspace(
             name="COEP Inspiron Workspace",
             status="active",
-            region="us-east-1",
-            cloud="AWS",
-            catalog="Glue",
-            clusters=4,
+            catalog_id=aws_catalog.id,
             description="Primary workspace for team collaboration and data analysis",
             trino_url="trino.mainworkspace.com",
             trino_user="admin",
@@ -55,14 +71,10 @@ with app.app_context():
             updated_on=datetime.datetime.utcnow(),
         )
 
-        # Create Dummy Workspace (Inactive)
         dummy_workspace = Workspace(
             name="DummyWorkspace",
             status="inactive",
-            region="us-west-1",
-            cloud="Azure",
-            catalog="Data Catalog",
-            clusters=1,
+            catalog_id=azure_catalog.id,
             description="Inactive dummy workspace for admin",
             trino_url="trino.dummy.com",
             trino_user="admin",
@@ -76,8 +88,10 @@ with app.app_context():
         db.session.add_all([main_workspace, dummy_workspace])
         db.session.commit()
 
-        # Assign Users to Main Workspace
-        ws_users = [
+        workspace_users = [
+            WorkspaceUser(
+                user_id=admin.id, workspace_id=main_workspace.id, role="admin"
+            ),
             WorkspaceUser(
                 user_id=adimail.id, workspace_id=main_workspace.id, role="admin"
             ),
@@ -91,13 +105,6 @@ with app.app_context():
                 user_id=prajwal.id, workspace_id=main_workspace.id, role="editor"
             ),
             WorkspaceUser(
-                user_id=admin.id, workspace_id=main_workspace.id, role="admin"
-            ),
-        ]
-
-        # Assign Users to Dummy Workspace
-        dummy_ws_users = [
-            WorkspaceUser(
                 user_id=admin.id, workspace_id=dummy_workspace.id, role="admin"
             ),
             WorkspaceUser(
@@ -105,10 +112,10 @@ with app.app_context():
             ),
         ]
 
-        db.session.add_all(ws_users + dummy_ws_users)
+        db.session.add_all(workspace_users)
         db.session.commit()
 
-        # Create Buckets for Main Workspace
+        # Create Buckets
         bucket1 = Bucket(
             name="main-raw-data",
             cloud_provider="AWS",
@@ -139,7 +146,6 @@ with app.app_context():
             object_count=3000,
         )
 
-        # Create Bucket for Dummy Workspace
         bucket3 = Bucket(
             name="dummy-data",
             cloud_provider="Azure",
@@ -148,7 +154,7 @@ with app.app_context():
             storage_access_key="DUMMY_ACCESS_KEY",
             storage_secret_key="DUMMY_SECRET_KEY",
             bucket_path="azure://dummy-data",
-            status="inactive",  # Matching workspace status
+            status="inactive",
             storage_class="STANDARD",
             workspace_id=dummy_workspace.id,
             total_size=1048576,  # 1GB
@@ -158,7 +164,7 @@ with app.app_context():
         db.session.add_all([bucket1, bucket2, bucket3])
         db.session.commit()
 
-        # Create Multiple Tables with Data for Main Workspace
+        # Create Tables
         tables = [
             TableMetadata(
                 workspace_id=main_workspace.id,
@@ -187,45 +193,16 @@ with app.app_context():
                 metadata_json='{"columns": ["product_id", "name", "quantity", "price"], "num_rows": 500000}',
                 last_updated=datetime.datetime.utcnow(),
             ),
-            TableMetadata(
-                workspace_id=main_workspace.id,
-                bucket_id=bucket2.id,
-                table_name="sales_analytics",
-                table_path="s3://main-processed-data/sales_analytics",
-                table_format="iceberg",
-                metadata_json='{"columns": ["date", "region", "sales", "profit"], "num_rows": 1000000, "partitions": ["region"]}',
-                last_updated=datetime.datetime.utcnow(),
-            ),
-            TableMetadata(
-                workspace_id=main_workspace.id,
-                bucket_id=bucket2.id,
-                table_name="customer_insights",
-                table_path="s3://main-processed-data/customer_insights",
-                table_format="hudi",
-                metadata_json='{"columns": ["customer_id", "segment", "lifetime_value"], "num_rows": 800000, "update_strategy": "merge"}',
-                last_updated=datetime.datetime.utcnow(),
-            ),
-            TableMetadata(
-                workspace_id=main_workspace.id,
-                bucket_id=bucket2.id,
-                table_name="daily_metrics",
-                table_path="s3://main-processed-data/daily_metrics",
-                table_format="parquet",
-                metadata_json='{"columns": ["date", "views", "clicks", "conversions"], "num_rows": 1200000}',
-                last_updated=datetime.datetime.utcnow(),
-            ),
         ]
 
         db.session.add_all(tables)
         db.session.commit()
 
-        print(
-            "Database populated successfully with COEP Inspiron Workspace and DummyWorkspace!"
-        )
+        print("Database successfully initialized with sample data!")
 
     except Exception as e:
         db.session.rollback()
-        print(f"Error: {e}")
+        print(f"Error occurred: {e}")
 
     finally:
         db.session.close()

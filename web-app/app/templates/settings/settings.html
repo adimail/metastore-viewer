@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="max-w-3xl">
+    <div class="max-w-5xl">
         <h1 class="text-3xl font-bold text-gray-800 mb-6">
             <a href="/settings"><i class="fas fa-cog mr-2"></i>Settings</a>
         </h1>
         <!-- Profile Settings -->
-        <div class="mb-10 py-6">
+        <div class="pt-6">
             <h3 class="text-lg font-medium text-gray-700">User Profile</h3>
             <div class="">
                 <img src="https://robohash.org/{{ current_user.username }}.png"
@@ -19,7 +19,7 @@
             <a href="{{ url_for('settings.profile_settings') }}"
                class="text-blue-500 hover:underline">Edit Profile & Credentials</a>
         </div>
-        <hr class="my-10 bg-gray-700" />
+        <hr class="my-5 bg-gray-700" />
         <!-- Workspaces -->
         <h3 class="text-lg font-semibold text-gray-800 mb-2">Manage Workspaces</h3>
         {% if workspaces %}
@@ -39,13 +39,17 @@
                         </div>
                         <!-- Workspace Info -->
                         <div class="space-y-2 mb-4">
-                            <p class="text-gray-600">
-                                <i class="fas fa-cloud mr-2"></i>
-                                Cloud: {{ workspace.cloud }}
+                            <p class="text-gray-600 text-sm">
+                                <i class="fas fa-folder text-gray-500 mr-2"></i>
+                                <strong>catalog:</strong> {{ workspace.catalog.name }}
                             </p>
-                            <p class="text-gray-600">
-                                <i class="fas fa-globe mr-2"></i>
-                                Region: {{ workspace.region }}
+                            <p class="text-gray-600 text-sm">
+                                <i class="fas fa-cloud text-gray-500 mr-2"></i>
+                                <strong>Provider:</strong> {{ workspace.catalog.cloud_provider }}
+                            </p>
+                            <p class="text-gray-600 text-sm mb-2">
+                                <i class="fas fa-box text-gray-500 mr-2"></i>
+                                <strong>Buckets:</strong> {{ workspace.buckets | length }}
                             </p>
                             <p class="text-gray-600">
                                 <i class="fas fa-clock mr-2"></i>

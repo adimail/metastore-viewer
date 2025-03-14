@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
-from app.models import Workspace, WorkspaceUser, User
+from app.models import Workspace, WorkspaceUser, User, Catalog
 from app.extensions import db
 import datetime
 
@@ -11,35 +11,55 @@ workspace_bp = Blueprint("workspace", __name__)
 @login_required
 def create_workspace():
     if request.method == "POST":
-        name = request.form.get("name")
-        region = request.form.get("region")
-        cloud = request.form.get("cloud")
-        catalog = request.form.get("catalog")
-        clusters = request.form.get("clusters")
+        name = request.form.get("workspace_name")
         description = request.form.get("description")
 
+        catalog_id = request.form.get("catalog_id")
+        if catalog_id:
+            catalog = Catalog.query.get(catalog_id)
+        else:
+            catalog_name = request.form.get("catalog_name")
+            object_store = request.form.get("object_store")
+            cloud_provider = request.form.get("cloud_provider")
+            access_key = request.form.get("access_key")
+            secret_key = request.form.get("secret_key")
+
+            if not catalog_name or not object_store or not cloud_provider:
+                flash("Please provide all catalog details.", "error")
+                return redirect(url_for("workspace.create_workspace"))
+
+            # Check if catalog already exists
+            catalog = Catalog.query.filter_by(name=catalog_name).first()
+            if not catalog:
+                catalog = Catalog(
+                    name=catalog_name,
+                    object_store=object_store,
+                    cloud_provider=cloud_provider,
+                    access_key=access_key,
+                    secret_key=secret_key,
+                )
+                db.session.add(catalog)
+                db.session.commit()
+
+        # Check for duplicate workspace
         if Workspace.query.filter_by(name=name).first():
-            flash(
-                "Workspace name already exists. Please choose a different name.",
-                "error",
-            )
+            flash("Workspace name already exists. Choose a different name.", "error")
             return redirect(url_for("workspace.create_workspace"))
 
+        # Create the workspace
         new_workspace = Workspace(
             name=name,
-            region=region,
-            cloud=cloud,
-            catalog=catalog,
-            clusters=clusters,
             description=description,
-            created_by_id=current_user.id,
+            catalog_id=catalog.id,
             owner_id=current_user.id,
+            created_by_id=current_user.id,
             created_at=datetime.datetime.utcnow(),
             updated_on=datetime.datetime.utcnow(),
         )
         db.session.add(new_workspace)
         db.session.commit()
 
+        # Assign the current user as admin
         ws_user = WorkspaceUser(
             user_id=current_user.id, workspace_id=new_workspace.id, role="admin"
         )
@@ -51,7 +71,8 @@ def create_workspace():
             url_for("workspace.view_workspace", workspace_id=new_workspace.id)
         )
 
-    return render_template("workspace/create_workspace.html")
+    catalogs = Catalog.query.all()
+    return render_template("workspace/create_workspace.html", catalogs=catalogs)
 
 
 @workspace_bp.route("/workspace/<int:workspace_id>")
@@ -168,9 +189,9 @@ def remove_member(workspace_id, user_id):
                 url_for("settings.workspace_settings", workspace_id=workspace_id)
             )
 
-        # Delete the WorkspaceUser entry
-        db.session.delete(ws_user)
-        db.session.commit()
+        flash("Delete options are prohibited in this prototype.", "danger")
+        # db.session.delete(ws_user)
+        # db.session.commit()
 
         flash(
             f"User '{ws_user.user.username}' has been removed from the workspace.",
