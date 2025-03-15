@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Bucket Explorer{% endblock %}
-{%
-block content %}
+{% block content %}
 <div class="">
     <h1 class="text-3xl font-extrabold text-gray-900 mb-6">
         <a href="/explorer" class="hover:underline">Bucket Explorer</a>
@@ -18,12 +17,10 @@ block content %}
                        class="text-blue-600 hover:underline">{{ bucket.workspace.name }}</a>
                 </div>
                 <div>
-                    <strong class="text-gray-900">Region:</strong> {{
-                    bucket.workspace.region }}
+                    <strong class="text-gray-900">Region:</strong> {{ bucket.workspace.region }}
                 </div>
                 <div>
-                    <strong class="text-gray-900">Cloud Provider:</strong> {{
-                    bucket.workspace.cloud }}
+                    <strong class="text-gray-900">Cloud Provider:</strong> {{ bucket.workspace.cloud }}
                 </div>
                 <div>
                     <strong class="text-gray-900">Status:</strong>
@@ -45,20 +42,16 @@ block content %}
                 <strong class="text-gray-900">Region:</strong> {{ bucket.region }}
             </div>
             <div>
-                <strong class="text-gray-900">Cloud Provider:</strong> {{
-                bucket.cloud_provider }}
+                <strong class="text-gray-900">Cloud Provider:</strong> {{ bucket.cloud_provider }}
             </div>
             <div>
-                <strong class="text-gray-900">Storage Class:</strong> {{
-                bucket.storage_class }}
+                <strong class="text-gray-900">Storage Class:</strong> {{ bucket.storage_class }}
             </div>
             <div>
-                <strong class="text-gray-900">Total Size:</strong> {{ bucket.total_size
-                }} bytes
+                <strong class="text-gray-900">Total Size:</strong> {{ bucket.total_size }} bytes
             </div>
             <div>
-                <strong class="text-gray-900">Object Count:</strong> {{
-                bucket.object_count }}
+                <strong class="text-gray-900">Object Count:</strong> {{ bucket.object_count }}
             </div>
             <div>
                 <strong class="text-gray-900">Status:</strong>
@@ -85,29 +78,58 @@ block content %}
                             <summary class="cursor-pointer font-semibold text-blue-600 group-open:text-blue-800 flex justify-between items-center">
                                 <span>📁 {{ tbl.table_name }}
                                     <span class="text-sm text-gray-500">({{ tbl.table_format }})</span></span>
-                                    <span class="text-gray-500 group-open:rotate-90 transition-transform">▶</span>
-                                </summary>
-                                <ul class="ml-6 mt-3 space-y-2 text-gray-700">
+                                <span class="text-gray-500 group-open:rotate-90 transition-transform">▶</span>
+                            </summary>
+                            <ul class="ml-6 mt-3 space-y-2 text-gray-700">
+                                <li>
+                                    <strong>Path:</strong>
+                                    <span class="text-gray-600">{{ tbl.table_path }}</span>
+                                </li>
+                                {% set meta = tbl.metadata_json|json_decode %}
+                                {% if meta.type == "directory" or meta.type == "delta_table" %}
                                     <li>
-                                        <strong>Path:</strong>
-                                        <span class="text-gray-600">{{ tbl.table_path }}</span>
+                                        <strong>Contents:</strong>
+                                        <ul class="ml-4">
+                                            {% for content in meta.contents %}
+                                                <li>
+                                                    {{ content.file_path }}
+                                                    ({{ content.size }} bytes,
+                                                    Last Modified: {{ content.last_modified }})
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
                                     </li>
-                                    <li>
-                                        <strong>Metadata:</strong>
-                                        <span class="text-gray-600">{{ tbl.metadata_json[:100] }}...</span>
-                                    </li>
-                                    <li>
-                                        <strong>Last Updated:</strong>
-                                        <span class="text-gray-600">{{ tbl.last_updated.strftime("%Y-%m-%d %H:%M") }}</span>
-                                    </li>
-                                </ul>
-                            </details>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p class="text-gray-500">No tables found in this bucket.</p>
-            {% endif %}
-        </div>
+                                {% endif %}
+                                <li>
+                                    <strong>Metadata:</strong>
+                                    <span class="text-gray-600">{{ tbl.metadata_json[:100] }}...</span>
+                                </li>
+                                <li>
+                                    <strong>Last Updated:</strong>
+                                    <span class="text-gray-600">{{ tbl.last_updated.strftime("%Y-%m-%d %H:%M") }}</span>
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-500">No tables found in this bucket.</p>
+        {% endif %}
+    </div>
+    <!-- Bucket Files -->
+    <div class="mt-6">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Files in {{ bucket.name }}</h2>
+        {% if files %}
+            <ul class="space-y-3">
+                {% for file in files %}
+                    <li class="bg-white p-4 shadow-md hover:shadow-lg transition duration-200 rounded">
+                        <span class="text-blue-600">📄 {{ file }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-500">No files found in this bucket.</p>
+        {% endif %}
     </div>
 {% endblock %}

@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Query Editor{% endblock %}
-{% block
-    content %}
+{% block content %}
     <!-- Monaco Editor CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/loader.min.js"></script>
     <div>
@@ -26,7 +25,7 @@
                 <div class="flex space-x-4 mt-4">
                     <button onclick="runQuery()"
                             class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded transition">
-                        <i class="fas fa-play"></i> Run
+                        <i class="fas fa-play"></i> Run Manual Query
                     </button>
                     <button onclick="saveQuery()"
                             class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded transition">
@@ -37,10 +36,18 @@
                         <i class="fas fa-file-export"></i> Export
                     </button>
                 </div>
+                <!-- Natural Language Query Section -->
+                <div class="mt-4">
+                    <h2 class="text-xl font-semibold text-gray-700">Natural Language Query</h2>
+                    <input type="text" id="nl-query-input" placeholder="Enter your natural language query" class="w-full p-2 border rounded">
+                    <button onclick="runNLQuery()" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4 py-2 rounded mt-2">
+                        Convert & Run
+                    </button>
+                </div>
                 <!-- Query Results -->
                 <div class="bg-white shadow-lg p-4 mt-6 rounded max-h-40 overflow-auto">
                     <h2 class="text-xl font-semibold text-gray-700 mb-2">Query Results</h2>
-                    <table class="min-w-full border border-gray-200">
+                    <table class="min-w-full border border-gray-200" id="results-table">
                         <thead class="bg-gray-100">
                             <tr>
                                 <th class="px-4 py-2 border text-left">ID</th>
@@ -49,23 +56,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-2 border">1</td>
-                                <td class="px-4 py-2 border">Aditya Godse</td>
-                                <td class="px-4 py-2 border">₹1000</td>
-                            </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-2 border">2</td>
-                                <td class="px-4 py-2 border">Sakshi Mane</td>
-                                <td class="px-4 py-2 border">₹1500</td>
-                            </tr>
+                            <!-- Results will be populated here -->
                         </tbody>
                     </table>
                 </div>
                 <!-- Query History -->
                 <div class="bg-white shadow-lg p-4 mt-6 rounded max-h-40 overflow-auto">
                     <h2 class="text-xl font-semibold text-gray-700 mb-2">Query History</h2>
-                    <ul class="space-y-2">
+                    <ul class="space-y-2" id="query-history">
                         <li class="p-2 bg-gray-100 rounded">
                             SELECT * FROM sales_data LIMIT 10;
                             <span class="text-sm text-gray-500">- 10:00 AM</span>
@@ -136,6 +134,7 @@
     </div>
     <!-- JavaScript -->
     <script>
+  // Toggle schema explorer nodes
   document.querySelectorAll(".toggle-btn").forEach((btn) => {
     btn.addEventListener("click", function () {
       const icon = this.querySelector("i");
@@ -148,6 +147,7 @@
     });
   });
 
+  // Filter schema explorer items
   const searchInput = document.getElementById("schema-search");
   searchInput.addEventListener("input", function () {
     const filter = searchInput.value.toLowerCase();
@@ -158,14 +158,15 @@
     });
   });
 
+  // Initialize Monaco Editor
+  let editor;
   require.config({
     paths: {
       vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs",
     },
   });
-  <!-- Monaco Editor Configuration -->
   require(["vs/editor/editor.main"], function () {
-    let editor = monaco.editor.create(
+    editor = monaco.editor.create(
       document.getElementById("editor-container"),
       {
         value: `SELECT company_name,
@@ -184,12 +185,97 @@ LIMIT 10;`,
         lineNumbers: "on",
         scrollBeyondLastLine: false,
         minimap: { enabled: false },
-      },
+      }
     );
   });
 
+  // Run manual SQL query by calling the backend
   function runQuery() {
-    alert("Running Query: " + editor.getValue());
+    const query = editor.getValue();
+    fetch('/run-manual-query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: query })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        const tbody = document.querySelector("#results-table tbody");
+        tbody.innerHTML = "";
+        if(data.result && data.result.length > 0) {
+            data.result.forEach(row => {
+                const tr = document.createElement("tr");
+                for (let key in row) {
+                    const td = document.createElement("td");
+                    td.className = "px-4 py-2 border";
+                    td.textContent = row[key];
+                    tr.appendChild(td);
+                }
+                tbody.appendChild(tr);
+            });
+        } else {
+            const tr = document.createElement("tr");
+            const td = document.createElement("td");
+            td.colSpan = 3;
+            td.className = "px-4 py-2 border text-center";
+            td.textContent = data.error ? data.error : "No results";
+            tr.appendChild(td);
+            tbody.appendChild(tr);
+        }
+    })
+    .catch(err => {
+        alert("Error: " + err);
+    });
+  }
+
+  // Run natural language query: convert prompt to SQL and run it
+  function runNLQuery() {
+    const prompt = document.getElementById("nl-query-input").value;
+    fetch('/run-nl-query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: prompt })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        const tbody = document.querySelector("#results-table tbody");
+        tbody.innerHTML = "";
+        if(data.result && data.result.length > 0) {
+            data.result.forEach(row => {
+                const tr = document.createElement("tr");
+                for (let key in row) {
+                    const td = document.createElement("td");
+                    td.className = "px-4 py-2 border";
+                    td.textContent = row[key];
+                    tr.appendChild(td);
+                }
+                tbody.appendChild(tr);
+            });
+            alert("Converted SQL: " + data.sql);
+        } else {
+            const tr = document.createElement("tr");
+            const td = document.createElement("td");
+            td.colSpan = 3;
+            td.className = "px-4 py-2 border text-center";
+            td.textContent = data.error ? data.error : "No results";
+            tr.appendChild(td);
+            tbody.appendChild(tr);
+        }
+    })
+    .catch(err => {
+        alert("Error: " + err);
+    });
+  }
+
+  function saveQuery() {
+      // Placeholder for saving query
+      alert("Save query functionality not implemented yet.");
+  }
+
+  function exportResults() {
+      // Placeholder for exporting results
+      alert("Export results functionality not implemented yet.");
   }
     </script>
 {% endblock %}

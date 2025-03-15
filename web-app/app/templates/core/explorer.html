@@ -23,8 +23,9 @@
                             <ul class="space-y-2">
                                 {% for b in ws.buckets %}
                                     <li>
-                                        <a href="{{ url_for('explorer.view_bucket', bucket_id=b.id) }}"
-                                           class="block bg-white p-4 shadow-md rounded hover:bg-gray-50 transition">
+                                        <a href="{{ url_for('explorer.bucket_explorer', bucket_id=b.id) }}"
+
+                                            class="block bg-white p-4 shadow-md rounded hover:bg-gray-50 transition">
                                             <strong class="text-gray-800">{{ b.name }}</strong>
                                             <span class="text-gray-600 text-sm ml-2">({{ b.cloud_provider }})</span>
                                             <p class="text-gray-500 text-sm mt-1">

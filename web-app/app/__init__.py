@@ -1,4 +1,4 @@
-from flask import Flask, render_template, g
+from flask import Flask, render_template, g, request
 from flask_cors import CORS
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -6,6 +6,10 @@ from flask_login import LoginManager, current_user
 from app.extensions import db
 from app.blueprints.admin import admin_bp
 from app.models import WorkspaceUser, Workspace
+import json
+from flask_caching import Cache
+
+cache = Cache(config={'CACHE_TYPE': 'simple'})
 
 limiter = Limiter(
     key_func=get_remote_address,
@@ -13,8 +17,8 @@ limiter = Limiter(
     storage_uri="memory://",
 )
 
-
 def create_app():
+    # Create Flask application instance
     app = Flask(__name__)
     CORS(app)
     app.config["SECRET_KEY"] = "nqMt+o1BxO2Wkaj4ogmFtg=="
@@ -25,14 +29,32 @@ def create_app():
     app.config["SESSION_PERMANENT"] = False
     app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 
+    # Initialize database
     db.init_app(app)
+    cache.init_app(app)
+
+    # Initialize login manager
     login_manager = LoginManager(app)
     login_manager.login_view = "auth.login"
+
+    # Add custom Jinja2 filter for JSON decoding
+    app.jinja_env.filters['json_decode'] = json.loads
+
+    # Optional: Add safe JSON decoding to handle invalid JSON
+    def safe_json_decode(value):
+        if value is None or not value.strip():
+            return {}
+        try:
+            return json.loads(value)
+        except json.JSONDecodeError:
+            print(f"Invalid JSON in metadata_json: {value}")
+            return {}
+
+    app.jinja_env.filters['safe_json_decode'] = safe_json_decode
 
     @login_manager.user_loader
     def load_user(user_id):
         from app.models import User
-
         return User.query.get(int(user_id))
 
     @app.before_request
@@ -48,6 +70,10 @@ def create_app():
                 .all()
             )
 
+        # Safely set g.bucket_id, defaulting to 1 if not present or if view_args is None
+        g.bucket_id = request.view_args.get('bucket_id', 1) if request.view_args is not None else 1
+
+    # Register blueprints
     from app.blueprints.home import home_bp
     from app.blueprints.api import api_bp
     from app.blueprints.auth.auth import auth_bp
@@ -67,6 +93,7 @@ def create_app():
     app.register_blueprint(settings_bp)
     app.register_blueprint(workspace_bp)
 
+    # Apply rate limits to blueprints
     limiter.limit("200 per hour")(home_bp)
     limiter.limit("200 per hour")(api_bp)
     limiter.limit("200 per hour")(auth_bp)
@@ -96,4 +123,12 @@ def create_app():
     def rate_limit_exceeded(e):
         return render_template("errors/429.html", error=e.description), 400
 
+    # Initialize database tables
+    with app.app_context():
+        db.create_all()
+
     return app
+
+if __name__ == "__main__":
+    app = create_app()
+    app.run(debug=True)

@@ -3,8 +3,11 @@ from flask_login import login_required, current_user
 from app import db
 from app.models import Workspace, WorkspaceUser, Bucket, TableMetadata
 from werkzeug.security import generate_password_hash
+import boto3
+from botocore.exceptions import ClientError 
 
 settings_bp = Blueprint("settings", __name__)
+
 
 
 # General settings page (lists profile settings & workspaces with admin/editor role)
@@ -316,3 +319,4 @@ def delete_bucket(workspace_id, bucket_id):
         flash(f"Failed to delete bucket: {str(e)}", "danger")
 
     return redirect(url_for("settings.workspace_settings", workspace_id=workspace.id))
+
