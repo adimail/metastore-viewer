@@ -1,0 +1,81 @@
+{% extends "visualizer/base.html" %}
+{% block title %}
+    Data Lineage | Table
+    Visualizer
+{% endblock %}
+{% block content %}
+    <div class="container mx-auto p-6">
+        <h1 class="text-2xl font-semibold text-gray-800">Data Lineage</h1>
+        <p class="text-gray-600">Explore the dependencies and transformations of your data.</p>
+        <div class="mt-4">
+            <select id="lineageTableSelector" class="border rounded px-3 py-2">
+                <option>Select Table</option>
+                <option value="customers">customers</option>
+                <option value="orders">orders</option>
+            </select>
+        </div>
+        <div class="mt-6 bg-white shadow rounded p-4">
+            <h2 class="text-lg font-semibold text-gray-700">Lineage Graph</h2>
+            <svg id="lineageGraph" width="600" height="400">
+            </svg>
+        </div>
+    </div>
+    <script>
+  document
+    .getElementById("lineageTableSelector")
+    .addEventListener("change", function () {
+      const tableName = this.value;
+      fetch(`/api/get-lineage?table=${tableName}`)
+        .then((response) => response.json())
+        .then((data) => {
+          drawGraph(data);
+        });
+    });
+
+  function drawGraph(data) {
+    const svg = d3.select("#lineageGraph"),
+      width = +svg.attr("width"),
+      height = +svg.attr("height");
+
+    svg.selectAll("*").remove();
+
+    const g = svg.append("g");
+
+    const simulation = d3
+      .forceSimulation(data.nodes)
+      .force(
+        "link",
+        d3.forceLink(data.links).id((d) => d.id),
+      )
+      .force("charge", d3.forceManyBody())
+      .force("center", d3.forceCenter(width / 2, height / 2));
+
+    const link = g
+      .selectAll("line")
+      .data(data.links)
+      .enter()
+      .append("line")
+      .attr("stroke", "#ccc");
+
+    const node = g
+      .selectAll("circle")
+      .data(data.nodes)
+      .enter()
+      .append("circle")
+      .attr("r", 10)
+      .attr("fill", "#3b82f6");
+
+    node.append("title").text((d) => d.name);
+
+    simulation.on("tick", function () {
+      link
+        .attr("x1", (d) => d.source.x)
+        .attr("y1", (d) => d.source.y)
+        .attr("x2", (d) => d.target.x)
+        .attr("y2", (d) => d.target.y);
+
+      node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
+    });
+  }
+    </script>
+{% endblock %}

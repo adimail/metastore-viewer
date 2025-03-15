@@ -1,0 +1,388 @@
+{% extends "visualizer/base.html" %}
+{% block title %}
+    Schema Explorer
+{% endblock
+%}
+{% block content %}
+    <div class="space-y-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">Schema Explorer</h1>
+                <p class="text-gray-600 mt-1">Track schema evolution and compare versions</p>
+            </div>
+            <div class="mt-4 md:mt-0 flex space-x-3">
+                <button class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm flex items-center hover:bg-gray-50">
+                    <i class="fas fa-code-branch mr-2"></i> Switch Branch
+                </button>
+                <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm flex items-center">
+                    <i class="fas fa-download mr-2"></i> Export Schema
+                </button>
+            </div>
+        </div>
+        <!-- Schema Version Timeline -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="p-4 border-b flex justify-between items-center">
+                <h2 class="font-semibold text-lg">Schema Version Timeline</h2>
+                <div class="text-sm">
+                    <span class="text-gray-500">Showing</span>
+                    <select class="ml-2 bg-gray-100 border border-gray-300 rounded-md py-1 px-2 text-sm">
+                        <option>Last 10 versions</option>
+                        <option>Last 20 versions</option>
+                        <option>All versions</option>
+                    </select>
+                </div>
+            </div>
+            <div class="p-4 overflow-x-auto">
+                <div class="grid grid-cols-5 pb-4">
+                    <div class="timeline-item flex-shrink-0 w-40 bg-white border border-gray-200 rounded-lg p-3 hover:border-blue-500">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-semibold text-gray-500">v5</span>
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">Current</span>
+                        </div>
+                        <div class="mt-2">
+                            <span class="text-xs text-gray-500">Mar 14, 2025</span>
+                            <p class="text-sm font-medium mt-1">Added customer_segment</p>
+                        </div>
+                        <div class="mt-3 flex justify-between">
+                            <span class="text-xs text-gray-500">
+                                <i class="fas fa-plus-circle text-green-500 mr-1"></i> 1
+                            </span>
+                            <span class="text-xs text-gray-500">
+                                <i class="fas fa-minus-circle text-red-500 mr-1"></i> 0
+                            </span>
+                            <span class="text-xs text-gray-500">
+                                <i class="fas fa-pen text-yellow-500 mr-1"></i> 0
+                            </span>
+                        </div>
+                    </div>
+                    <div class="timeline-item flex-shrink-0 w-40 bg-white border border-gray-200 rounded-lg p-3 hover:border-blue-500">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-semibold text-gray-500">v4</span>
+                        </div>
+                        <div class="mt-2">
+                            <span class="text-xs text-gray-500">Mar 5, 2025</span>
+                            <p class="text-sm font-medium mt-1">Modified address fields</p>
+                        </div>
+                        <div class="mt-3 flex justify-between">
+                            <span class="text-xs text-gray-500">
+                                <i class="fas fa-plus-circle text-green-500 mr-1"></i> 2
+                            </span>
+                            <span class="text-xs text-gray-500">
+                                <i class="fas fa-minus-circle text-red-500 mr-1"></i> 1
+                            </span>
+                            <span class="text-xs text-gray-500">
+                                <i class="fas fa-pen text-yellow-500 mr-1"></i> 3
+                            </span>
+                        </div>
+                    </div>
+                    <div class="timeline-item flex-shrink-0 w-40 bg-white border border-gray-200 rounded-lg p-3 hover:border-blue-500">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-semibold text-gray-500">v3</span>
+                        </div>
+                        <div class="mt-2">
+                            <span class="text-xs text-gray-500">Feb 21, 2025</span>
+                            <p class="text-sm font-medium mt-1">Added payment fields</p>
+                        </div>
+                        <div class="mt-3 flex justify-between">
+                            <span class="text-xs text-gray-500">
+                                <i class="fas fa-plus-circle text-green-500 mr-1"></i> 5
+                            </span>
+                            <span class="text-xs text-gray-500">
+                                <i class="fas fa-minus-circle text-red-500 mr-1"></i> 0
+                            </span>
+                            <span class="text-xs text-gray-500">
+                                <i class="fas fa-pen text-yellow-500 mr-1"></i> 0
+                            </span>
+                        </div>
+                    </div>
+                    <div class="timeline-item flex-shrink-0 w-40 bg-white border border-gray-200 rounded-lg p-3 hover:border-blue-500">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-semibold text-gray-500">v2</span>
+                        </div>
+                        <div class="mt-2">
+                            <span class="text-xs text-gray-500">Feb 10, 2025</span>
+                            <p class="text-sm font-medium mt-1">Type conversions</p>
+                        </div>
+                        <div class="mt-3 flex justify-between">
+                            <span class="text-xs text-gray-500">
+                                <i class="fas fa-plus-circle text-green-500 mr-1"></i> 0
+                            </span>
+                            <span class="text-xs text-gray-500">
+                                <i class="fas fa-minus-circle text-red-500 mr-1"></i> 0
+                            </span>
+                            <span class="text-xs text-gray-500">
+                                <i class="fas fa-pen text-yellow-500 mr-1"></i> 4
+                            </span>
+                        </div>
+                    </div>
+                    <div class="timeline-item flex-shrink-0 w-40 bg-white border border-gray-200 rounded-lg p-3 hover:border-blue-500">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-semibold text-gray-500">v1</span>
+                        </div>
+                        <div class="mt-2">
+                            <span class="text-xs text-gray-500">Jan 28, 2025</span>
+                            <p class="text-sm font-medium mt-1">Initial schema</p>
+                        </div>
+                        <div class="mt-3 flex justify-between">
+                            <span class="text-xs text-gray-500">
+                                <i class="fas fa-plus-circle text-green-500 mr-1"></i> 18
+                            </span>
+                            <span class="text-xs text-gray-500">
+                                <i class="fas fa-minus-circle text-red-500 mr-1"></i> 0
+                            </span>
+                            <span class="text-xs text-gray-500">
+                                <i class="fas fa-pen text-yellow-500 mr-1"></i> 0
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Schema Comparison -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="p-4 border-b">
+                <h2 class="font-semibold text-lg">Schema Comparison</h2>
+            </div>
+            <div class="p-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Version 1</label>
+                        <div class="relative">
+                            <select class="block w-full bg-white border border-gray-300 rounded-md py-2 pl-3 pr-10 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option>v5 (Current) - Mar 14, 2025</option>
+                                <option>v4 - Mar 5, 2025</option>
+                                <option>v3 - Feb 21, 2025</option>
+                                <option>v2 - Feb 10, 2025</option>
+                                <option>v1 - Jan 28, 2025</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Version 2</label>
+                        <div class="relative">
+                            <select class="block w-full bg-white border border-gray-300 rounded-md py-2 pl-3 pr-10 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option>v4 - Mar 5, 2025</option>
+                                <option>v5 (Current) - Mar 14, 2025</option>
+                                <option>v3 - Feb 21, 2025</option>
+                                <option>v2 - Feb 10, 2025</option>
+                                <option>v1 - Jan 28, 2025</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg">
+                        <div class="border-b border-gray-200 bg-gray-100 px-4 py-3 flex justify-between items-center">
+                            <h3 class="text-sm font-semibold text-gray-700">Schema Changes</h3>
+                            <div>
+                                <button class="text-gray-600 hover:text-gray-900">
+                                    <i class="fas fa-expand-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Field Name
+                                            </th>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Change Type
+                                            </th>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Version 1 (v5)
+                                            </th>
+                                            <th scope="col"
+                                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Version 2 (v4)
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">customer_segment</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Added</span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">string</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">address_line1</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Unchanged</span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">string</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">string</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">address_line2</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Unchanged</span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">string</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">string</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">zip_code</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                    Modified
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">string</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 bg-yellow-50">int</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Current Schema Structure -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="p-4 border-b flex justify-between items-center">
+                <h2 class="font-semibold text-lg">Current Schema Structure</h2>
+                <div>
+                    <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-md text-sm">
+                        <i class="fas fa-code mr-1"></i> JSON
+                    </button>
+                    <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-md text-sm ml-2">
+                        <i class="fas fa-table mr-1"></i> Avro
+                    </button>
+                </div>
+            </div>
+            <div class="p-4">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Field Name
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Type
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Nullable
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Default
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Comment
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">customer_id</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">string</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <span class="text-red-500"><i class="fas fa-times"></i></span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Primary key</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">first_name</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">string</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <span class="text-red-500"><i class="fas fa-times"></i></span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Customer first name</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">last_name</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">string</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <span class="text-red-500"><i class="fas fa-times"></i></span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Customer last name</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">email</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">string</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <span class="text-red-500"><i class="fas fa-times"></i></span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Contact email address</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">phone_number</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">string</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <span class="text-green-500"><i class="fas fa-check"></i></span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">null</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Contact phone number</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">address_line1</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">string</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <span class="text-red-500"><i class="fas fa-times"></i></span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Primary address line</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">address_line2</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">string</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <span class="text-green-500"><i class="fas fa-check"></i></span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">null</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Secondary address line</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">customer_segment</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">string</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <span class="text-green-500"><i class="fas fa-check"></i></span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">'standard'</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Customer segment (standard, premium, vip)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Make timeline items clickable
+    const timelineItems = document.querySelectorAll(".timeline-item");
+    timelineItems.forEach((item) => {
+      item.addEventListener("click", function () {
+        // You'd normally fetch version details here
+        // For now we'll just highlight the selected item
+        timelineItems.forEach((i) => i.classList.remove("border-blue-500"));
+        this.classList.add("border-blue-500");
+      });
+    });
+  });
+    </script>
+{% endblock %}

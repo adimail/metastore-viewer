@@ -1,0 +1,38 @@
+{% extends "visualizer/base.html" %}
+{% block title %}
+    Partition Explorer | Table
+    Visualizer
+{% endblock %}
+{% block content %}
+    <div class="container mx-auto p-6">
+        <h1 class="text-2xl font-semibold text-gray-800">Partition Explorer</h1>
+        <p class="text-gray-600">View partition structure of selected tables.</p>
+        <div class="mt-4">
+            <select id="partitionTableSelector" class="border rounded px-3 py-2">
+                <option>Select Table</option>
+                <option value="customers">customers</option>
+                <option value="orders">orders</option>
+            </select>
+        </div>
+        <div class="mt-6 bg-white shadow rounded p-4">
+            <h2 class="text-lg font-semibold text-gray-700">Partitions</h2>
+            <pre id="partitionData" class="bg-gray-100 p-3 rounded text-sm"></pre>
+        </div>
+    </div>
+    <script>
+  document
+    .getElementById("partitionTableSelector")
+    .addEventListener("change", function () {
+      const tableName = this.value;
+      fetch(`/api/get-partitions?table=${tableName}`)
+        .then((response) => response.json())
+        .then((data) => {
+          document.getElementById("partitionData").textContent = JSON.stringify(
+            data,
+            null,
+            2,
+          );
+        });
+    });
+    </script>
+{% endblock %}

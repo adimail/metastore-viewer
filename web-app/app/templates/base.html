@@ -138,15 +138,15 @@
                         <i class="fas fa-code"></i>
                         <span class="link-text">Query Editor</span>
                     </a>
-                    <a href="/metadata"
+                    <a href="/visualizer"
                        data-title="Metadata Comparison"
-                       class="{% if request.path.startswith('/metadata') %}active-link{% endif %}">
+                       class="{% if request.path.startswith('/visualizer') %}active-link{% endif %}">
                         <i class="fas fa-table"></i>
-                        <span class="link-text">Metadata tables</span>
+                        <span class="link-text">Table Visualizations</span>
                     </a>
-                    <a href="/compare-metatables"
+                    <a href="/schema-explorer"
                        data-title="Metadata Comparison"
-                       class="{% if request.path.startswith('/compare-metatables') %}active-link{% endif %}">
+                       class="{% if request.path.startswith('/schema-explorer') %}active-link{% endif %}">
                         <i class="fas fa-table"></i>
                         <span class="link-text">Metadata Comparison</span>
                     </a>
@@ -197,33 +197,33 @@
             <script src="{{ url_for('static', filename='js/session.js') }}"></script>
             <script>
       // Hide flash messages after 3 seconds
-        setTimeout(function () {
-          var flashContainer = document.getElementById("flash-message-container");
-          if (flashContainer) {
-            flashContainer.style.display = "none";
-          }
-        }, 3000);
+      setTimeout(function () {
+        var flashContainer = document.getElementById("flash-message-container");
+        if (flashContainer) {
+          flashContainer.style.display = "none";
+        }
+      }, 3000);
             </script>
             <script>
-        document
-          .getElementById("userDropdownBtn")
-          .addEventListener("click", function () {
-            document
-              .getElementById("userDropdownMenu")
-              .classList.toggle("hidden");
-          });
-
-        document.addEventListener("click", function (event) {
-          var dropdown = document.getElementById("userDropdownMenu");
-          var button = document.getElementById("userDropdownBtn");
-
-          if (
-            !button.contains(event.target) &&
-            !dropdown.contains(event.target)
-          ) {
-            dropdown.classList.add("hidden");
-          }
+      document
+        .getElementById("userDropdownBtn")
+        .addEventListener("click", function () {
+          document
+            .getElementById("userDropdownMenu")
+            .classList.toggle("hidden");
         });
+
+      document.addEventListener("click", function (event) {
+        var dropdown = document.getElementById("userDropdownMenu");
+        var button = document.getElementById("userDropdownBtn");
+
+        if (
+          !button.contains(event.target) &&
+          !dropdown.contains(event.target)
+        ) {
+          dropdown.classList.add("hidden");
+        }
+      });
             </script>
         </body>
     </html>

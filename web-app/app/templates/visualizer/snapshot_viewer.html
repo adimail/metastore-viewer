@@ -1,0 +1,39 @@
+{% extends "visualizer/base.html" %}
+{% block title %}
+    Snapshot Viewer | Table
+    Visualizer
+{% endblock %}
+{% block content %}
+    <div class="container mx-auto p-6">
+        <h1 class="text-2xl font-semibold text-gray-800">Snapshot Viewer</h1>
+        <p class="text-gray-600">View past snapshots and version history of tables.</p>
+        <div class="mt-4">
+            <select id="snapshotTableSelector" class="border rounded px-3 py-2">
+                <option>Select Table</option>
+                <option value="customers">customers</option>
+                <option value="orders">orders</option>
+            </select>
+        </div>
+        <div class="mt-6 bg-white shadow rounded p-4">
+            <h2 class="text-lg font-semibold text-gray-700">Snapshot History</h2>
+            <ul id="snapshotList" class="text-sm text-gray-600">
+            </ul>
+        </div>
+    </div>
+    <script>
+  document
+    .getElementById("snapshotTableSelector")
+    .addEventListener("change", function () {
+      const tableName = this.value;
+      fetch(`/api/get-snapshots?table=${tableName}`)
+        .then((response) => response.json())
+        .then((data) => {
+          let snapshotHTML = "";
+          data.forEach((snapshot) => {
+            snapshotHTML += `<li>Snapshot ID: ${snapshot.id}, Timestamp: ${snapshot.timestamp}</li>`;
+          });
+          document.getElementById("snapshotList").innerHTML = snapshotHTML;
+        });
+    });
+    </script>
+{% endblock %}
