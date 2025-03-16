@@ -7,47 +7,22 @@
     <!-- D3.js for advanced visualizations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
     <!-- dagre-d3 for graph layouts -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dagre-d3/0.6.4/dagre-d3.min.js"></script>
-    <!-- CodeMirror for SQL editor -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/codemirror.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.3/mode/sql/sql.min.js"></script>
-    <style>
-  .sidebar-item.active {
-    background-color: rgba(59, 130, 246, 0.1);
-    border-left: 4px solid #3b82f6;
-  }
-
-  .timeline-item {
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .timeline-item:hover {
-    background-color: rgba(59, 130, 246, 0.1);
-  }
-
-  .CodeMirror {
-    height: auto;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.375rem;
-  }
-    </style>
 {% endblock %}
 {% block content %}
     <div class="">
         <!-- Main Content -->
-        <div class="flex-1 overflow-y-auto">
+        <div class="">
             <!-- Top Bar -->
-            <div class="bg-white p-4 shadow-sm flex justify-between items-center">
+            <div class="pb-5 shadow-sm flex justify-between items-center">
                 <button class="md:hidden text-gray-700" id="menuToggle">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
                 <div class="flex items-center">
                     <div class="relative">
                         <select id="tableSelector"
-                                class="appearance-none bg-gray-100 border border-gray-300 rounded-md py-2 pl-3 pr-10 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                class="appearance-none bg-gray-100 border border-gray-300  py-2 pl-3 pr-10 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option>Select Table</option>
                             <option value="customers">customers</option>
                             <option value="orders">orders</option>
@@ -68,13 +43,13 @@
                     <button class="text-gray-700 hover:text-gray-900 mr-4">
                         <i class="fas fa-cog"></i>
                     </button>
-                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm flex items-center">
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2  text-sm flex items-center">
                         <i class="fas fa-sync-alt mr-2"></i> Refresh
                     </button>
                 </div>
             </div>
             <!-- Page Content -->
-            <div class="p-6">
+            <div class="py-6">
                 {% block visualizer_content %}{% endblock %}
             </div>
         </div>

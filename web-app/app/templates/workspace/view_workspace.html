@@ -16,18 +16,18 @@
                 </h2>
                 <div class="mt-4 sm:mt-0 flex space-x-3">
                     <a href="{{ url_for('workspace.update_workspace', workspace_id=workspace.id) }}"
-                       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition duration-200 flex items-center shadow-md">
+                       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2  font-medium transition duration-200 flex items-center shadow-md">
                         <i class="fas fa-edit mr-2"></i>Update
                     </a>
                     <a href="{{ url_for('workspace.disable_workspace', workspace_id=workspace.id) }}"
-                       class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-md font-medium transition duration-200 flex items-center shadow-md">
+                       class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2  font-medium transition duration-200 flex items-center shadow-md">
                         <i class="fas fa-ban mr-2"></i>Disable
                     </a>
                     <form method="POST"
                           action="{{ url_for('workspace.delete_workspace', workspace_id=workspace.id) }}"
                           onsubmit="return confirm('Are you sure you want to delete {{ workspace.name }}? This action cannot be undone.');">
                         <button type="submit"
-                                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md font-medium transition duration-200 flex items-center shadow-md">
+                                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2  font-medium transition duration-200 flex items-center shadow-md">
                             <i class="fas fa-trash mr-2"></i>Delete
                         </button>
                     </form>
@@ -97,7 +97,7 @@
                 {% if members %}
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {% for member in members %}
-                            <div class="bg-gray-50 p-4 rounded-md hover:bg-gray-100 transition duration-200 flex items-center space-x-4">
+                            <div class="bg-gray-50 p-4  hover:bg-gray-100 transition duration-200 flex items-center space-x-4">
                                 <img src="{{ member.user.profile_image if member.user.profile_image else 'https://robohash.org/' + member.user.username + '.png' }}"
                                      alt="{{ member.user.username }}'s Profile"
                                      class="w-12 h-12 rounded-full border-2 border-blue-500 object-cover" />
@@ -121,7 +121,7 @@
                         {% for b in workspace.buckets %}
                             <li>
                                 <a href="{{ url_for('explorer.view_bucket', bucket_id=b.id) }}"
-                                   class="block bg-white p-4 shadow-md rounded hover:bg-gray-50 transition">
+                                   class="block bg-white p-4 shadow-md hover:bg-gray-50 transition">
                                     <strong class="text-gray-800">{{ b.name }}</strong>
                                     <span class="text-gray-600 text-sm ml-2">({{ b.cloud_provider }})</span>
                                     <p class="text-gray-500 text-sm mt-1">
@@ -136,15 +136,15 @@
             <!-- Action Buttons -->
             <div class="mt-8 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                 <a href="{{ url_for('workspace.add_member', workspace_id=workspace.id) }}"
-                   class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md font-medium transition duration-200 shadow-md flex items-center justify-center">
+                   class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3  font-medium transition duration-200 shadow-md flex items-center justify-center">
                     <i class="fas fa-user-plus mr-2"></i>Add Member
                 </a>
                 <a href="{{ url_for('settings.add_bucket', workspace_id=workspace.id) }}"
-                   class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-md font-medium transition duration-200 shadow-md flex items-center justify-center">
+                   class="bg-green-600 hover:bg-green-700 text-white px-6 py-3  font-medium transition duration-200 shadow-md flex items-center justify-center">
                     <i class="fas fa-database mr-2"></i>Add Datasource
                 </a>
                 <a href="{{ url_for('settings.workspace_settings', workspace_id=workspace.id) }}"
-                   class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-md font-medium transition duration-200 shadow-md flex items-center justify-center">
+                   class="bg-green-600 hover:bg-green-700 text-white px-6 py-3  font-medium transition duration-200 shadow-md flex items-center justify-center">
                     <i class="fas fa-cog mr-2"></i>Edit Workspace Settings
                 </a>
             </div>

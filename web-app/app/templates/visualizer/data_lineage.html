@@ -1,81 +1,84 @@
 {% extends "visualizer/base.html" %}
-{% block title %}
-    Data Lineage | Table
-    Visualizer
-{% endblock %}
+{% block title %}Data Lineage | Table Visualizer{% endblock %}
 {% block content %}
     <div class="container mx-auto p-6">
-        <h1 class="text-2xl font-semibold text-gray-800">Data Lineage</h1>
-        <p class="text-gray-600">Explore the dependencies and transformations of your data.</p>
-        <div class="mt-4">
-            <select id="lineageTableSelector" class="border rounded px-3 py-2">
-                <option>Select Table</option>
-                <option value="customers">customers</option>
-                <option value="orders">orders</option>
+        <h1 class="text-3xl font-bold text-gray-800">Data Lineage</h1>
+        <p class="text-gray-600 mt-2">Explore dependencies and transformations of your data visually.</p>
+        <div class="mt-4 flex items-center space-x-4">
+            <label for="lineageTableSelector" class="font-semibold text-gray-700">Select Table:</label>
+            <select id="lineageTableSelector"
+                    class="border border-gray-300 px-3 py-2 focus:ring focus:ring-indigo-300">
+                <option value="">Loading...</option>
             </select>
         </div>
-        <div class="mt-6 bg-white shadow rounded p-4">
-            <h2 class="text-lg font-semibold text-gray-700">Lineage Graph</h2>
-            <svg id="lineageGraph" width="600" height="400">
-            </svg>
+        <div class="mt-6 bg-white shadow  p-4">
+            <h2 class="text-xl font-semibold text-gray-700">Lineage Graph</h2>
+            <div class="overflow-x-auto">
+                <svg id="lineageGraph" class="w-full max-w-4xl h-[400px]">
+                </svg>
+            </div>
         </div>
     </div>
     <script>
-  document
-    .getElementById("lineageTableSelector")
-    .addEventListener("change", function () {
-      const tableName = this.value;
-      fetch(`/api/get-lineage?table=${tableName}`)
-        .then((response) => response.json())
-        .then((data) => {
-          drawGraph(data);
+(async function () {
+    const selector = document.getElementById("lineageTableSelector");
+    const svg = d3.select("#lineageGraph");
+    const width = svg.node().clientWidth;
+    const height = svg.node().clientHeight;
+
+    // Fetch available tables dynamically
+    try {
+        const response = await fetch("/api/get-tables");
+        const tables = await response.json();
+        selector.innerHTML = '<option value="">Select a Table</option>' +
+            tables.map(table => `<option value="${table}">${table}</option>`).join("");
+    } catch (error) {
+        console.error("Error fetching table list:", error);
+        selector.innerHTML = '<option value="">Error loading tables</option>';
+    }
+
+    // Fetch and render lineage graph
+    selector.addEventListener("change", async function () {
+        if (!this.value) return;
+        try {
+            const res = await fetch(`/api/get-lineage?table=${this.value}`);
+            const data = await res.json();
+            drawGraph(data);
+        } catch (error) {
+            console.error("Error fetching lineage:", error);
+            alert("Failed to load lineage data.");
+        }
+    });
+
+    function drawGraph(data) {
+        svg.selectAll("*").remove();
+        const g = new dagreD3.graphlib.Graph().setGraph({ rankdir: "LR" });
+
+        data.nodes.forEach(node => {
+            g.setNode(node.id, {
+                label: node.name,
+                shape: node.type === "view" ? "ellipse" : node.type === "external" ? "diamond" : "rect",
+                attributes: node.attributes,
+            });
         });
-    });
 
-  function drawGraph(data) {
-    const svg = d3.select("#lineageGraph"),
-      width = +svg.attr("width"),
-      height = +svg.attr("height");
+        data.links.forEach(link => g.setEdge(link.source, link.target, { label: link.type }));
 
-    svg.selectAll("*").remove();
+        const render = new dagreD3.render();
+        const svgGroup = svg.append("g");
+        render(svgGroup, g);
 
-    const g = svg.append("g");
+        // Center graph
+        const graphWidth = g.graph().width;
+        const graphHeight = g.graph().height;
+        svgGroup.attr("transform", `translate(${(width - graphWidth) / 2}, ${(height - graphHeight) / 2})`);
 
-    const simulation = d3
-      .forceSimulation(data.nodes)
-      .force(
-        "link",
-        d3.forceLink(data.links).id((d) => d.id),
-      )
-      .force("charge", d3.forceManyBody())
-      .force("center", d3.forceCenter(width / 2, height / 2));
-
-    const link = g
-      .selectAll("line")
-      .data(data.links)
-      .enter()
-      .append("line")
-      .attr("stroke", "#ccc");
-
-    const node = g
-      .selectAll("circle")
-      .data(data.nodes)
-      .enter()
-      .append("circle")
-      .attr("r", 10)
-      .attr("fill", "#3b82f6");
-
-    node.append("title").text((d) => d.name);
-
-    simulation.on("tick", function () {
-      link
-        .attr("x1", (d) => d.source.x)
-        .attr("y1", (d) => d.source.y)
-        .attr("x2", (d) => d.target.x)
-        .attr("y2", (d) => d.target.y);
-
-      node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
-    });
-  }
+        // Show node details on click
+        svgGroup.selectAll("g.node").on("click", (event, d) => {
+            const node = g.node(d);
+            alert(`Node: ${node.label}\nAttributes: ${JSON.stringify(node.attributes, null, 2)}`);
+        });
+    }
+})();
     </script>
 {% endblock %}

@@ -1,22 +1,23 @@
 {% extends 'base.html' %}
-{% block title %}
-    Home | Metastore Viewer for
-    Lakehouse Tables on Object Stores
-{% endblock %}
+{% block title %}Home | Metastore Viewer for Lakehouse Tables on Object Stores{% endblock %}
 {% block content %}
     <h1 class="text-3xl font-bold text-gray-800 mb-4">Welcome to Metastore Viewer</h1>
     <p class="text-gray-600 text-lg mb-6">
-        Metastore Viewer is a data lake management interface designed for interaction
-        with object stores. It provides tools for exploring storage buckets, querying
-        data, and comparing metadata efficiently.
+        Metastore Viewer is a data lake management interface designed for interaction with object stores. It provides tools for exploring storage buckets, querying data, and comparing metadata efficiently.
     </p>
     <div class="bg-yellow-100 border-l-4 border-yellow-500 p-4 mb-6">
         <p class="text-yellow-700">
-            <strong>Prototype Note:</strong> This is a prototype version. A dummy user
-            account and workspace have been created for demonstration purposes. Use
-            username: <strong>admin</strong> and password: <strong>admin</strong> to log
-            in and explore the application. Please note that you can only view contents
-            - delete and create operations are disabled in this prototype.
+            <strong>Prototype Notice:</strong> This is a prototype version created for demonstration purposes. A dummy user account is available for testing.
+            <br>
+            <br>
+            <strong>Login credentials:</strong>
+            <br>
+            <strong>Username:</strong> admin
+            <br>
+            <strong>Password:</strong> admin
+            <br>
+            <br>
+            This user has pre-configured tables, buckets, and workspaces. Please note that delete and create operations are disabled in this prototype.
         </p>
     </div>
     <h2 class="text-2xl font-semibold text-gray-800 mt-6 mb-4">Features</h2>
@@ -28,8 +29,7 @@
             <strong>Query Editor:</strong> Run SQL queries on your data lakes.
         </li>
         <li>
-            <strong>Metadata Comparison:</strong> Compare metadata of different
-            datasets.
+            <strong>Metadata Comparison:</strong> Compare metadata of different datasets.
         </li>
         <li>
             <strong>Settings:</strong> Customize your preferences and configurations.
@@ -37,21 +37,18 @@
     </ul>
     <h2 class="text-2xl font-semibold text-gray-800 mt-6 mb-4">How to Use</h2>
     <ol class="list-decimal list-inside text-gray-700 space-y-2">
-        <li>Login using the dummy credentials (admin/admin) provided above.</li>
+        <li>Login using the provided dummy credentials (admin/admin).</li>
         <li>
-            Use the <strong>Bucket Explorer</strong> to browse available storage
-            buckets.
+            Use the <strong>Bucket Explorer</strong> to browse available storage buckets.
         </li>
         <li>
             Write and execute SQL queries in the <strong>Query Editor</strong>.
         </li>
         <li>
-            Compare metadata between datasets in the
-            <strong>Metadata Comparison</strong> section.
+            Compare metadata between datasets in the <strong>Metadata Comparison</strong> section.
         </li>
         <li>
-            Visit <strong>Settings</strong> to view configurations (modifications
-            disabled).
+            Visit <strong>Settings</strong> to view configurations (modifications disabled).
         </li>
     </ol>
     <div class="flex flex-col items-center mt-8">
@@ -61,8 +58,7 @@
                class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 text-lg font-medium transition">
                 Get Started →
             </a>
-            {% if current_user.is_authenticated and current_user.workspaces|length > 0
-                %}
+            {% if current_user.is_authenticated and current_user.workspaces|length > 0 %}
                 <a href="{{ url_for('workspace.workspace') }}"
                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 text-lg font-medium transition">
                     My Workspaces →

@@ -87,7 +87,7 @@ block content %}
         {% if bucket.tables %}
             <ul class="space-y-3">
                 {% for tbl in bucket.tables %}
-                    <li class="bg-white p-4 shadow-md hover:shadow-lg transition duration-200 rounded">
+                    <li class="bg-white p-4 shadow-md hover:shadow-lg transition duration-200">
                         <details class="group">
                             <summary class="cursor-pointer font-semibold text-blue-600 group-open:text-blue-800 flex justify-between items-center">
                                 <span>📁 {{ tbl.table_name }}

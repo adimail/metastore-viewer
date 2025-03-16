@@ -126,6 +126,12 @@
                         <i class="fas fa-home"></i>
                         <span class="link-text">Home</span>
                     </a>
+                    <a href="/visualizer"
+                       data-title="Metadata Comparison"
+                       class="{% if request.path.startswith('/visualizer') %}active-link{% endif %}">
+                        <i class="fas fa-table"></i>
+                        <span class="link-text">Dashboard</span>
+                    </a>
                     <a href="/explorer"
                        data-title="Bucket Explorer"
                        class="{% if request.path.startswith('/explorer') %}active-link{% endif %}">
@@ -137,12 +143,6 @@
                        class="{% if request.path.startswith('/query-editor') %}active-link{% endif %}">
                         <i class="fas fa-code"></i>
                         <span class="link-text">Query Editor</span>
-                    </a>
-                    <a href="/visualizer"
-                       data-title="Metadata Comparison"
-                       class="{% if request.path.startswith('/visualizer') %}active-link{% endif %}">
-                        <i class="fas fa-table"></i>
-                        <span class="link-text">Table Visualizations</span>
                     </a>
                     <a href="/schema-explorer"
                        data-title="Metadata Comparison"

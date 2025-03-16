@@ -8,7 +8,7 @@
             <div class="mb-6">
                 <h2 class="text-xl font-semibold text-gray-700">Workspaces</h2>
                 <ul class="flex flex-wrap gap-4">
-                    {% for ws in workspaces %}<li class="bg-gray-200 px-4 py-2 rounded font-medium">{{ ws.name }}</li>{% endfor %}
+                    {% for ws in workspaces %}<li class="bg-gray-200 px-4 py-2 font-medium">{{ ws.name }}</li>{% endfor %}
                 </ul>
             </div>
             <!-- Display Buckets by Workspace -->
@@ -24,7 +24,7 @@
                                 {% for b in ws.buckets %}
                                     <li>
                                         <a href="{{ url_for('explorer.view_bucket', bucket_id=b.id) }}"
-                                           class="block bg-white p-4 shadow-md rounded hover:bg-gray-50 transition">
+                                           class="block bg-white p-4 shadow-md hover:bg-gray-50 transition">
                                             <strong class="text-gray-800">{{ b.name }}</strong>
                                             <span class="text-gray-600 text-sm ml-2">({{ b.cloud_provider }})</span>
                                             <p class="text-gray-500 text-sm mt-1">
