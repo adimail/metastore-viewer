@@ -6,6 +6,9 @@ from werkzeug.security import generate_password_hash
 
 settings_bp = Blueprint("settings", __name__)
 
+# For the prototype we cannot allow the admin users to update anything on the application
+RESTRICTED_USERS = {"adimail", "parth", "rohit", "prajwal", "admin"}
+
 
 # General settings page (lists profile settings & workspaces with admin/editor role)
 @settings_bp.route("/settings")
@@ -27,6 +30,12 @@ def settings():
 @login_required
 def profile_settings():
     if request.method == "POST":
+        if current_user.username in RESTRICTED_USERS:
+            flash(
+                "This is admin account, please make your own account for usage",
+                "danger",
+            )
+            return redirect(url_for("settings.profile_settings"))
         new_username = request.form.get("username")
         new_password = request.form.get("password")
 
@@ -115,6 +124,13 @@ def workspace_settings(workspace_id):
         return redirect(url_for("home.home"))
 
     if request.method == "POST":
+        if current_user.username in RESTRICTED_USERS:
+            flash(
+                "This is admin account, please make your own account for usage",
+                "danger",
+            )
+            return redirect(url_for("settings.workspace_settings"))
+
         # Update only Workspace model fields
         workspace.name = request.form.get("name", workspace.name)
         workspace.status = request.form.get("status", workspace.status)
@@ -220,6 +236,13 @@ def edit_bucket(workspace_id, bucket_id):
         )
 
     if request.method == "POST":
+        if current_user.username in RESTRICTED_USERS:
+            flash(
+                "This is admin account, please make your own account for usage",
+                "danger",
+            )
+            return redirect(url_for("settings.workspace_settings"))
+
         bucket.name = request.form.get("bucket_name", bucket.name)
         bucket.cloud_provider = request.form.get(
             "cloud_provider", bucket.cloud_provider
@@ -281,6 +304,13 @@ def edit_bucket(workspace_id, bucket_id):
 @login_required
 def delete_bucket(workspace_id, bucket_id):
     try:
+        if current_user.username in RESTRICTED_USERS:
+            flash(
+                "This is admin account, please make your own account for usage",
+                "danger",
+            )
+            return redirect(url_for("settings.workspace_settings"))
+
         workspace = Workspace.query.get_or_404(workspace_id)
         bucket = Bucket.query.get_or_404(bucket_id)
 

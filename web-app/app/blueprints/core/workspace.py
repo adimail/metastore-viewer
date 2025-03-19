@@ -98,6 +98,13 @@ def view_workspace(workspace_id):
 def add_member(workspace_id):
     workspace = Workspace.query.get_or_404(workspace_id)
     if request.method == "POST":
+        if current_user.username in RESTRICTED_USERS:
+            flash(
+                "This is admin account, please make your own account for usage",
+                "danger",
+            )
+            return redirect(url_for("settings.profile_settings"))
+
         username = request.form.get("username")
         role = request.form.get("role")
         user = User.query.filter_by(username=username).first()
